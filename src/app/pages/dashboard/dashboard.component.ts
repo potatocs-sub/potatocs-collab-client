@@ -15,6 +15,7 @@ import { Observable, Subject, Subscription, distinctUntilChanged, filter, fromEv
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ConnectCompanyDialogComponent } from '../../components/dialogs/connect-company-dialog/connect-company-dialog.component';
 import moment from 'moment';
+import { ConnectManagerDialogComponentComponent } from '../../components/dialogs/connect-manager-dialog-component/connect-manager-dialog-component.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -121,7 +122,23 @@ export class DashboardComponent {
   }
 
 
-  deleteCompany(companyId: any) { }
+  deleteCompany(companyId: any) {
+    this.dialogsService.openDialogConfirm('Do you want to delete the company?').subscribe((result: any) => {
+      if (result) {
+        this.companiesService.deleteCompanyRequest(companyId).subscribe({
+          next: (res: any) => {
+            this.userCompanyInfo.update(() => null);
+            this.dialogsService.openDialogPositive('Successfully, the process has done!');
+          },
+          error: (err: any) => {
+            console.log(err);
+            this.dialogsService.openDialogNegative(err);
+          }
+        }
+        );
+      }
+    });
+  }
 
   openDialogFindMyCompany() {
     const dialogRef = this.dialog.open(ConnectCompanyDialogComponent);
@@ -130,7 +147,37 @@ export class DashboardComponent {
 
 
 
-  deleteManager(managerId: any) { }
+  deleteManager(managerId: any) {
+    this.dialogsService.openDialogConfirm('Do you want to delete the manager?').subscribe(result => {
+      if (result) {
+        this.leavesService.checkPendingLeave().subscribe(
+          (data: any) => {
+            console.log(data);
+
+            if (data.pendingFlag) {
+              this.managersService.deletePending(managerId).subscribe({
+                next: (res: any) => {
+                  if (res.message == 'delete') {
+                    this.profilesService.userManagerInfo.update(() => null)
+                    this.dialogsService.openDialogPositive('Successfully, the process has done');
+                  }
+                },
+                error: (err: any) => {
+                  console.log(err);
+                  this.dialogsService.openDialogNegative(err.error.message);
+                },
+              });
+            } else {
+              this.dialogsService.openDialogNegative(
+                `current manager has the suspended leave you applied for.\nIf you want to change your manager, cancel your leave`,
+              );
+            }
+          },
+          (err: any) => { },
+        );
+      }
+    });
+  }
 
   openDialogFindMyManager() {
     if (this.userCompanyInfo()?.status == 'pending'
@@ -138,11 +185,10 @@ export class DashboardComponent {
       this.dialogsService.openDialogNegative('Please, register a company first.');
       return
     }
-    const dialogRef = this.dialog.open(ConnectCompanyDialogComponent, {
+    const dialogRef = this.dialog.open(ConnectManagerDialogComponentComponent, {
       data: {
         company_id: this.userCompanyInfo()._id,
       },
-
     });
     return dialogRef.afterClosed();
   }

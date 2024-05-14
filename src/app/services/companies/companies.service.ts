@@ -27,4 +27,9 @@ export class CompaniesService {
       )
     );
   }
+
+  deleteCompanyRequest(id: any) {
+    return this.http.delete(this.baseUrl + '/leaves/deleteCompanyRequest/' + id)
+
+  }
 }

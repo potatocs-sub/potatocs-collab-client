@@ -17,8 +17,8 @@ export interface NavigationSubheading {
   type: 'subheading';
   label: string;
   children: Array<NavigationLink | NavigationDropdown | NavigationCreateSpace>;
-  isAdmin?: boolean;
-  isNsAdmin?: boolean
+  isManager?: boolean
+
 }
 
 /**
@@ -29,8 +29,8 @@ export interface NavigationDropdown {
   label: string;
   icon?: string;
   children: Array<NavigationLink | NavigationDropdown>;
-  isAdmin?: boolean;
-  isNsAdmin?: boolean
+  isManager?: boolean
+
 
 }
 
@@ -44,8 +44,8 @@ export interface NavigationLink {
   label: string;
   icon?: string;
   routerLinkActive?: { exact: boolean };
-  isAdmin?: boolean;
-  isNsAdmin?: boolean
+  isManager?: boolean
+
   isReplacementDay?: boolean;
 
   isSuperManager?: boolean;
@@ -61,9 +61,11 @@ export interface NavigationCreateSpace {
   label: string;
   icon?: string;
   // routerLinkActive?: { exact: boolean };
-  isAdmin?: boolean;
+  isManager?: boolean
+
 }
 
 export interface SidenavViewPolicy {
-  isAdmin?: boolean;
+  isManager?: boolean
+
 }

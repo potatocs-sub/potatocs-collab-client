@@ -1,13 +1,38 @@
-<!-- 소제목 -->
-<!-- <ng-container *ngIf="
-    isSubheading(item) &&
-    (item.label !== 'Contract' ||
-      !userInfo().isManager ||
-      userInfo().isSuperManager)
-  " class="cursor-pointer w-full box-border">
-  <div class="box-border">{{ item.label }}</div>
-  <sidenav-item class="relative" *ngFor="let subItem of item.children" [item]="subItem" [level]="0"></sidenav-item>
-</ng-container> -->
+<!-- angular flex:
+      flex layout: https://github.com/angular/flex-layout
+      fxLayout: https://github.com/angular/flex-layout/wiki/fxLayout-API
+      fxLayoutAlign: https://github.com/angular/flex-layout/wiki/fxLayoutAlign-API
+      fxFlex: https://github.com/angular/flex-layout/wiki/fxFlex-API -->
+
+<!-- route link -->
+<div *ngIf="isLink(item)">
+  <a [routerLinkActiveOptions]="item.routerLinkActive || { exact: false }" [routerLink]="item.route" class="item"
+    fxLayout="row" fxLayoutAlign="start center" matRipple routerLinkActive="active">
+    <mat-icon *ngIf="level === 0" class="item-icon" fxFlex="none"> {{item.icon}} </mat-icon>
+    <span class="item-label" fxFlex="auto">{{ item.label }}</span>
+  </a>
+</div>
+
+<!-- drop down menu -->
+<ng-container *ngIf="isDropdown(item)">
+  <div>
+    <div (click)="toggleOpen()" [class.active]="isOpen || isActive" [class.open]="isOpen" class="item" fxLayout="row"
+      fxLayoutAlign="start center" matRipple>
+      <mat-icon *ngIf="level === 0" class="item-icon" fxFlex="none">{{item.icon}}</mat-icon>
+      <span class="item-label" fxFlex="auto">{{ item.label }}</span>
+      <!-- arrow icon -->
+      <mat-icon class="item-dropdown-icon" fxFlex="none">keyboard_arrow_right</mat-icon>
+    </div>
+
+    <!-- dropdown menu 하위 list: animation으로 처리 -->
+    <div [@dropdown]="isOpen?'open':'closed'" class="item-dropdown">
+      <!-- kje: recursive component (dropdown menu의 하위 children)
+      https://netbasal.com/recursion-in-angular-components-1cd636269b12 -->
+      <app-side-nav-item *ngFor="let subItem of item.children" [item]="subItem" [user]="user"
+        [level]="level + 1"></app-side-nav-item>
+    </div>
+  </div>
+</ng-container>
 
 
 <!-- Subheading menu -->
@@ -15,42 +40,4 @@
   <div class="subheading mat-caption">{{ item.label }}</div>
   <app-side-nav-item *ngFor="let subItem of item.children" [item]="subItem" [user]="user"
     [level]="0"></app-side-nav-item>
-</ng-container>
-
-<!-- <ng-container class="cursor-pointer w-full box-border">
-  <div class="box-border text-white">{{ item.label }}</div>
-  <app-side-nav-item class="relative" *ngFor="let subItem of item.children" [item]="subItem"
-    [level]="0"></app-side-nav-item>
-</ng-container> -->
-
-<!-- 링크 -->
-
-<ng-container *ngIf="isLink(item)">
-  <!-- class="item" -->
-  <a matRipple (click)="item.label === '로그아웃' ? signOut() : null"
-    [routerLinkActiveOptions]="item.routerLinkActive || { exact: false }" [routerLink]="item.route"
-    class="item cursor-pointer w-full flex items-center h-[70px] rounded-lg px-5 box-border hover:#F4AF1B" matRipple
-    routerLinkActive="active">
-    <mat-icon class="mr-5 item-icon">{{ item.icon }}</mat-icon>
-    <span class="font-medium">{{ item.label }}</span>
-  </a>
-</ng-container>
-
-
-<!-- 드롭다운 -->
-<ng-container *ngIf="isDropdown(item)">
-  <div>
-    <!-- class="item" -->
-    <div matRipple
-      class="item cursor-pointer w-full flex items-center h-[70px] rounded-lg px-5 box-border hover:bg-white  "
-      (click)="toggleOpen()" [class.active]="isOpen || isActive" [class.open]="isOpen">
-      <mat-icon class="mr-5 text-white">{{ item.icon }}</mat-icon>
-      <span class="font-medium text-white">{{ item.label }}</span>
-    </div>
-
-    <div [@dropdown]="isOpen ? 'open' : 'closed'" class="overflow-hidden">
-      <app-side-nav-item class="relative" *ngFor="let subItem of item.children" [item]="subItem"
-        [level]="level + 1"></app-side-nav-item>
-    </div>
-  </div>
 </ng-container>

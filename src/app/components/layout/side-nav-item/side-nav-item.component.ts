@@ -28,12 +28,12 @@ export class SideNavItemComponent {
   @Input() item!: any;
 
   //레벨, 얼마나 깊이 들어왔는지 파악하기 위함
-  @Input() level: number = 0;
+  @Input() level!: number;
+  @Input() user: boolean = false;
 
   //열려있는지 파악하기 위함
   isOpen: boolean = false;
   isActive: boolean = false;
-  @Input() user: boolean = false;
 
   // 의존성 주입
   router = inject(Router)

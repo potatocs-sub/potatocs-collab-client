@@ -8,6 +8,23 @@
   font-size: 18px;
 }
 
+.toolbar-profile-img {
+  width: 35px;
+  border: 0;
+  height: auto;
+  border-radius: 100%;
+  margin-right: 15px;
+}
+
+.profile-img {
+  width: 40px;
+  border: 0;
+  height: auto;
+  border-radius: 100%;
+  // right:0;
+  margin-right: 15px;
+}
+
 .example-spacer {
   flex: 1 1 auto;
 }
@@ -23,6 +40,7 @@
   overflow: initial !important;
   border-radius: 4px;
   outline: 0;
+  min-height: initial !important;
 }
 
 // Notification CSS
@@ -130,25 +148,49 @@
   color: rgba(59, 130, 246, .5);
 }
 
-.company-request {
-  color: rgba(75, 246, 59, 0.5);
+.leave-request-approve {
+  color: rgba(59, 130, 246, .5);
 }
 
-.company-res-y {
-  color: rgba(59, 62, 246, 0.5);
-}
-
-.company-res-n {
+.leave-request-reject {
   color: rgba(246, 59, 59, 0.5);
 }
 
-.leave-res-y {
+.request-confirm-rd {
+  color: rgba(66, 62, 255, 0.5)
+}
+
+.rd-request-approve {
+  color: rgba(59, 130, 246, .5);
+}
+
+.rd-request-reject {
+  color: rgba(246, 59, 59, 0.5);
+}
+
+.space-invite {
   color: rgba(59, 62, 246, 0.5);
 }
 
-.leave-res-n {
+.space-exported {
   color: rgba(246, 59, 59, 0.5);
 }
+
+.meeting-created {
+  color: rgba(31, 175, 18, 0.5);
+}
+
+
+// .company-request {
+// 	color:rgba(75, 246, 59, 0.5);
+// }
+
+// .company-res-y {
+// 	color:rgba(59, 62, 246, 0.5);
+// }
+// .company-res-n {
+// 	color:rgba(246, 59, 59, 0.5);
+// }
 
 .icon-box-2 {
   color: darkgrey;
@@ -161,5 +203,20 @@
 
   button {
     font-size: 14px;
+  }
+}
+
+.newNotification {
+  background-color: rgb(253, 248, 220)
+}
+
+// .isReadFalse{
+// 	background-color:#00154F
+// }
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media screen and (max-width: 780px) {
+  .tb-color {
+    width: 100%;
   }
 }

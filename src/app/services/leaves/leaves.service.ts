@@ -15,6 +15,11 @@ export class LeavesService {
   constructor() { }
 
   getMyLeaveStatus() {
-    return this.http.get(this.baseUrl + '/leave/my-status');
+    return this.http.get(this.baseUrl + '/leaves/my-status');
+  }
+
+  // dashboard 에서 매니저 지울때 pending 중인 leave 있는지 체크
+  checkPendingLeave() {
+    return this.http.get(this.baseUrl + '/leaves/checkPendingLeave');
   }
 }

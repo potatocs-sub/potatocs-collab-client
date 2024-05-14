@@ -146,11 +146,11 @@
                 Manager
               </div>
               <span class="example-spacer"></span>
-              <mat-icon class="closeMark" (click)="deleteManager(manager.manager_id)"
-                *ngIf="manager != null">close</mat-icon>
+              <mat-icon class="closeMark" (click)="deleteManager(userManagerInfo()?.manager_id)"
+                *ngIf="userManagerInfo() != null">close</mat-icon>
             </div>
 
-            <div *ngIf="manager == null; else showManagerInfo">
+            <div *ngIf="userManagerInfo()  == null; else showManagerInfo">
               <div fxLayout="row" fxLayoutAlign="center">
                 <div>
                   <mat-icon class="addMark" (click)="openDialogFindMyManager()">add</mat-icon>
@@ -165,12 +165,12 @@
                 </div>
                 <div fxLayout="column" fxLayoutAlign="center default">
                   <div class="addDesc">
-                    <span class="descSpan">Manager Name :</span> {{ manager?.name }}
+                    <span class="descSpan">Manager Name :</span> {{ userManagerInfo()?.name }}
                   </div>
                   <div class="addDesc">
-                    <span class="descSpan">Manager Email :</span> {{ manager?.email }}
+                    <span class="descSpan">Manager Email :</span> {{ userManagerInfo()?.email }}
                   </div>
-                  <div *ngIf="manager?.accepted === false; else statusPositive">
+                  <div *ngIf="userManagerInfo()?.accepted === false; else statusPositive">
                     <div class="addDesc">
                       <span class="descSpan">status :</span> Pending
                     </div>

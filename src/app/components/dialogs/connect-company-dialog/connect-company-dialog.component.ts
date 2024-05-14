@@ -18,7 +18,7 @@ import { CompaniesService } from '../../../services/companies/companies.service'
 })
 export class ConnectCompanyDialogComponent {
 
-  public dialogRef!: MatDialogRef<ConnectCompanyDialogComponent>;
+  public dialogRef = inject(MatDialogRef<ConnectCompanyDialogComponent>);
   public data: any = Inject(MAT_DIALOG_DATA)
   addCodeInput = new FormControl('');
   addCode = ''; // 검색어.

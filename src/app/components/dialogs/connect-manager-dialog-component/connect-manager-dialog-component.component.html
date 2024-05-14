@@ -3,7 +3,7 @@
     <div fxLayout="row">
       <div class="mainTitle">Find My Manager</div>
     </div>
-    <form (ngSubmit)="f.form.valid && findManager()" #f="ngForm" novalidate>
+    <form [formGroup]="emailForm" (ngSubmit)="emailForm.valid && findManager()">
       <div class="selectContainer">
         <div class="selectBox">
           <span class="selectLabel">
@@ -12,13 +12,19 @@
           <mat-form-field color="accent" appearance="outline" style="min-width:300px;" class="selectInput">
             <mat-label>E-MAIL</mat-label>
             <!-- https://stackoverflow.com/questions/5601647/html5-email-input-pattern-attribute -->
-            <input type="email" spellcheck="false" matInput name="id" #id="ngModel" [(ngModel)]="searchStr"
+            <input type="email" spellcheck="false" matInput name="id" formControlName="email"
               pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required>
-            <mat-error *ngIf="f.submitted && id.hasError('required')">an e-mail is required</mat-error>
-            <mat-error *ngIf="f.submitted && id.hasError('pattern')">Please input a correct e-mail!
+            @if(emailForm.controls['email'].errors?.['required']){
+            <mat-error>an e-mail is required</mat-error>
+            }
+            @if(emailForm.controls['email'].errors?.['pattern']){
+            <mat-error>Please input a correct e-mail!
             </mat-error>
+            }
+
+
           </mat-form-field>
-          <button mat-raised-button color="primary" class="submit-button" [disabled]="!searchBtn">search</button>
+          <button mat-raised-button color="primary" class="submit-button" [disabled]="!emailForm.valid">search</button>
         </div>
       </div>
     </form>

@@ -37,6 +37,21 @@ export const routes: Routes = [
           import('./pages/dashboard/dashboard.component').then((m) => m.DashboardComponent),
       },
       {
+        path: 'leaves',
+        loadComponent: () =>
+          import('./pages/dashboard/dashboard.component').then((m) => m.DashboardComponent),
+      },
+      {
+        path: 'employees',
+        loadChildren: () =>
+          import('./pages/employees/routes').then((m) => m.EMPLOYEES_ROUTES),
+      },
+      {
+        path: 'documents',
+        loadComponent: () =>
+          import('./pages/dashboard/dashboard.component').then((m) => m.DashboardComponent),
+      },
+      {
         path: '',
         redirectTo: 'dashboard',
         pathMatch: 'full',

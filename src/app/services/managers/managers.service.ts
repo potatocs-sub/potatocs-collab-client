@@ -16,17 +16,16 @@ export class ManagersService {
 
   constructor() { }
   findManager(sendData: any) {
-    return this.http.get(this.baseUrl + '/leave/find-manager', { params: sendData });
+    return this.http.get(this.baseUrl + '/leaves/find-manager', { params: sendData });
   }
 
   addManager(_id: any) {
     console.log(_id);
-    return this.http.post(this.baseUrl + '/leave/add-manager', { manager_id: _id }).pipe(
-      shareReplay(1),
+    return this.http.post(this.baseUrl + '/leaves/add-manager', { manager_id: _id }).pipe(
       tap(
         (res: any) => {
           console.log(res);
-          this.userManagerInfo.update(res.getManager);
+          this.userManagerInfo.update(() => res.getManager);
           return res.message;
         }
       )
@@ -57,15 +56,7 @@ export class ManagersService {
   //   );
   // }
 
-  // deletePending(id) {
-  //   return this.http.delete('/api/v1/leave/delete-my-manager/' + id).pipe(
-  //     shareReplay(1),
-  //     tap(
-  //       (res: any) => {
-  //         this.pendingFindManagerStorageService.updatePendingRequest(res.pendingData);
-  //         return res.message;
-  //       }
-  //     )
-  //   );
-  // }
+  deletePending(id: any) {
+    return this.http.delete(this.baseUrl + '/leaves/delete-my-manager/' + id)
+  }
 }

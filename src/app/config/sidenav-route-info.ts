@@ -8,133 +8,119 @@ export const sidenavRouteInfo: NavigationItem[] = [
     label: 'Dashboard',
     route: '/main',
     icon: 'dashboard',
-    isNsAdmin: true
+    isManager: false,
+    isReplacementDay: false,
   },
-  // company
+  // project
   {
     type: 'subheading',
-    label: 'CORPORATION',
+    label: 'project',
     children: [
       {
-        type: 'link',
-        label: 'Company List',
-        route: '/companies',
-        icon: 'update',
-        isNsAdmin: true
+        type: 'click',
+        label: 'Create space',
+        icon: 'create_new_folder'
       },
       {
-        type: 'link',
-        label: 'Admin List',
-        route: '/admins',
+        type: 'dropdown',
+        label: 'Space',
+        icon: 'library_books',
+        isManager: false,
+        children: [
+
+        ]
+      }
+    ]
+  },
+
+
+  // Leave
+  {
+    type: 'subheading',
+    label: 'Leave ',
+    children: [
+      {
+        type: 'dropdown',
+        label: 'Leave Management',
+        icon: 'event_available',
+        isManager: false,
+        children: [
+          {
+            type: 'link',
+            label: 'My Leave Status',
+            route: '/leave/my-status',
+            icon: 'update',
+            isManager: false,
+            isReplacementDay: false,
+          },
+          {
+            type: 'link',
+            label: 'Leave Request',
+            route: '/leave/leave-request-list',
+            icon: 'update',
+            isManager: false,
+            isReplacementDay: false,
+          },
+          {
+            type: 'link',
+            label: 'Replacement Day Request',
+            route: '/leave/rd-request-list',
+            icon: 'update',
+            isManager: false,
+            isReplacementDay: true,
+          },
+        ]
+      },
+      {
+        type: 'dropdown',
+        label: 'Employee Management',
         icon: 'groups',
-        isNsAdmin: true
-      },
+        isManager: true,
+        children: [
+          {
+            type: 'link',
+            label: 'Employee Leave Status',
+            route: '/employee-mngmt/employee-leave-status',
+            icon: 'update',
+            isManager: true,
+            isReplacementDay: false,
+          },
+          {
+            type: 'link',
+            label: 'Employee List',
+            route: '/employee-mngmt/employee-list',
+            icon: 'update',
+            isManager: true,
+            isReplacementDay: false,
+          },
+          {
+            type: 'link',
+            label: 'Employee Leave Request',
+            route: '/approval-mngmt/leave-request',
+            icon: 'update',
+            isManager: true,
+            isReplacementDay: false,
+          },
+          {
+            type: 'link',
+            label: 'RD Confirming Request',
+            route: '/employee-mngmt/employee-rd-request',
+            icon: 'update',
+            isManager: true,
+            isReplacementDay: true,
+          },
+          {
+            type: 'link',
+            label: 'Employee Register Request',
+            route: '/employees/manager-connection-requests',
+            icon: 'update',
+            isManager: true,
+            isReplacementDay: false,
+          },
+        ]
+      }
     ]
   },
-  // National Holiday Management
-  {
-    type: 'subheading',
-    label: 'HOLIDAY MANAGEMENT',
-    children: [
-      {
-        type: 'link',
-        label: 'Country List',
-        route: '/countries',
-        icon: 'holiday_village',
-        isNsAdmin: true
-      },
-    ]
-  },
-
-  // // project
-  // {
-  // 	type: 'subheading',
-  // 	label: 'project',
-  // 	children: [
-  // 	{
-  // 		type: 'click',
-  // 		label: 'Create space',
-  // 		icon: 'create_new_folder'
-  // 	},
-  // 	{
-  // 		type: 'dropdown',
-  // 		label: 'Space',
-  // 		icon: 'library_books',
-  // 		isManager: false,
-  // 		children: [
-
-  // 		]
-  // 	}
-  // 	]
-  // },
-
-
-  // // Leave
-  // {
-  // 	type: 'subheading',
-  // 	label: 'Leave ',
-  // 	children: [
-  // 	{
-  // 		type: 'dropdown',
-  // 		label: 'Leave Management',
-  // 		icon: 'event_available',
-  // 		isManager: false,
-  // 		children: [
-  // 		{
-  // 			type: 'link',
-  // 			label: 'My Leave Status',
-  // 			route: '/leave/my-status',
-  // 			icon: 'update',
-  // 			isManager: false
-  // 		},
-  // 		{
-  // 			type: 'link',
-  // 			label: 'Request Leave',
-  // 			route: '/leave/request-leave-list',
-  // 			icon: 'update',
-  // 			isManager: false
-  // 		},
-  // 		]
-  // 	},
-
-  // 	{
-  // 		type: 'dropdown',
-  // 		label: 'Employee Management',
-  // 		icon: 'groups',
-  // 		isManager: true,
-  // 		children: [  
-  // 		{
-  // 			type: 'link',
-  // 			label: 'Employee Leave Status',
-  // 			route: '/employee-mngmt/employee-leave-status',
-  // 			icon: 'update',
-  // 			isManager: true
-  // 		},
-  // 		{
-  // 			type: 'link',
-  // 			label: 'Employee List',
-  // 			route: '/employee-mngmt/employee-list',
-  // 			icon: 'update',
-  // 			isManager: true
-  // 		},
-  // 		{
-  // 			type: 'link',
-  // 			label: 'Employee Leave Request',
-  // 			route: '/approval-mngmt/leave-request',
-  // 			icon: 'update',
-  // 			isManager: true
-  // 		},
-  // 		{
-  // 			type: 'link',
-  // 			label: 'Employee Register Request',
-  // 			route: '/employee-mngmt/register-request',
-  // 			icon: 'update',
-  // 			isManager: true
-  // 		},
-  // 		]
-  // 	},
-  // 	]
-  // },
 
 
 ];
