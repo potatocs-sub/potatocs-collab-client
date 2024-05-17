@@ -40,8 +40,8 @@ export const routes: Routes = [
       },
       {
         path: 'leaves',
-        loadComponent: () =>
-          import('./pages/dashboard/dashboard.component').then((m) => m.DashboardComponent),
+        loadChildren: () =>
+          import('./pages/leaves/routes').then((m) => m.LEAVES_ROUTES),
       },
       {
         path: 'employees',

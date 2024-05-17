@@ -56,7 +56,7 @@ export const sidenavRouteInfo: NavigationItem[] = [
           {
             type: 'link',
             label: 'Leave Request',
-            route: '/leave/leave-request-list',
+            route: '/leaves/requests',
             icon: 'update',
             isManager: false,
             isReplacementDay: false,

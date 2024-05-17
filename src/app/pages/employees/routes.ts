@@ -14,4 +14,8 @@ export const EMPLOYEES_ROUTES: Route[] = [
     path: 'manager-connection-requests', // 회사 공휴일 or 기념일
     loadComponent: () => ManagersConnectionComponent,
   },
+  {
+    path: 'leave-requests', // 회사 공휴일 or 기념일
+    loadComponent: () => ManagersConnectionComponent,
+  },
 ];

@@ -42,6 +42,9 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSliderModule } from '@angular/material/slider';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+
+
 @NgModule({
   exports: [
     FlexLayoutModule,
@@ -83,7 +86,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     MatRadioModule,
     MatProgressBarModule,
     MatSlideToggleModule,
-    MatSliderModule
+    MatSliderModule,
+    MatSnackBarModule
   ],
 })
 export class MaterialsModule { }
