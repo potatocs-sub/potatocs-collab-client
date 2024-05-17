@@ -1,13 +1,15 @@
 import { Routes } from '@angular/router';
 import { LayoutComponent } from './components/layout/layout.component';
 import { SignInComponent } from './pages/auth/sign-in/sign-in.component';
+import { IndexComponent } from './pages/index/index.component';
+import { isLoggedInGuard } from './guards/is-logged-in.guard';
 
 export const routes: Routes = [
-  // {
-  // path: '',
-  // component: IndexComponent,
-  // canActivate: [signInGuard]
-  // },
+  {
+    path: '',
+    component: IndexComponent,
+    canActivate: [isLoggedInGuard]
+  },
   {
     path: 'sign-in',
     component: SignInComponent,
@@ -32,7 +34,7 @@ export const routes: Routes = [
     canActivate: [],
     children: [
       {
-        path: 'dashboard',
+        path: 'main',
         loadComponent: () =>
           import('./pages/dashboard/dashboard.component').then((m) => m.DashboardComponent),
       },

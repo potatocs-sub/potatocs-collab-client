@@ -88,7 +88,7 @@ export const sidenavRouteInfo: NavigationItem[] = [
           {
             type: 'link',
             label: 'Employee List',
-            route: '/employee-mngmt/employee-list',
+            route: '/employees/',
             icon: 'update',
             isManager: true,
             isReplacementDay: false,

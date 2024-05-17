@@ -5,7 +5,7 @@ import { Component, WritableSignal, effect, inject } from '@angular/core';
 import { MaterialsModule } from '../../../materials/materials.module';
 import { SideNavService } from '../../../stores/side-nav/side-nav.service';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-toolbar',
@@ -79,7 +79,7 @@ export class ToolbarComponent {
   ];
 
   dialogService = inject(DialogService)
-
+  router = inject(Router)
   sideNavService = inject(SideNavService)
   authService = inject(AuthService)
   profilesService = inject(ProfilesService)
@@ -110,5 +110,10 @@ export class ToolbarComponent {
 
   openSidenav() {
     this.isSideNavOpen.update(() => true);
+  }
+
+  logOut() {
+    this.authService.logOut();
+    this.router.navigate(['']);
   }
 }
