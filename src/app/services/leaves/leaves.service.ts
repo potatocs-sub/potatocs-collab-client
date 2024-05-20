@@ -15,7 +15,7 @@ export class LeavesService {
 
   constructor() { }
 
-  getMyLeaveStatus() {
+  getMyLeavesStatus() {
     return this.http.get(this.baseUrl + '/leaves/my-status');
   }
 
@@ -44,7 +44,7 @@ export class LeavesService {
   }
 
   getNationHolidays(nationId: any) {
-    return this.http.get(this.baseUrl + '/leaves/getNationList', { params: nationId })
+    return this.http.get(this.baseUrl + '/leaves/getNationList', { params: { id: nationId } })
 
   }
 }
