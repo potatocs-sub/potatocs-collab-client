@@ -14,9 +14,7 @@
               </div>
             </div>
             <div class="rightTable" fxFlex>
-              <div>
-                {{userProfileInfo()?.name}}
-              </div>
+              <div>{{ userProfileInfo()?.name }}</div>
             </div>
           </div>
           <div class="lineDivider" fxLayout="row wrap">
@@ -30,26 +28,28 @@
                 <div fxLayout="column nowrap" fxLayoutGap="10px">
                   <div>
                     <span>Annual Leave:
-                      <em class="availableDays">{{myLeaves()?.annual_leave - myLeaves()?.used_annual_leave}}</em> Day(s)
+                      <em class="availableDays">{{ myLeaves()?.annual_leave - myLeaves()?.used_annual_leave }}</em>
+                      Day(s)
                     </span>
                   </div>
                   <div *ngIf="userCompanyInfo()?.isRollover">
                     <span>Rollover:
-                      <em class="availableDays">{{myLeaves()?.rollover - myLeaves()?.used_rollover}}</em> Day(s)
+                      <em class="availableDays">{{ myLeaves()?.rollover - myLeaves()?.used_rollover }}</em>
+                      Day(s)
                     </span>
-                    <span>
-                      ( available period : {{ rolloverMinDate }} ~ {{ rolloverMaxDate }} )
-                    </span>
+                    <span>(available period : {{ rolloverMinDate }} ~ {{ rolloverMaxDate }})</span>
                   </div>
                   <div>
                     <span>Sick Leave:
-                      <em class="availableDays">{{myLeaves()?.sick_leave - myLeaves()?.used_sick_leave}}</em> Day(s)
+                      <em class="availableDays">{{ myLeaves()?.sick_leave - myLeaves()?.used_sick_leave }}</em>
+                      Day(s)
                     </span>
                   </div>
                   <div>
                     <span>Replacement Day:
                       <em class="availableDays">{{ (myLeaves()?.replacement_leave || 0) -
-                        (myLeaves()?.used_replacement_leave || 0) }}</em> Day(s)
+                        (myLeaves()?.used_replacement_leave || 0) }}</em>
+                      Day(s)
                     </span>
                   </div>
                 </div>
@@ -58,9 +58,7 @@
           </div>
           <div class="lineDivider" fxLayout="row wrap">
             <div class="leftTable" fxFlex="30" fxFlex.gt-md="20">
-              <div>
-                <span>Type</span>
-              </div>
+              <div><span>Type</span></div>
             </div>
             <div class="rightTable" fxFlex>
               <div>
@@ -70,7 +68,6 @@
                     <mat-option value="annual_leave">Annual Leave</mat-option>
                     <mat-option *ngIf="isRollover" value="rollover">Rollover</mat-option>
                     <mat-option value="sick_leave">Sick Leave</mat-option>
-                    <!-- <mat-option value="replacement_leave">Replacement Day</mat-option> -->
                   </mat-select>
                 </mat-form-field>
 
@@ -86,9 +83,7 @@
           </div>
           <div class="lineDivider" fxLayout="row wrap">
             <div class="leftTable" fxFlex="30" fxFlex.gt-md="20">
-              <div>
-                <span>Period</span>
-              </div>
+              <div><span>Period</span></div>
             </div>
             <div class="rightTable" fxFlex>
               <div>

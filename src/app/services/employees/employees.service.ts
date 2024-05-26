@@ -30,7 +30,7 @@ export class EmployeesService {
 
   // 매니저가 관리 중인 직원들 리스트
   getMyEmployeeList(active: string, direction: string, pageIndex: number, pageSize: number) {
-    return this.http.get(this.baseUrl + '/leaves/employees', { params: { active, direction, pageIndex, pageSize } });
+    return this.http.get(this.baseUrl + '/employees', { params: { active, direction, pageIndex, pageSize } });
   }
 
   getEmployeeInfo(id: any) {

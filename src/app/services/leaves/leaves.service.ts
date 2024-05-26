@@ -47,4 +47,13 @@ export class LeavesService {
     return this.http.get(this.baseUrl + '/leaves/getNationList', { params: { id: nationId } })
 
   }
+
+  requestLeave(leaveData: any) {
+    return this.http.post(this.baseUrl + '/leaves', leaveData)
+  }
+
+  cancelMyRequestLeave(data: any) {
+    return this.http.put(this.baseUrl + '/leaves/cancel-my-request-leave', data)
+  }
+
 }

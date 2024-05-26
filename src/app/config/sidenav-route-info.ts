@@ -79,16 +79,16 @@ export const sidenavRouteInfo: NavigationItem[] = [
         children: [
           {
             type: 'link',
-            label: 'Employee Leave Status',
-            route: '/employee-mngmt/employee-leave-status',
+            label: 'Employee List',
+            route: '/employees/list',
             icon: 'update',
             isManager: true,
             isReplacementDay: false,
           },
           {
             type: 'link',
-            label: 'Employee List',
-            route: '/employees/',
+            label: 'Employee Leave Status',
+            route: '/employees/leaves/status',
             icon: 'update',
             isManager: true,
             isReplacementDay: false,
@@ -96,7 +96,7 @@ export const sidenavRouteInfo: NavigationItem[] = [
           {
             type: 'link',
             label: 'Employee Leave Request',
-            route: '/approval-mngmt/leave-request',
+            route: '/employees/leaves/requests',
             icon: 'update',
             isManager: true,
             isReplacementDay: false,
@@ -104,7 +104,7 @@ export const sidenavRouteInfo: NavigationItem[] = [
           {
             type: 'link',
             label: 'RD Confirming Request',
-            route: '/employee-mngmt/employee-rd-request',
+            route: '/employees/replacement-days/requests',
             icon: 'update',
             isManager: true,
             isReplacementDay: true,
@@ -112,7 +112,7 @@ export const sidenavRouteInfo: NavigationItem[] = [
           {
             type: 'link',
             label: 'Employee Register Request',
-            route: '/employees/manager-connection-requests',
+            route: '/employees/registration/requests',
             icon: 'update',
             isManager: true,
             isReplacementDay: false,

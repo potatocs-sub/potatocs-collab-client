@@ -7,6 +7,7 @@ import { LeavesService } from '../../../../services/leaves/leaves.service';
 import { CommonService } from '../../../../services/common/common.service';
 import { DialogService } from '../../../../stores/dialog/dialog.service';
 import moment from 'moment';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-leaves-requests-add',
@@ -18,13 +19,14 @@ import moment from 'moment';
 export class LeavesRequestsAddComponent {
 
   fb = inject(FormBuilder)
+  router = inject(Router)
   profilesService = inject(ProfilesService)
   leavesService = inject(LeavesService)
   commonService = inject(CommonService)
   dialogsService = inject(DialogService)
+
   userProfileInfo: WritableSignal<any> = this.profilesService.userProfileInfo
   userCompanyInfo: WritableSignal<any> = this.profilesService.userCompanyInfo
-
   myLeaves: WritableSignal<any | null> = signal(null)
 
   employeeLeaveForm: FormGroup = this.fb.group({
@@ -34,7 +36,15 @@ export class LeavesRequestsAddComponent {
     leave_end_date: ['', [Validators.required]],
     leave_reason: ['', [Validators.required]],
   });
-  holidayList: Array<any> = [];
+
+  holidayList: string[] = [];
+  rolloverMinDate: any;
+  rolloverMaxDate: any;
+  minDate: Date | null = null;
+  maxDate: Date | null = null;
+  isRollover = false;
+  isHalf = false;
+  leaveDuration: any;
 
   days: any;
   start_date_sec: any;
@@ -44,152 +54,118 @@ export class LeavesRequestsAddComponent {
   weeks: any;
   leaveDays: any;
 
-  rolloverMinDate: any;
-  rolloverMaxDate: any;
-  minDate: Date | null = null; // rollover 제한
-  maxDate: Date | null = null; // rollover 제한
-  isRollover = false; // rollover 제한
+
   myInfo: any;
   // 원하는 총 휴가 기간
-  leaveDuration: any;
-  isHalf: boolean = false;
+
   leaveRequestData: any;
   leaveInfo: any;
   company: any;
   user: any;
+
+
   holidayDateFilter = (d: Date | null): boolean => {
-    // Check if the date is null or undefined
-    if (d === null) {
-      return false;
-    }
-
+    if (!d) return false;
     const day = d.getDay();
-
-    // Check if the date is a weekend day
-    if (day === 0 || day === 6) {
-      return false;
-    }
-
-    // Check if the date is a holiday
     const formattedDate = moment(d);
-    const isHoliday = this.holidayList.some((holiday: string) => moment(holiday).isSame(formattedDate, 'day'));
-
-    // Return false if it's a holiday, otherwise true
-    return !isHoliday;
+    const isHoliday = this.holidayList.some((holiday) => moment(holiday).isSame(formattedDate, 'day'));
+    return day !== 0 && day !== 6 && !isHoliday;
   };
 
 
   constructor() {
     effect(() => {
-      if (this.userProfileInfo()?.location) {
-        this.leavesService.getNationHolidays(this.userProfileInfo().location).subscribe({
+      const profileInfo = this.userProfileInfo();
+      const companyInfo = this.userCompanyInfo();
+
+      if (profileInfo?.location) {
+        this.leavesService.getNationHolidays(profileInfo.location).subscribe({
           next: (res: any) => {
-            this.holidayList = [...this.holidayList, ...res.nation[0]?.countryHoliday.map((h: any) => {
-              const localDate = moment.utc(h.holidayDate).local().format('YYYY-MM-DD');
-              return localDate;
-            })]
-            console.log(this.holidayList)
+            this.holidayList = [
+              ...this.holidayList,
+              ...res.nation[0]?.countryHoliday.map((h: any) =>
+                moment.utc(h.holidayDate).local().format('YYYY-MM-DD')
+              ),
+            ];
           },
-          error: () => { }
-        })
+          error: () => { },
+        });
       }
 
-      if (this.userCompanyInfo()) {
-        this.holidayList = [...this.holidayList, ...this.userCompanyInfo()?.company_holiday.map((h: any) => {
-          const localDate = moment.utc(h.ch_date).local().format('YYYY-MM-DD');
-          return localDate;
-        })];
-        console.log(this.holidayList)
+      if (companyInfo) {
+        this.holidayList = [
+          ...this.holidayList,
+          ...companyInfo.company_holiday.map((h: any) =>
+            moment.utc(h.ch_date).local().format('YYYY-MM-DD')
+          ),
+        ];
+
         this.leavesService.getMyLeavesStatus().subscribe({
-          next: (res: any) => {
-            console.log(res)
+          next: (res) => {
             this.myLeaves.set(res);
           },
-          error: (err: any) => {
-
-          }
-        })
+          error: () => { },
+        });
       }
-
-    })
-
-
-
+    });
   }
 
   ngAfterViewInit() {
 
   }
 
+  // 휴가 분류 변경 시 호출되는 함수
   classificationChange(value: any) {
-
-
-    if (value == 'rollover') {
-      this.minDate = this.rolloverMinDate;
-      this.maxDate = this.rolloverMaxDate;
+    if (value === 'rollover') {
+      this.minDate = this.rolloverMinDate; // 롤오버 최소 날짜 설정
+      this.maxDate = this.rolloverMaxDate; // 롤오버 최대 날짜 설정
     }
-    // this.employeeLeaveForm.get('leaveType2').setValue('');
-    this.datePickDisabled();
-    this.datePickReset();
+    this.datePickDisabled(); // 날짜 선택 비활성화
+    this.datePickReset(); // 날짜 선택 초기화
   }
 
-  // 연차, 반차 변화시 기간 설정 달력 disable/enable
+  // 휴가 단위 변경 시 호출되는 함수 (연차, 반차)
   typeSecondChange(value: any) {
-    if (value == 'half') {
-      this.employeeLeaveForm.controls['leave_start_date'].enable();
-      this.employeeLeaveForm.controls['leave_end_date'].disable();
-
-      this.datePickReset();
-      this.isHalf = true;
-    } else {
-      this.employeeLeaveForm.controls['leave_start_date'].enable();
-      this.employeeLeaveForm.controls['leave_end_date'].enable();
-
-      this.datePickReset();
-      this.isHalf = false;
+    if (value === 'half') { // 반차인 경우
+      this.employeeLeaveForm.controls['leave_start_date'].enable(); // 시작 날짜 활성화
+      this.employeeLeaveForm.controls['leave_end_date'].disable(); // 종료 날짜 비활성화
+      this.isHalf = true; // 반차 설정
+    } else { // 하루인 경우
+      this.employeeLeaveForm.controls['leave_start_date'].enable(); // 시작 날짜 활성화
+      this.employeeLeaveForm.controls['leave_end_date'].enable(); // 종료 날짜 활성화
+      this.isHalf = false; // 하루 설정
     }
+    this.datePickReset(); // 날짜 선택 초기화
   }
 
-  // 날짜 입력 시 소모되는 일 체크
+  // 날짜 변경 시 호출되는 함수
   checkDateChange(value: any) {
-    // console.log(value);
-
     const formValue = this.employeeLeaveForm.value;
     const start_date = formValue.leave_start_date;
     const end_date = formValue.leave_end_date;
     const currentClassification = formValue.leaveType1;
     const matchedLeaveDay = this.availableLeaveCount(currentClassification);
 
-    if (this.checkEmpYear(start_date, end_date)) {
-      if (this.isHalf) {
+    if (this.checkEmpYear(start_date, end_date)) { // 근속 년수 체크
+      if (this.isHalf) { // 반차인 경우
         this.leaveDuration = 0.5;
-        // this.employeeLeaveForm.get('leave_end_date').setValue('');
-        if (this.company.isMinusAnnualLeave === undefined) {
+        if (!this.userCompanyInfo().isMinusAnnualLeave) { // 연차 감소 허용 여부
           if (this.leaveDuration > matchedLeaveDay || this.leaveDuration < 0) {
-            console.log(this.leaveDuration);
-            console.log(matchedLeaveDay);
             this.dialogsService.openDialogNegative('Wrong period, Try again.');
-            // alert('Wrong period, Try again.');
             this.allReset();
             return;
           }
         }
-      } else {
+      } else { // 하루인 경우
         this.leaveDuration = this.calculateDiff(start_date, end_date);
-        console.log(this.company.isMinusAnnualLeave);
-        if (this.company.isMinusAnnualLeave === undefined) {
+        if (!this.userCompanyInfo().isMinusAnnualLeave) {
           if (this.leaveDuration > matchedLeaveDay || this.leaveDuration < 0) {
-            console.log(this.leaveDuration);
-            console.log(matchedLeaveDay);
             this.dialogsService.openDialogNegative('Wrong period, Try again.');
-            // alert('Wrong period, Try again.');
             this.allReset();
             return;
           }
         }
       }
-
-      console.log(this.leaveDuration);
     }
   }
 
@@ -198,130 +174,150 @@ export class LeavesRequestsAddComponent {
     // this.employeeLeaveForm.get('leave_end_date').setValue('');
   }
 
+  // 시작 날짜와 종료 날짜의 차이를 계산하는 함수
   calculateDiff(start_date: any, end_date: any) {
     const holidayCount = this.holidayList.filter((x: any) => {
       return new Date(x) <= end_date && new Date(x) >= start_date;
-    }).length;
+    }).length; // 공휴일 수 계산
 
-    this.millisecondsPerDay = 86400 * 1000; // Day in milliseconds
-    this.start_date_sec = start_date.setHours(0, 0, 0, 1); // Start just after midnight
-    this.end_date_sec = end_date.setHours(23, 59, 59, 999); // End just before midnight
-    this.diff = this.end_date_sec - this.start_date_sec; // Milliseconds between datetime objects
-    this.days = Math.ceil(this.diff / this.millisecondsPerDay);
+    const millisecondsPerDay = 86400 * 1000; // 하루를 밀리초로 변환
+    const start_date_sec = start_date.setHours(0, 0, 0, 1); // 시작 날짜를 자정 직후로 설정
+    const end_date_sec = end_date.setHours(23, 59, 59, 999); // 종료 날짜를 자정 직전으로 설정
+    const diff = end_date_sec - start_date_sec; // 두 날짜 간의 밀리초 차이 계산
+    let days = Math.ceil(diff / millisecondsPerDay); // 일수로 변환
 
-    if (this.start_date_sec >= this.end_date_sec) {
+    if (start_date_sec >= end_date_sec) { // 시작 날짜가 종료 날짜보다 뒤인 경우
       this.dialogsService.openDialogNegative('Wrong period, Try again.');
       this.datePickReset();
+      return 0;
     }
 
-    // Subtract two weekend days for every week in between
-    this.weeks = Math.floor(this.days / 7);
-    this.days = this.days - this.weeks * 2;
+    const weeks = Math.floor(days / 7);
+    days -= weeks * 2; // 주말을 제외한 일수 계산
 
-    // Handle special cases
-    this.start_date_sec = start_date.getDay();
-    this.end_date_sec = end_date.getDay();
+    const startDay = start_date.getDay();
+    const endDay = end_date.getDay();
 
-    // Remove weekend not previously removed.
-    if (this.start_date_sec - this.end_date_sec > 1) this.days = this.days - 2;
+    if (startDay - endDay > 1) days -= 2; // 주말 처리
+    if (startDay === 0 && endDay !== 6) days -= 1; // 시작일이 일요일인 경우
+    if (endDay === 6 && startDay !== 0) days -= 1; // 종료일이 토요일인 경우
 
-    // Remove start day if span starts on Sunday but ends before Saturday
-    if (this.start_date_sec == 0 && this.end_date_sec != 6) this.days = this.days - 1;
-
-    // Remove end day if span ends on Saturday but starts after Sunday
-    if (this.end_date_sec == 6 && this.start_date_sec != 0) {
-      this.days = this.days - 1;
-    }
-
-    this.leaveDays = this.days;
-
-    if (this.leaveDays == 'NaN' || this.leaveDays == '' || this.leaveDays <= '0' || this.leaveDays == 'undefined') {
-      this.leaveDays = '';
-    } else {
-      this.leaveDays = this.days;
-    }
-    return this.leaveDays - holidayCount;
+    return days - holidayCount; // 최종 일수에서 공휴일 제외
   }
 
-  availableLeaveCount(stringValue: any) {
-    if (stringValue == 'annual_leave') {
-      return this.leaveInfo['annual_leave'] - this.leaveInfo['used_annual_leave'];
-    } else if (stringValue == 'rollover') {
-      return this.leaveInfo['rollover'] - this.leaveInfo['used_rollover'];
-    } else if (stringValue == 'sick_leave') {
-      return this.leaveInfo['sick_leave'] - this.leaveInfo['used_sick_leave'];
-    } else {
-      return this.leaveInfo['replacement_leave'] - this.leaveInfo['used_replacement_leave'];
+  // 사용 가능한 휴가 일수를 반환하는 함수
+  availableLeaveCount(type: string) {
+    const leaves = this.myLeaves();
+    switch (type) {
+      case 'annual_leave':
+        return leaves.annual_leave - leaves.used_annual_leave; // 연차 휴가 일수
+      case 'rollover':
+        return leaves.rollover - leaves.used_rollover; // 롤오버 휴가 일수
+      case 'sick_leave':
+        return leaves.sick_leave - leaves.used_sick_leave; // 병가 일수
+      default:
+        return leaves.replacement_leave - leaves.used_replacement_leave; // 대체 휴가 일수
     }
   }
-
+  // 날짜 선택 초기화
   datePickReset() {
-    // this.employeeLeaveForm.get('leave_start_date').setValue('');
-    // this.employeeLeaveForm.get('leave_end_date').setValue('');
+    this.employeeLeaveForm.get('leave_start_date')?.reset();
+    this.employeeLeaveForm.get('leave_end_date')?.reset();
   }
 
+  // 날짜 선택 비활성화
   datePickDisabled() {
     this.employeeLeaveForm.controls['leave_start_date'].disable();
     this.employeeLeaveForm.controls['leave_end_date'].disable();
   }
 
+  // 모든 필드 초기화 및 비활성화
   allReset() {
-    // this.employeeLeaveForm.get('leaveType1').setValue('');
-    // this.employeeLeaveForm.get('leaveType2').setValue('');
-    this.datePickReset();
+    this.employeeLeaveForm.reset();
     this.datePickDisabled();
   }
 
+
   // 휴가 쓰는 기간이 N년차 범위에 속하는지, 안속하면 안돼
   checkEmpYear(start_date: any, end_date: any) {
-    //이건 내가 선택한 휴가 날짜
     const cal_start_date = this.commonService.dateFormatting(start_date, 'timeZone');
     const cal_end_date = this.commonService.dateFormatting(end_date, 'timeZone');
-    //입사 년월일,
-    const startYear = this.commonService.dateFormatting(this.leaveInfo.startYear, 'timeZone');
-    const endYear = this.commonService.dateFormatting(this.leaveInfo.endYear, 'timeZone');
-    console.log(cal_start_date, cal_end_date, startYear, endYear);
-    // 반차일떄
-    if (this.isHalf) {
-      return true;
-    }
+    const startYear = this.commonService.dateFormatting(this.myLeaves().startYear, 'timeZone');
+    const endYear = this.commonService.dateFormatting(this.myLeaves().endYear, 'timeZone');
 
-    // 휴가 시작. 종료일이 같은 년차에 들어가는지
-    if (
-      cal_start_date >= startYear &&
-      cal_start_date <= endYear &&
-      cal_end_date >= startYear &&
-      cal_end_date <= endYear
-    ) {
-      return true;
-    }
+    if (this.isHalf) return true; // 반차인 경우 바로 반환
 
-    // 휴가 시작 종료일이 다음해의 같은 년차에 들어가는지
-    else if (cal_start_date > endYear && cal_end_date > endYear) {
-      const flag = this.dialogsService
-        .openDialogConfirm(
-          `Your current contract period: ${startYear} ~ ${endYear}.\nThis annual leave request will be counted on next year's annual leave. Do you want to proceed?`,
-        )
-        .subscribe((result: any) => {
-          if (result) {
-            return true;
-          } else {
-            this.datePickReset();
-            return false;
-          }
-        });
-      return true;
+    if (cal_start_date >= startYear && cal_start_date <= endYear && cal_end_date >= startYear && cal_end_date <= endYear) {
+      return true; // 휴가가 같은 근무 연한 내에 있는 경우
+    } else if (cal_start_date > endYear && cal_end_date > endYear) {
+      this.dialogsService.openDialogConfirm(
+        `Your current contract period: ${startYear} ~ ${endYear}.\nThis annual leave request will be counted on next year's annual leave. Do you want to proceed?`
+      ).subscribe((result) => {
+        if (result) return true;
+        else {
+          this.datePickReset();
+          return false;
+        }
+      });
+      return true; // 휴가가 다음 근무 연한 내에 있는 경우
     } else {
       this.dialogsService.openDialogNegative(
-        `Your current contract period: ${startYear} ~ ${endYear}.\nPlease, choose leave dates within the current contract period or after the end of your current period in order to use next year's annual leave.`,
+        `Your current contract period: ${startYear} ~ ${endYear}.\nPlease, choose leave dates within the current contract period or after the end of your current period to use next year's annual leave.`
       );
-      // alert('Please, choose a leave date within the contract period.');
       this.datePickReset();
-      return false;
+      return false; // 휴가가 유효하지 않은 경우
     }
   }
+  requestLeave() {
+    // '휴가 요청을 제출하시겠습니까?' 확인 대화상자를 열고 사용자의 응답을 구독
+    this.dialogsService.openDialogConfirm('Would you like to submit the leave request?').subscribe({
+      next: (res) => {
+        // 사용자가 '확인'을 클릭한 경우
+        if (res) {
+          // 휴가 요청 데이터를 준비하는 메서드 호출
+          this.prepareLeaveRequestData();
+          // 휴가 요청을 제출하는 메서드 호출
+          this.submitLeaveRequest();
+        }
+      },
+      error: (err: any) => {
+        this.dialogsService.openDialogNegative(err.error.message);
+      }
+    });
+  }
 
-  requestLeave() { }
+  prepareLeaveRequestData() {
+    const formValue = this.employeeLeaveForm.value;
+    // 시작 날짜를 공통 서비스의 날짜 포맷팅 메서드를 사용하여 포맷팅
+    const leaveStartDate = this.commonService.dateFormatting(formValue.leave_start_date);
+    // 반차인 경우 시작 날짜와 동일하게 설정하고, 그렇지 않은 경우 종료 날짜를 포맷팅
+    const leaveEndDate = this.leaveDuration == 0.5 ? leaveStartDate : this.commonService.dateFormatting(formValue.leave_end_date);
+
+    this.leaveRequestData = {
+      leaveType: formValue.leaveType1, // 휴가 타입
+      leaveDay: formValue.leaveType2,// 휴가 단위 (하루 또는 반차)
+      leaveDuration: this.leaveDuration,// 휴가 기간
+      leave_start_date: leaveStartDate,// 시작 날짜
+      leave_end_date: leaveEndDate,// 종료 날짜
+      leave_reason: formValue.leave_reason,// 휴가 사유
+      status: 'pending', // 요청 상태를 '대기 중'으로 설정
+    };
+  }
+
+  submitLeaveRequest() {
+    this.leavesService.requestLeave(this.leaveRequestData).subscribe({
+      next: (data: any) => {
+        if (data.message === 'requested') {
+          this.router.navigate(['leaves/requests']);
+          this.dialogsService.openDialogPositive('Successfully, the request has been submitted.');
+        }
+      },
+      error: (err: any) => {
+        this.dialogsService.openDialogNegative(err.error.message);
+      }
+    });
+  }
+
 
   toBack() { }
 }

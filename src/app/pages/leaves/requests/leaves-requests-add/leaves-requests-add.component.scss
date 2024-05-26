@@ -66,6 +66,15 @@
   font-size: 18px;
   padding: 10px;
   font-family: 'Noto Sans', 'Roboto', "Helvetica Neue", sans-serif;
+  border: 1px solid #ccc;
+  /* 테두리 추가 */
+  border-radius: 4px;
+  /* 둥근 테두리 추가 */
+  box-sizing: border-box;
+  /* 패딩 포함하여 크기 계산 */
+  resize: none;
+  /* 크기 변경 비활성화 */
+
 }
 
 .btnSection_1 {
@@ -97,6 +106,16 @@
 
   .demo-textarea {
     padding: 0;
+    width: 100%;
+    height: auto;
+    font-size: 16px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    /* 테두리 추가 */
+    border-radius: 4px;
+    /* 둥근 테두리 추가 */
+    resize: none;
+    /* 크기 변경 비활성화 */
   }
 
   .mainTitle {
