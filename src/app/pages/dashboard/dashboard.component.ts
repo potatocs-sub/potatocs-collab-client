@@ -1,7 +1,17 @@
 import { CommonService } from './../../services/common/common.service';
 import { ProfilesService } from './../../services/profiles/profiles.service';
 import { AuthService } from './../../services/auth/auth.service';
-import { Component, Signal, inject, effect, ViewChild, ElementRef, DestroyRef, WritableSignal, signal } from '@angular/core';
+import {
+  Component,
+  Signal,
+  inject,
+  effect,
+  ViewChild,
+  ElementRef,
+  DestroyRef,
+  WritableSignal,
+  signal,
+} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { LeavesService } from '../../services/leaves/leaves.service';
 import { Router, RouterModule } from '@angular/router';
@@ -11,7 +21,16 @@ import { CompaniesService } from '../../services/companies/companies.service';
 import { SideNavService } from '../../stores/side-nav/side-nav.service';
 import { CommonModule } from '@angular/common';
 import { MaterialsModule } from '../../materials/materials.module';
-import { Observable, Subject, Subscription, distinctUntilChanged, filter, fromEvent, takeUntil, withLatestFrom } from 'rxjs';
+import {
+  Observable,
+  Subject,
+  Subscription,
+  distinctUntilChanged,
+  filter,
+  fromEvent,
+  takeUntil,
+  withLatestFrom,
+} from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ConnectCompanyDialogComponent } from '../../components/dialogs/connect-company-dialog/connect-company-dialog.component';
 import moment from 'moment';
@@ -22,22 +41,21 @@ import { ConnectManagerDialogComponentComponent } from '../../components/dialogs
   standalone: true,
   imports: [CommonModule, MaterialsModule],
   templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.scss'
+  styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent {
-
-  dialog = inject(MatDialog)
-  leavesService = inject(LeavesService)
-  router = inject(Router)
-  dialogsService = inject(DialogService)
-  managersService = inject(ManagersService)
-  companiesService = inject(CompaniesService)
-  sideNavService = inject(SideNavService)
-  authService = inject(AuthService)
+  dialog = inject(MatDialog);
+  leavesService = inject(LeavesService);
+  router = inject(Router);
+  dialogsService = inject(DialogService);
+  managersService = inject(ManagersService);
+  companiesService = inject(CompaniesService);
+  sideNavService = inject(SideNavService);
+  authService = inject(AuthService);
   destroyRef = inject(DestroyRef);
 
-  userInfo: Signal<any> = this.authService.userInfo
-  isDesktop: Signal<boolean> = this.sideNavService.isDesktop
+  userInfo: Signal<any> = this.authService.userInfo;
+  isDesktop: Signal<boolean> = this.sideNavService.isDesktop;
 
   @ViewChild('dash') dashElement!: ElementRef<HTMLDivElement>;
   @ViewChild('leaveBalance') leaveBalanceElement!: ElementRef<HTMLDivElement>;
@@ -47,31 +65,31 @@ export class DashboardComponent {
 
   manager: any;
   leaveInfo: any; // 휴가정보
-  isRollover: any; // 휴가이월 정책 
+  isRollover: any; // 휴가이월 정책
   minDate: any; // 휴가 이월
   maxDate: any; // 휴가 이월
   company: any; // 회사정책 정보
   currentDate: Date = new Date();
 
-  commonService = inject(CommonService)
-  profilesService = inject(ProfilesService)
-  userProfileInfo: WritableSignal<any> = this.profilesService.userProfileInfo
-  userCompanyInfo: WritableSignal<any> = this.profilesService.userCompanyInfo
-  userManagerInfo: WritableSignal<any> = this.profilesService.userManagerInfo
+  commonService = inject(CommonService);
+  profilesService = inject(ProfilesService);
+  userProfileInfo: WritableSignal<any> = this.profilesService.userProfileInfo;
+  userCompanyInfo: WritableSignal<any> = this.profilesService.userCompanyInfo;
+  userManagerInfo: WritableSignal<any> = this.profilesService.userManagerInfo;
 
   constructor() {
     effect(() => {
       if (!this.userProfileInfo()) {
-        console.log('rollover')
+        console.log('rollover');
         this.rolloverDate();
       }
-    })
+    });
     effect(() => {
       if (!this.userCompanyInfo()) {
-        console.log('rollover')
+        console.log('rollover');
         this.rolloverDate();
       }
-    })
+    });
   }
 
   // rollover 사용기간
@@ -87,14 +105,15 @@ export class DashboardComponent {
       const careerYear = today.diff(empStartDate, 'years');
 
       // 계약 시작일에 n년 더해주고, max에는 회사 rollover 규정 더해줌
-      this.minDate = moment(this.userProfileInfo()?.emp_start_date).add(careerYear, 'y').format('YYYY-MM-DD');
+      this.minDate = moment(this.userProfileInfo()?.emp_start_date)
+        .add(careerYear, 'y')
+        .format('YYYY-MM-DD');
 
       this.maxDate = moment(this.minDate)
         .add(this.company.rollover_max_month, 'M')
         .subtract(1, 'days')
         .format('YYYY-MM-DD');
     }
-
   }
 
   calculateTenure(data: any) {
@@ -121,69 +140,76 @@ export class DashboardComponent {
     return yearDiffToday + ' Years ' + monthDiffToday + ' Months';
   }
 
-
   deleteCompany(companyId: any) {
-    this.dialogsService.openDialogConfirm('Do you want to delete the company?').subscribe((result: any) => {
-      if (result) {
-        this.companiesService.deleteCompanyRequest(companyId).subscribe({
-          next: (res: any) => {
-            this.userCompanyInfo.update(() => null);
-            this.dialogsService.openDialogPositive('Successfully, the process has done!');
-          },
-          error: (err: any) => {
-            console.log(err);
-            this.dialogsService.openDialogNegative(err);
-          }
+    this.dialogsService
+      .openDialogConfirm('Do you want to delete the company?')
+      .subscribe((result: any) => {
+        if (result) {
+          this.companiesService.deleteCompanyRequest(companyId).subscribe({
+            next: (res: any) => {
+              this.userCompanyInfo.update(() => null);
+              this.dialogsService.openDialogPositive(
+                'Successfully, the process has done!'
+              );
+            },
+            error: (err: any) => {
+              console.log(err);
+              this.dialogsService.openDialogNegative(err);
+            },
+          });
         }
-        );
-      }
-    });
+      });
   }
 
   openDialogFindMyCompany() {
     const dialogRef = this.dialog.open(ConnectCompanyDialogComponent);
   }
 
-
-
-
   deleteManager(managerId: any) {
-    this.dialogsService.openDialogConfirm('Do you want to delete the manager?').subscribe(result => {
-      if (result) {
-        this.leavesService.checkPendingLeave().subscribe(
-          (data: any) => {
-            console.log(data);
+    this.dialogsService
+      .openDialogConfirm('Do you want to delete the manager?')
+      .subscribe((result) => {
+        if (result) {
+          this.leavesService.checkPendingLeave().subscribe(
+            (data: any) => {
+              console.log(data);
 
-            if (data.pendingFlag) {
-              this.managersService.deletePending(managerId).subscribe({
-                next: (res: any) => {
-                  if (res.message == 'delete') {
-                    this.profilesService.userManagerInfo.update(() => null)
-                    this.dialogsService.openDialogPositive('Successfully, the process has done');
-                  }
-                },
-                error: (err: any) => {
-                  console.log(err);
-                  this.dialogsService.openDialogNegative(err.error.message);
-                },
-              });
-            } else {
-              this.dialogsService.openDialogNegative(
-                `current manager has the suspended leave you applied for.\nIf you want to change your manager, cancel your leave`,
-              );
-            }
-          },
-          (err: any) => { },
-        );
-      }
-    });
+              if (data.pendingFlag) {
+                this.managersService.deletePending(managerId).subscribe({
+                  next: (res: any) => {
+                    if (res.message == 'delete') {
+                      this.profilesService.userManagerInfo.update(() => null);
+                      this.dialogsService.openDialogPositive(
+                        'Successfully, the process has done'
+                      );
+                    }
+                  },
+                  error: (err: any) => {
+                    console.log(err);
+                    this.dialogsService.openDialogNegative(err.error.message);
+                  },
+                });
+              } else {
+                this.dialogsService.openDialogNegative(
+                  `current manager has the suspended leave you applied for.\nIf you want to change your manager, cancel your leave`
+                );
+              }
+            },
+            (err: any) => {}
+          );
+        }
+      });
   }
 
   openDialogFindMyManager() {
-    if (this.userCompanyInfo()?.status == 'pending'
-      || this.userCompanyInfo() == null) {
-      this.dialogsService.openDialogNegative('Please, register a company first.');
-      return
+    if (
+      this.userCompanyInfo()?.status == 'pending' ||
+      this.userCompanyInfo() == null
+    ) {
+      this.dialogsService.openDialogNegative(
+        'Please, register a company first.'
+      );
+      return 0;
     }
     const dialogRef = this.dialog.open(ConnectManagerDialogComponentComponent, {
       data: {
@@ -192,6 +218,4 @@ export class DashboardComponent {
     });
     return dialogRef.afterClosed();
   }
-
-
 }
