@@ -13,20 +13,13 @@
 				<mat-label>description</mat-label>
 				<input matInput [(ngModel)]="data.spaceBrief" />
 			</mat-form-field>
-			<!-- <mat-form-field appearance="fill">
-				<mat-label>folder name</mat-label>
-				<mat-select [(ngModel)]="data.folderId">
-					<mat-option *ngFor="let data of data.folderList" [value]="data._id">
-						{{data.displayName}} 
-					</mat-option>
-				</mat-select>
-			</mat-form-field> -->
 		</div>
 
 		<div class="btnBox" fxLayout="row" fxLayoutGap="25px">
 			<button
 				class="confirmBtn"
 				mat-raised-button
+				[mat-dialog-close]="data"
 				*ngIf="data.spaceFlag.spaceFlag=='collab'"
 				[disabled]="data.spaceName === ''"
 			>

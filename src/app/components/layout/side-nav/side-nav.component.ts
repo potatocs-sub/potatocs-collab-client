@@ -1,18 +1,55 @@
-import { Component } from '@angular/core';
-import { MaterialsModule } from '../../../materials/materials.module';
-import { CommonModule } from '@angular/common';
-import { SideNavItemComponent } from '../side-nav-item/side-nav-item.component';
-import { sidenavRouteInfo } from '../../../config/sidenav-route-info';
-import { NavigationItem } from '../../../interfaces/navigation-item.interface';
-import { RouterModule } from '@angular/router';
-
+import { MaterialsModule } from "../../../materials/materials.module";
+import { CommonModule } from "@angular/common";
+import { SideNavItemComponent } from "../side-nav-item/side-nav-item.component";
+import { sidenavRouteInfo } from "../../../config/sidenav-route-info";
+import { NavigationItem } from "../../../interfaces/navigation-item.interface";
+import { RouterModule } from "@angular/router";
+import { SideNavService } from "../../../stores/side-nav/side-nav.service";
+import { ProfilesService } from "../../../services/profiles/profiles.service";
+import { Component, HostBinding, Input, SimpleChanges, WritableSignal, inject, effect } from "@angular/core";
+import { NavigationService } from "../../../stores/navigation/navigation.service";
 @Component({
-  selector: 'app-side-nav',
-  standalone: true,
-  imports: [MaterialsModule, CommonModule, SideNavItemComponent, RouterModule],
-  templateUrl: './side-nav.component.html',
-  styleUrl: './side-nav.component.scss'
+	selector: "app-side-nav",
+	standalone: true,
+	imports: [MaterialsModule, CommonModule, SideNavItemComponent, RouterModule],
+	templateUrl: "./side-nav.component.html",
+	styleUrl: "./side-nav.component.scss",
 })
 export class SideNavComponent {
-  navItems: NavigationItem[] = sidenavRouteInfo;
+	navItems: any[] = sidenavRouteInfo;
+
+	// 의존성 주입
+	profilesService = inject(ProfilesService);
+
+	userProfileInfo: WritableSignal<any> = this.profilesService.userProfileInfo;
+	userCompanyInfo: WritableSignal<any> = this.profilesService.userCompanyInfo;
+	userSpaceInfo: WritableSignal<any> = this.profilesService.userSpaceInfo;
+
+	constructor(private sideNavService: SideNavService, private navigationService: NavigationService) {
+		effect(() => {
+			console.log(this.userSpaceInfo());
+		});
+	}
+	ngOnInit(): void {
+		this.sideNavService.updateSideMenu().subscribe(
+			(data: any) => {
+				const space = data.navList[0].spaces;
+				this.navItems[1].children[1].children = [];
+				for (let index = 0; index < space.length; index++) {
+					const element = {
+						type: "link",
+						label: space[index].displayName,
+						route: "collab/space/" + space[index]._id,
+						isManager: false,
+						isReplacementDay: false,
+					};
+					this.navItems[1].children[1].children.push(element);
+				}
+				this.profilesService.userSpaceInfo.set(this.navItems);
+			},
+			(err: any) => {
+				console.log("sideNavService error", err);
+			}
+		);
+	}
 }

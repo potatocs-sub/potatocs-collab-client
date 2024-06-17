@@ -9,6 +9,8 @@ import { Subscription, filter } from "rxjs";
 import { dropdownAnimation } from "../../../animations/dropdown.animation";
 import { MatDialog, MatDialogModule } from "@angular/material/dialog";
 import { DialogCreateSpaceComponent } from "../../dialogs/create-space-dialog/dialog-create-space.component";
+import { SideNavService } from "../../../stores/side-nav/side-nav.service";
+import { DialogService } from "../../../stores/dialog/dialog.service";
 @Component({
 	selector: "app-side-nav-item",
 	standalone: true,
@@ -35,6 +37,8 @@ export class SideNavItemComponent {
 	isOpen: boolean = false;
 	isActive: boolean = false;
 
+	navItems;
+
 	// 의존성 주입
 	router = inject(Router);
 	navigationService = inject(NavigationService);
@@ -42,6 +46,7 @@ export class SideNavItemComponent {
 
 	userProfileInfo: WritableSignal<any> = this.profilesService.userProfileInfo;
 	userCompanyInfo: WritableSignal<any> = this.profilesService.userCompanyInfo;
+	userSpaceInfo: WritableSignal<any> = this.profilesService.userSpaceInfo;
 
 	isLink = this.navigationService.isLink;
 	isDropdown = this.navigationService.isDropdown;
@@ -54,7 +59,15 @@ export class SideNavItemComponent {
 	subscriptions!: Subscription;
 	userLeaveData: any;
 
-	constructor(public dialog: MatDialog) {
+	spaceFlag = {
+		spaceFlag: "collab",
+	};
+	folderList;
+	constructor(
+		public dialog: MatDialog,
+		private sideNavService: SideNavService,
+		private dialogService: DialogService
+	) {
 		// Signal state change handling
 		effect(() => {
 			const item = this.selectedDropDownItem();
@@ -127,6 +140,7 @@ export class SideNavItemComponent {
 	 * - 2. 하위 자식 중 active가 없음: dropdown 닫기
 	 */
 	onRouteChange() {
+		console.log("엥?");
 		// 내 하위 Menu에 active child가 있는 경우
 		if (this.hasActiveChilds(this.item as NavigationDropdown)) {
 			this.isActive = true;
@@ -135,7 +149,6 @@ export class SideNavItemComponent {
 		}
 		// 내 하위 Menu에 active child가 없는 경우
 		else {
-			console.log("여기");
 			this.isActive = false;
 			this.isOpen = false;
 			this.navigationService.openItems.set(this.item as NavigationDropdown);
@@ -205,10 +218,10 @@ export class SideNavItemComponent {
 		const spaceDialogRef = this.dialog.open(DialogCreateSpaceComponent, {
 			// width: '270px',
 			data: {
-				// spaceFlag: this.spaceFlag,
+				spaceFlag: this.spaceFlag,
 				spaceName: "",
 				spaceBrief: "",
-				// folderList: this.folderList,
+				folderList: this.folderList,
 			},
 		});
 		spaceDialogRef.afterClosed().subscribe((result) => {
@@ -229,49 +242,51 @@ export class SideNavItemComponent {
 		});
 	}
 	createSpace(spaceData: any) {
-		// console.log(spaceData);
-		// this.sideNavService.createSpace(spaceData).subscribe(
-		//   (data: any) => {
-		//     if (data.message = 'created') {
-		//       this.dialogService.openDialogPositive('space created!');
-		//       this.updateSideMenu();
-		//     }
-		//   },
-		//   err => {
-		//     console.log(err);
-		//   }
-		// );
+		console.log(spaceData);
+		this.sideNavService.createSpace(spaceData).subscribe(
+			(data: any) => {
+				if ((data.message = "created")) {
+					this.dialogService.openDialogPositive("space created!");
+					this.updateSideMenu();
+				}
+			},
+			(err) => {
+				console.log(err);
+			}
+		);
 	}
+	//2024-06-14 박재현
+	//sideMenu Update
 	updateSideMenu() {
-		// this.sideNavService.updateSideMenu().subscribe(
-		//   (data: any) => {
-		//     // console.log(data);
-		//     // console.log(data.navList);
-		//     console.log('sidenav-item component');
-		//     ///////////////
-		//     const space = data.navList[0].spaces[data.navList[0].spaces.length - 1]
-		//     console.log(space);
-		//     this.navItems = this.navigationService.items;
-		//     const element = {
-		//       type: 'link',
-		//       label: space.displayName,
-		//       route: 'collab/space/' + space._id,
-		//       isManager: false,
-		//       isReplacementDay: false
-		//     }
-		//     this.navItems[1].children[1].children.push(element);
-		//     this.spaceListStorageService.updateSpaceList(this.navItems);
-		//     this.router.navigate(['/' + this.navItems[1].children[1].children[this.navItems[1].children[1].children.length - 1].route]);
-		//     ///////////////
-		//     const sideNavLists = {
-		//       folder_list: data.navList[0].folders,
-		//       space_list: data.navList[0].spaces
-		//     }
-		//     // this.sideNavService.setTrueForSideNavFlag();
-		//     this.folderList = data.folderNav
-		//     this.sideNavService.updateMenuData(sideNavLists);
-		//   }
-		// );
+		this.sideNavService.updateSideMenu().subscribe((data: any) => {
+			// console.log(data);
+			// console.log(data.navList);
+			console.log("sidenav-item component");
+			///////////////
+			const space = data.navList[0].spaces[data.navList[0].spaces.length - 1];
+			console.log(space);
+			this.navItems = this.userSpaceInfo();
+			const element = {
+				type: "link",
+				label: space.displayName,
+				route: "collab/space/" + space._id,
+				isManager: false,
+				isReplacementDay: false,
+			};
+			this.navItems[1].children[1].children.push(element);
+			this.profilesService.userSpaceInfo.update(this.navItems);
+			this.router.navigate([
+				"/" + this.navItems[1].children[1].children[this.navItems[1].children[1].children.length - 1].route,
+			]);
+			const sideNavLists = {
+				folder_list: data.navList[0].folders,
+				space_list: data.navList[0].spaces,
+			};
+			this.folderList = data.folderNav;
+			//2004-06-14 박재현
+			//일단 의미없어 보여서 주석처리함
+			// this.sideNavService.updateMenuData(sideNavLists);
+		});
 	}
 	updateSpacePlace(data: any) {
 		// this.sideNavService.updateSpacePlace(data).subscribe(
