@@ -40,6 +40,10 @@ export const routes: Routes = [
 				loadChildren: () => import("./pages/employees/routes").then((m) => m.EMPLOYEES_ROUTES),
 			},
 			{
+				path: "space",
+				loadChildren: () => import("./pages/spaces/routes").then((m) => m.SPACES_ROUTES),
+			},
+			{
 				path: "documents",
 				loadComponent: () => import("./pages/dashboard/dashboard.component").then((m) => m.DashboardComponent),
 			},

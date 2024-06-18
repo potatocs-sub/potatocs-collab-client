@@ -11,6 +11,7 @@ import { MatDialog, MatDialogModule } from "@angular/material/dialog";
 import { DialogCreateSpaceComponent } from "../../dialogs/create-space-dialog/dialog-create-space.component";
 import { SideNavService } from "../../../stores/side-nav/side-nav.service";
 import { DialogService } from "../../../stores/dialog/dialog.service";
+import { SpacesService } from "../../../services/spaces/spaces.service";
 @Component({
 	selector: "app-side-nav-item",
 	standalone: true,
@@ -43,10 +44,10 @@ export class SideNavItemComponent {
 	router = inject(Router);
 	navigationService = inject(NavigationService);
 	profilesService = inject(ProfilesService);
-
+	spacesService = inject(SpacesService);
 	userProfileInfo: WritableSignal<any> = this.profilesService.userProfileInfo;
 	userCompanyInfo: WritableSignal<any> = this.profilesService.userCompanyInfo;
-	userSpaceInfo: WritableSignal<any> = this.profilesService.userSpaceInfo;
+	userSpaceInfo: WritableSignal<any> = this.spacesService.userSpaceInfo;
 
 	isLink = this.navigationService.isLink;
 	isDropdown = this.navigationService.isDropdown;
@@ -269,12 +270,12 @@ export class SideNavItemComponent {
 			const element = {
 				type: "link",
 				label: space.displayName,
-				route: "collab/space/" + space._id,
+				route: "space/" + space._id,
 				isManager: false,
 				isReplacementDay: false,
 			};
 			this.navItems[1].children[1].children.push(element);
-			this.profilesService.userSpaceInfo.update(this.navItems);
+			this.spacesService.userSpaceInfo.update(this.navItems);
 			this.router.navigate([
 				"/" + this.navItems[1].children[1].children[this.navItems[1].children[1].children.length - 1].route,
 			]);

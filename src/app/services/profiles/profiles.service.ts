@@ -13,13 +13,12 @@ export class ProfilesService {
 	userProfileInfo: WritableSignal<any | null> = signal<any | null>(null);
 	userCompanyInfo: WritableSignal<any | null> = signal<any | null>(null);
 	userManagerInfo: WritableSignal<any | null> = signal<any | null>(null);
-	userSpaceInfo: WritableSignal<any | null> = signal<any | null>(null);
+
 	constructor() {
 		effect(() => {
 			console.log(this.userProfileInfo());
 			console.log(this.userCompanyInfo());
 			console.log(this.userManagerInfo());
-			console.log(this.userSpaceInfo());
 		});
 	}
 	getUserProfile() {

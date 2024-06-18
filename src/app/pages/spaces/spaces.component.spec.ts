@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DocListComponent } from './doc-list.component';
+import { SpacesComponent } from './spaces.component';
 
-describe('DocListComponent', () => {
-  let component: DocListComponent;
-  let fixture: ComponentFixture<DocListComponent>;
+describe('SpacesComponent', () => {
+  let component: SpacesComponent;
+  let fixture: ComponentFixture<SpacesComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DocListComponent]
+      imports: [SpacesComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(DocListComponent);
+    fixture = TestBed.createComponent(SpacesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -8,6 +8,7 @@ import { SideNavService } from "../../../stores/side-nav/side-nav.service";
 import { ProfilesService } from "../../../services/profiles/profiles.service";
 import { Component, HostBinding, Input, SimpleChanges, WritableSignal, inject, effect } from "@angular/core";
 import { NavigationService } from "../../../stores/navigation/navigation.service";
+import { SpacesService } from "../../../services/spaces/spaces.service";
 @Component({
 	selector: "app-side-nav",
 	standalone: true,
@@ -20,10 +21,11 @@ export class SideNavComponent {
 
 	// 의존성 주입
 	profilesService = inject(ProfilesService);
+	spacesService = inject(SpacesService);
 
 	userProfileInfo: WritableSignal<any> = this.profilesService.userProfileInfo;
 	userCompanyInfo: WritableSignal<any> = this.profilesService.userCompanyInfo;
-	userSpaceInfo: WritableSignal<any> = this.profilesService.userSpaceInfo;
+	userSpaceInfo: WritableSignal<any> = this.spacesService.userSpaceInfo;
 
 	constructor(private sideNavService: SideNavService, private navigationService: NavigationService) {
 		effect(() => {
@@ -39,13 +41,13 @@ export class SideNavComponent {
 					const element = {
 						type: "link",
 						label: space[index].displayName,
-						route: "collab/space/" + space[index]._id,
+						route: "space/" + space[index]._id,
 						isManager: false,
 						isReplacementDay: false,
 					};
 					this.navItems[1].children[1].children.push(element);
 				}
-				this.profilesService.userSpaceInfo.set(this.navItems);
+				this.spacesService.userSpaceInfo.set(this.navItems);
 			},
 			(err: any) => {
 				console.log("sideNavService error", err);
