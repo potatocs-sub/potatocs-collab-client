@@ -49,7 +49,7 @@ export class LeavesService {
   }
 
   requestLeave(leaveData: any) {
-    return this.http.post(this.baseUrl + '/leaves', leaveData)
+    return this.http.post(this.baseUrl + '/leaves/request-leave', leaveData)
   }
 
   cancelMyRequestLeave(data: any) {
