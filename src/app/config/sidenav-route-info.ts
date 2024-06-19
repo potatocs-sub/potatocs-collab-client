@@ -48,7 +48,7 @@ export const sidenavRouteInfo: NavigationItem[] = [
           {
             type: 'link',
             label: 'My Leave Status',
-            route: '/leave/my-status',
+            route: '/leaves/my-status',
             icon: 'update',
             isManager: false,
             isReplacementDay: false,
