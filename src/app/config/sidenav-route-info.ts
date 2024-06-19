@@ -48,7 +48,7 @@ export const sidenavRouteInfo: NavigationItem[] = [
           {
             type: 'link',
             label: 'My Leave Status',
-            route: '/leave/my-status',
+            route: '/leaves/status',
             icon: 'update',
             isManager: false,
             isReplacementDay: false,
@@ -64,7 +64,7 @@ export const sidenavRouteInfo: NavigationItem[] = [
           {
             type: 'link',
             label: 'Replacement Day Request',
-            route: '/leave/rd-request-list',
+            route: '/leaves/replacement-requests',
             icon: 'update',
             isManager: false,
             isReplacementDay: true,
@@ -104,7 +104,7 @@ export const sidenavRouteInfo: NavigationItem[] = [
           {
             type: 'link',
             label: 'RD Confirming Request',
-            route: '/employees/replacement-days/requests',
+            route: '/employees/leaves/replacement-requests',
             icon: 'update',
             isManager: true,
             isReplacementDay: true,

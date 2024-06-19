@@ -21,7 +21,7 @@
                 Contract Start : {{ userProfileInfo()?.emp_start_date | date:'YYYY-MM-dd' }}
               </div>
               <div>
-                Tenure today : {{ userProfileInfo()?.tenure_today }}
+                Tenure today : {{ tenure_today }}
               </div>
               <div *ngIf="isRollover">
                 Rollover Period : {{ minDate }} ~ {{ maxDate }}

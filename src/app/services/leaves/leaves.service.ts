@@ -43,6 +43,10 @@ export class LeavesService {
     );
   }
 
+  getMyLeaveList(active: string, direction: string, pageIndex: number, pageSize: number) {
+    return this.http.get(this.baseUrl + '/leaves/my-request', { params: { active, direction, pageIndex, pageSize } });
+  }
+
   getNationHolidays(nationId: any) {
     return this.http.get(this.baseUrl + '/leaves/getNationList', { params: { id: nationId } })
 
@@ -56,4 +60,26 @@ export class LeavesService {
     return this.http.put(this.baseUrl + '/leaves/cancel-my-request-leave', data)
   }
 
+  /* -----------------------------------------------
+    rd-request-list Component
+  ----------------------------------------------- */
+  getRdList(active: string, direction: string, pageIndex: number, pageSize: number) {
+    return this.http.get(this.baseUrl + '/leaves/getRdList', { params: { active, direction, pageIndex, pageSize } });
+  }
+
+  requestRdLeave(data: any) {
+    return this.http.post(this.baseUrl + '/leaves/requestRdLeave', data);
+  }
+
+
+  /* -----------------------------------------------
+  replacement-day-request Component
+----------------------------------------------- */
+  requestConfirmRd(requestConfirmRdData: any) {
+    return this.http.post(this.baseUrl + '/leaves/requestConfirmRd', requestConfirmRdData);
+  }
+
+  requestCancelRd(rdObjId: any) {
+    return this.http.delete(this.baseUrl + '/leaves/requestCancelRd', { params: rdObjId })
+  }
 }
