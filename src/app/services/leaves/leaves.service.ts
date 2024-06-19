@@ -14,9 +14,9 @@ export class LeavesService {
 
 
   constructor() { }
-  getMyLeaveList() {
-    return this.http.get(this.baseUrl + '/leaves/my-request');
-  }
+  // getMyLeaveList() {
+  //   return this.http.get(this.baseUrl + '/leaves/my-request');
+  // }
   getMyLeavesStatus() {
     return this.http.get(this.baseUrl + '/leaves/my-status');
   }
