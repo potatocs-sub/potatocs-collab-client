@@ -48,7 +48,8 @@ export const sidenavRouteInfo: NavigationItem[] = [
           {
             type: 'link',
             label: 'My Leave Status',
-            route: '/leaves/status',
+            // route: '/leaves/status', 이정운 작업. 둘중 하나 선택
+            route: '/leaves/my-status',
             icon: 'update',
             isManager: false,
             isReplacementDay: false,
