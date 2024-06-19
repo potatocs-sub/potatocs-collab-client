@@ -70,6 +70,7 @@ export class StatusComponent {
         startWith({}),
         switchMap(() => this.getMyLeaveList()),
         map((res: any) => {
+          console.log(res)
           this.isLoadingResults.set(false);
           if (res === null) {
             this.isRateLimitReached.set(true);

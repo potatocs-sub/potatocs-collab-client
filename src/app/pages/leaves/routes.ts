@@ -12,7 +12,7 @@ export const LEAVES_ROUTES: Route[] = [
     // path: 'status', // 휴가 사용 현황
     // loadComponent: () => StatusComponent
     path: 'my-status',
-    loadComponent: () => LeavesComponent
+    loadComponent: () => StatusComponent
   },
   {
     path: 'requests', // 회사 공휴일 or 기념일
