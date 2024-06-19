@@ -1,10 +1,15 @@
-import { Component, inject, OnInit, ViewChild, WritableSignal } from "@angular/core";
-import { MatDialog } from "@angular/material/dialog";
+import { Component, Inject, inject, OnInit, ViewChild, WritableSignal } from "@angular/core";
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { ActivatedRoute, Router } from "@angular/router";
 import { SpacesService } from "../../services/spaces/spaces.service";
 import { DocumentsService } from "../../services/spaces/documents.service";
 import { CommonService } from "../../services/common/common.service";
 import { MaterialsModule } from "../../materials/materials.module";
+import { SideNavService } from "../../stores/side-nav/side-nav.service";
+import { DialogService } from "../../stores/dialog/dialog.service";
+import { NavigationService } from "../../stores/navigation/navigation.service";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { DialogSettingSpaceComponent } from "./dialogs/dialog-setting-space/dialog-setting-space.component";
 
 @Component({
 	selector: "app-spaces",
@@ -83,5 +88,23 @@ export class SpacesComponent implements OnInit {
 			console.error("An error occurred:", error);
 			alert("An unexpected error occurred. Please try again later.");
 		}
+	}
+
+	openSpaceOption(): void {
+		const dialogRef = this.dialog.open(DialogSettingSpaceComponent, {
+			// width: '600px',
+			// height: '500px',
+			data: {
+				spaceInfo: this.spaceInfo,
+				memberInSpace: this.memberInSpace,
+			},
+		});
+
+		dialogRef.afterClosed().subscribe((result) => {
+			console.log("The dialog setting was closed");
+			if (result == null || result == "") {
+			} else {
+			}
+		});
 	}
 }

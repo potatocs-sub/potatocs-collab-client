@@ -3,6 +3,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { NegativeDialogComponent } from "../../components/dialogs/negative-dialog/negative-dialog.component";
 import { PositiveDialogComponent } from "../../components/dialogs/positive-dialog/positive-dialog.component";
 import { ConfirmDialogComponent } from "../../components/dialogs/confirm-dialog/confirm-dialog.component";
+import { ProgressDialogComponent } from "../../components/dialogs/progress-dialog/progress-dialog.component";
 
 @Injectable({
 	providedIn: "root",
@@ -49,5 +50,20 @@ export class DialogService {
 		dialogRef.afterClosed().subscribe((result) => {
 			console.log("dialog close");
 		});
+	}
+
+	openDialogProgress(data) {
+		const dialogRef = this.dialog.open(ProgressDialogComponent, {
+			data: {
+				content: data,
+			},
+		});
+
+		dialogRef.afterClosed().subscribe((result) => {
+			console.log("dialog close");
+		});
+	}
+	closeDialog() {
+		this.dialog.closeAll();
 	}
 }
