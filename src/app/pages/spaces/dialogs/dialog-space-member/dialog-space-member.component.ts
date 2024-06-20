@@ -4,10 +4,14 @@ import { SpacesService } from "../../../../services/spaces/spaces.service";
 import { DialogService } from "../../../../stores/dialog/dialog.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from "@angular/material/dialog";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { FormsModule } from "@angular/forms";
+import { MaterialsModule } from "../../../../materials/materials.module";
+import { CdkTableModule } from "@angular/cdk/table";
 @Component({
 	selector: "app-dialog-space-member",
 	standalone: true,
-	imports: [],
+	imports: [MatFormFieldModule, FormsModule, MaterialsModule, CdkTableModule],
 	templateUrl: "./dialog-space-member.component.html",
 	styleUrl: "./dialog-space-member.component.scss",
 })
@@ -95,9 +99,6 @@ export class DialogSpaceMemberComponent implements OnInit {
 			}
 		});
 	}
-	// clearMember(){
-	// 	this.displaymemberInfo =[];
-	// }
 
 	reUpdateMembers() {
 		console.log(this.spaceTime);

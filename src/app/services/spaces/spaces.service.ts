@@ -39,6 +39,7 @@ export class SpacesService {
 	}
 
 	deleteSpace(spaceTime) {
+		console.log("delete space");
 		return this.http.delete(this.baseUrl + "/collab/space/deleteSpace", { params: spaceTime });
 	}
 

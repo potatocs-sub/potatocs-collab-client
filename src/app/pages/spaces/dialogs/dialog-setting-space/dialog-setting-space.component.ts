@@ -71,6 +71,9 @@ export class DialogSettingSpaceComponent implements OnInit {
 					docStatus: data[0].docStatus,
 					labels: data[0].labels,
 				};
+				console.log(this.spaceInfo);
+				this.displayName = this.spaceInfo.displayName;
+				this.displayBrief = this.spaceInfo.displayBrief;
 				// console.log(this.spaceInfo);
 				this.memberInSpace = data[0].memberObjects;
 				this.adminInSpace = data[0].admins;
@@ -102,8 +105,8 @@ export class DialogSettingSpaceComponent implements OnInit {
 				if (result) {
 					this.dialogService.openDialogProgress("Deleting space..");
 					const spaceTime = this.spaceInfo.spaceTime;
-					this.spacesService.deleteSpace({ spaceTime }).subscribe(
-						(data: any) => {
+					this.spacesService.deleteSpace({ spaceTime }).subscribe({
+						next: (data: any) => {
 							console.log(data);
 							// this.collabSideBarComponent.updateSideMenu();
 							this.reUpdateSideNav();
@@ -111,22 +114,21 @@ export class DialogSettingSpaceComponent implements OnInit {
 							this.dialogService.closeDialog();
 							this.dialogService.openDialogPositive("Successfully,the space has been deleted.");
 						},
-						(err: any) => {
+						error: (err: any) => {
 							console.log(err);
-						}
-					);
+						},
+					});
 				}
 			});
 	}
 	reUpdateSideNav() {
-		this.sideNavService.updateSideMenu().subscribe(
-			(data: any) => {
+		this.sideNavService.updateSideMenu().subscribe({
+			next: (data: any) => {
 				console.log(data);
 				///////////////
 				const space = data.navList[0].spaces;
-
-				this.navItems = this.navigationService.navItems();
-
+				this.navItems = this.navigationService.navItems;
+				console.log(this.navItems);
 				this.navItems[1].children[1].children = [];
 				for (let index = 0; index < space.length; index++) {
 					const element = {
@@ -138,13 +140,12 @@ export class DialogSettingSpaceComponent implements OnInit {
 					};
 					this.navItems[1].children[1].children.push(element);
 				}
-				this.spacesService.userSpaceInfo.update(this.navItems);
 				///////////////
 			},
-			(err: any) => {
+			error: (err: any) => {
 				console.log("sideNavService error", err);
-			}
-		);
+			},
+		});
 	}
 
 	// displayName ---
@@ -157,8 +158,8 @@ export class DialogSettingSpaceComponent implements OnInit {
 			id: this.spaceInfo._id,
 			displayName: this.displayName,
 		};
-		this.spacesService.changeSpaceName(data).subscribe(
-			async (data: any) => {
+		this.spacesService.changeSpaceName(data).subscribe({
+			next: async (data: any) => {
 				console.log(data.message);
 				this.isDisplayName = true;
 				await this.reUpdateMembers();
@@ -168,10 +169,10 @@ export class DialogSettingSpaceComponent implements OnInit {
 					horizontalPosition: "center",
 				});
 			},
-			(err: any) => {
+			error: (err: any) => {
 				console.log("spaceService error", err);
-			}
-		);
+			},
+		});
 	}
 
 	onCancelName() {

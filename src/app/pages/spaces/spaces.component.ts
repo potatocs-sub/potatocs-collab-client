@@ -10,11 +10,14 @@ import { DialogService } from "../../stores/dialog/dialog.service";
 import { NavigationService } from "../../stores/navigation/navigation.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { DialogSettingSpaceComponent } from "./dialogs/dialog-setting-space/dialog-setting-space.component";
-
+import { DialogSpaceMemberComponent } from "./dialogs/dialog-space-member/dialog-space-member.component";
+import { CalendarListComponent } from "./calendar-list/calendar-list.component";
+import { CommonModule } from "@angular/common";
+import { ScrumboardListComponent } from "./scrumboard-list/scrumboard-list.component";
 @Component({
 	selector: "app-spaces",
 	standalone: true,
-	imports: [MaterialsModule],
+	imports: [MaterialsModule, CalendarListComponent, CommonModule, ScrumboardListComponent],
 	templateUrl: "./spaces.component.html",
 	styleUrl: "./spaces.component.scss",
 })
@@ -102,6 +105,24 @@ export class SpacesComponent implements OnInit {
 
 		dialogRef.afterClosed().subscribe((result) => {
 			console.log("The dialog setting was closed");
+			if (result == null || result == "") {
+			} else {
+			}
+		});
+	}
+	openSpaceMemeber(): void {
+		console.log("openSpaceMemeber this.spaceTime : ", this.spaceTime);
+		const dialogRef = this.dialog.open(DialogSpaceMemberComponent, {
+			width: "600px",
+			height: "300px",
+			data: {
+				spaceTime: this.spaceTime,
+			},
+		});
+
+		dialogRef.afterClosed().subscribe((result) => {
+			console.log("The dialog setting was closed");
+			this.getMembers();
 			if (result == null || result == "") {
 			} else {
 			}

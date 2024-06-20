@@ -1,5 +1,6 @@
 import { Route } from "@angular/router";
 import { SpacesComponent } from "./spaces.component";
+import { CalendarListComponent } from "./calendar-list/calendar-list.component";
 
 export const SPACES_ROUTES: Route[] = [
 	{
@@ -17,11 +18,11 @@ export const SPACES_ROUTES: Route[] = [
 	//   loadComponent: () => DocumentComponent,
 	//   canActivate: [SpaceGuard]
 	// },
-	// {
-	//   path: 'space/calendar',
-	//   loadComponent: () => CalendarListComponent,
-	//   // canActivate: [SpaceGuard]
-	// },
+	{
+		path: "space/calendar",
+		loadComponent: () => CalendarListComponent,
+		// canActivate: [SpaceGuard]
+	},
 	{
 		path: "",
 		redirectTo: "employees/list",
