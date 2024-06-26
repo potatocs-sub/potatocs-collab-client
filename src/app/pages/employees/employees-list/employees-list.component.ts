@@ -119,6 +119,7 @@ export class EmployeesListComponent {
   }
 
   // Reset table filters
+  // 이 부분 뭐지 
   resetFilters() {
     this.filterValues = {};
     this.filterSelectObj.forEach((value: any, key: any) => {
