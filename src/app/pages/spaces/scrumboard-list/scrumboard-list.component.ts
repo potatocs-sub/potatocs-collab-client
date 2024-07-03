@@ -307,7 +307,7 @@ export class ScrumboardListComponent implements OnInit {
 			status: status.label,
 		};
 
-		this.router.navigate(["collab/editor/ctDoc"], { queryParams: editorQuery });
+		this.router.navigate(["/space/editor/ctDoc"], { queryParams: editorQuery });
 		this.textareaFlag = false;
 	}
 
