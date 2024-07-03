@@ -24,6 +24,15 @@ export class DocumentsService {
 		});
 	}
 
+	createDoc(docData) {
+		console.log("doc서비스", docData);
+		return this.http.post(this.baseUrl + "/collab/space/doc/create", docData).pipe(
+			tap((res: any) => {
+				console.log(res);
+				this.scrumService.updateScrumBoard(res.scrumBoard);
+			})
+		);
+	}
 	// 미팅목록 가져오기
 	getMeetingList(data) {
 		console.log(data);
@@ -64,12 +73,48 @@ export class DocumentsService {
 
 	// create doc Status
 	scrumAddDocStatus(data) {
-		return this.http.put("/api/v1/collab/space/doc/scrumAddDocStatus", data).pipe(
+		return this.http.put(this.baseUrl + "/collab/space/doc/scrumAddDocStatus", data).pipe(
 			shareReplay(1),
 			tap(async (res: any) => {
 				console.log(res.scrumboard);
 				await this.scrumService.updateScrumBoard(res.scrumboard);
 				return "fffff";
+			})
+		);
+	}
+
+	// delete doc Status
+	scrumDeleteDocStatus(data) {
+		return this.http.put(this.baseUrl + "/collab/space/doc/scrumDeleteDocStatus", data).pipe(
+			shareReplay(1),
+			tap(async (res: any) => {
+				console.log(res.scrumboard);
+				await this.scrumService.updateScrumBoard(res.scrumboard);
+				return res.message;
+			})
+		);
+	}
+
+	statusNameChange(data) {
+		console.log(data);
+		return this.http.put(this.baseUrl + "/collab/space/doc/statusNameChange", data).pipe(
+			shareReplay(1),
+			tap(async (res: any) => {
+				console.log(res.updateDocs);
+				await this.scrumService.updateScrumBoard(res.scrumboard);
+				this.docs.set(res.updateDocs);
+				return res.message;
+			})
+		);
+	}
+
+	//done 상태 변경
+	updateDoneEntry(updateDoneEntry) {
+		return this.http.put(this.baseUrl + "/collab/space/doc/docCheckDone", updateDoneEntry).pipe(
+			shareReplay(1),
+			tap(async (res: any) => {
+				// await this.scrumService.updateScrumBoard(res.scrumBoard);
+				this.docs.set(res.updateDocs);
 			})
 		);
 	}

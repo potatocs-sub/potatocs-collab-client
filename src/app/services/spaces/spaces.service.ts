@@ -1,18 +1,15 @@
 import { Injectable, WritableSignal, effect, signal } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { ScrumboardStorageService } from "../../stores/scrumboard-storage/scrumboard-storage.service";
-import { tap } from "rxjs/operators";
-import { environment } from "../../../environments/environment";
+import { CentralService } from "../../stores/central.service";
+
 @Injectable({
 	providedIn: "root",
 })
 export class SpacesService {
-	private baseUrl = environment.apiUrl;
-	spaceMembers: WritableSignal<any | null> = signal<any | null>(null);
-	//
-	userSpaceInfo: WritableSignal<any | null> = signal<any | null>(null);
+	spaceMembers: WritableSignal<any | null> = this.centralService.spaceMembers;
+	userSpaceInfo: WritableSignal<any | null> = this.centralService.userSpaceInfo;
 
-	constructor(private http: HttpClient, private scrumService: ScrumboardStorageService) {
+	constructor(private centralService: CentralService) {
 		effect(() => {
 			if (this.spaceMembers()) {
 				console.log(this.spaceMembers());
@@ -24,51 +21,38 @@ export class SpacesService {
 	}
 
 	getSpaceMembers(spaceTime) {
-		return this.http.get(this.baseUrl + "/collab/space/" + spaceTime).pipe(
-			tap((res: any) => {
-				this.spaceMembers.set(res.spaceMembers);
-				console.log(res.scrumBoard);
-				console.log(res.spaceDocs);
-				console.log(res.spaceMembers);
-				// this.mdsService.updateMembers(res.M);
-				this.scrumService.updateScrumBoard(res.scrumBoard);
-				// this.ddsService.updateDocs(res.spaceDocs);
-				return res.message;
-			})
-		);
+		return this.centralService.getSpaceMembers(spaceTime);
 	}
 
 	deleteSpace(spaceTime) {
-		console.log("delete space");
-		return this.http.delete(this.baseUrl + "/collab/space/deleteSpace", { params: spaceTime });
+		return this.centralService.deleteSpace(spaceTime);
 	}
 
 	changeSpaceName(data) {
-		// { params: data }
-		return this.http.put(this.baseUrl + "/collab/space/change-space-name", data);
+		return this.centralService.changeSpaceName(data);
 	}
 
 	changeSpaceBrief(data) {
-		return this.http.put(this.baseUrl + "/collab/change-space-brief", data);
+		return this.centralService.changeSpaceBrief(data);
 	}
 
 	quitSpaceAdmin(data) {
-		return this.http.put(this.baseUrl + "/collab/quit-space-admin", data);
+		return this.centralService.quitSpaceAdmin(data);
 	}
 
 	addSpaceAdmin(data) {
-		return this.http.put(this.baseUrl + "/collab/add-space-member", data);
+		return this.centralService.addSpaceAdmin(data);
 	}
 
 	deleteSpaceMember(data) {
-		return this.http.put(this.baseUrl + "/collab/delete-space-member", data);
+		return this.centralService.deleteSpaceMember(data);
 	}
 
 	searchSpaceMember(email) {
-		return this.http.get(this.baseUrl + "/collab/searchSpaceMember", { params: email });
+		return this.centralService.searchSpaceMember(email);
 	}
 
 	inviteSpaceMember(data) {
-		return this.http.put(this.baseUrl + "/collab/inviteSpaceMember", data);
+		return this.centralService.inviteSpaceMember(data);
 	}
 }

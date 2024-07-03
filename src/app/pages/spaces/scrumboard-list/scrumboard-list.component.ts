@@ -9,11 +9,11 @@ import {
 	ɵunwrapWritableSignal,
 	effect,
 } from "@angular/core";
-import { CdkDragDrop, moveItemInArray, transferArrayItem } from "@angular/cdk/drag-drop";
-import { FormControl } from "@angular/forms";
+import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray, transferArrayItem } from "@angular/cdk/drag-drop";
+import { FormControl, FormsModule } from "@angular/forms";
 import { SpacesService } from "../../../services/spaces/spaces.service";
 
-import * as moment from "moment";
+import moment from "moment";
 import { MatDialog } from "@angular/material/dialog";
 import { DialogService } from "../../../stores/dialog/dialog.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
@@ -23,6 +23,7 @@ import { MaterialsModule } from "../../../materials/materials.module";
 import { ScrumboardStorageService } from "../../../stores/scrumboard-storage/scrumboard-storage.service";
 import { DocumentsService } from "../../../services/spaces/documents.service";
 import { SpaceAddStatusDialogComponent } from "./space-add-status-dialog/space-add-status-dialog.component";
+import { ScrumboardSummaryComponent } from "./scrumboard-summary/scrumboard-summary.component";
 
 export interface ScrumboardList {
 	// id: number;
@@ -43,11 +44,13 @@ export interface ScrumboardDoc {
 	startDate: Date;
 	status: string;
 	doc_id: string;
+	done: boolean;
+	labels: any;
 }
 @Component({
 	selector: "app-scrumboard-list",
 	standalone: true,
-	imports: [CommonModule, MaterialsModule],
+	imports: [CommonModule, MaterialsModule, FormsModule, CdkDropList, CdkDrag],
 	templateUrl: "./scrumboard-list.component.html",
 	styleUrl: "./scrumboard-list.component.scss",
 })
@@ -88,7 +91,7 @@ export class ScrumboardListComponent implements OnInit {
 	) {
 		this.list = [];
 		effect(() => {
-			if (!this.scrum()) {
+			if (this.scrum()) {
 				const data = this.scrum();
 				console.log(data);
 				this.temp = data.scrum;
@@ -154,7 +157,7 @@ export class ScrumboardListComponent implements OnInit {
 		this.textareaFlag = false;
 	}
 
-	drop(event: CdkDragDrop<ScrumboardDoc[]>) {
+	drop(event: CdkDragDrop<ScrumboardDoc[]>, _: any) {
 		const temp = event.previousContainer.data[event.previousIndex];
 
 		const data = {
@@ -207,19 +210,144 @@ export class ScrumboardListComponent implements OnInit {
 		dialogRef.afterClosed().subscribe((result) => {
 			// result 에 값이 오면 업로드
 			if (result) {
-				this.docService.scrumAddDocStatus(result).subscribe(
-					(data: any) => {
+				this.docService.scrumAddDocStatus(result).subscribe({
+					next: (data: any) => {
 						this.initializeScrumBoard(this.member.value);
 						this.snackbar.open("Add list", "Close", {
 							duration: 3000,
 							horizontalPosition: "center",
 						});
 					},
-					(err: any) => {}
-				);
+					error: (err: any) => {},
+				});
 			}
 		});
 		this.textareaFlag = false;
+	}
+
+	// status 삭제
+	deleteStatus(status) {
+		this.dialogService
+			.openDialogConfirm(
+				`If you delete the list, you will also delete the documents in it.\nDo you still want to delete it?`
+			)
+			.subscribe((result) => {
+				if (result) {
+					const data = {
+						space_id: this.spaceInfo._id,
+						label: status.label,
+					};
+					this.docService.scrumDeleteDocStatus(data).subscribe(
+						(data: any) => {
+							this.initializeScrumBoard(this.member.value);
+							this.snackbar.open("Delete list", "Close", {
+								duration: 3000,
+								horizontalPosition: "center",
+							});
+						},
+						(err: any) => {}
+					);
+				}
+			});
+		this.textareaFlag = false;
+	}
+	// status 이름 바꾸기
+	statusNameChange(value, index, status) {
+		const data = {
+			spaceId: this.spaceTime,
+			changeStatus: value,
+			statusIndex: index,
+		};
+
+		if (status == value) {
+			console.log("안바꼇지롱");
+			return;
+		}
+
+		this.docService.statusNameChange(data).subscribe(
+			(data: any) => {
+				this.snackbar.open("Status name change", "Close", {
+					duration: 3000,
+					horizontalPosition: "center",
+				});
+				this.initializeScrumBoard(this.member.value);
+				this.textareaFlag = false;
+			},
+			(err: any) => {}
+		);
+		this.textareaFlag = false;
+	}
+
+	openSummary(document, status) {
+		console.log(document);
+		const dialogRef = this.dialog.open(ScrumboardSummaryComponent, {
+			data: {
+				document: document,
+				space_id: this.spaceInfo._id,
+				docStatus: status,
+				member: this.spaceInfo.memberObjects,
+				labels: this.spaceInfo.labels,
+				scrumData: this.docStatusList,
+			},
+		});
+
+		dialogRef.afterClosed().subscribe((result) => {
+			console.log(result);
+
+			this.initializeScrumBoard(this.member.value);
+		});
+		this.textareaFlag = false;
+	}
+
+	createDoc(status) {
+		const editorQuery = {
+			spaceTime: this.spaceInfo._id,
+			spaceTitle: this.spaceInfo.displayName,
+			status: status.label,
+		};
+
+		this.router.navigate(["collab/editor/ctDoc"], { queryParams: editorQuery });
+		this.textareaFlag = false;
+	}
+
+	//park
+	//카드 만들기
+	createCardAble(status, i) {
+		console.log(status);
+		console.log(i);
+		this.createCardFlag = i;
+	}
+
+	createCard(status, title) {
+		if (title.replace(/\s/g, "").length === 0) {
+			this.dialogService.openDialogNegative("Please");
+			this.createCardFlag = -1;
+			return;
+		}
+
+		const docData = {
+			spaceTime: this.spaceTime,
+			editorTitle: title,
+			status: status.label,
+			docContent: ``,
+			startDate: new Date(),
+			endDate: new Date(),
+			// memberId: this.selectedMember._id
+			memberId: this.loginId,
+		};
+		console.log(docData);
+		this.docService.createDoc(docData).subscribe(
+			(data: any) => {
+				if (data.message == "created") {
+					console.log("만들어버렸다");
+					this.initializeScrumBoard(this.member.value);
+					this.createCardFlag = -1;
+				}
+			},
+			(err: any) => {
+				console.log(err);
+			}
+		);
 	}
 	// 멤버 필터부분
 	memberFilter() {
@@ -227,7 +355,8 @@ export class ScrumboardListComponent implements OnInit {
 	}
 	initializeScrumBoard(member?) {
 		this.docStatusList = this.temp;
-		for (let i = 0; i < this.docStatusList.length; i++) {
+		console.log(this.docStatusList);
+		for (let i = 0; i < this.docStatusList?.length; i++) {
 			const children = this.docStatusList[i].children;
 
 			for (let index = 0; index < children.length; index++) {
@@ -244,5 +373,41 @@ export class ScrumboardListComponent implements OnInit {
 				}
 			}
 		}
+	}
+
+	checkDate(endDate: any) {
+		const today = moment(new Date());
+		const docDate = moment(new Date(endDate));
+
+		let diff = docDate.startOf("day").diff(today.startOf("day"), "days");
+		if (diff === 0) {
+			//빨간색
+			return { "background-color": "#ed2131", color: "#fff" };
+		} else if (diff === 1) {
+			return { "background-color": "#ffb412" };
+		} else if (diff < 0) {
+			return { "background-color": "pink" };
+		} else {
+			return { "background-color": "black" };
+		}
+	}
+
+	checkDone(doc: any) {
+		if (doc.done !== undefined) {
+			const uploadData = {
+				doc_id: doc.doc_id,
+				done: !doc.done,
+			};
+			doc.done = !doc.done;
+			this.docService.updateDoneEntry(uploadData).subscribe((data: any) => {
+				if (data.message == "updated") {
+					console.log("Update document check");
+				}
+			});
+		}
+	}
+	// textarea able flag
+	textareaAble() {
+		this.textareaFlag = true;
 	}
 }
