@@ -1,17 +1,17 @@
 import { Injectable, WritableSignal, signal } from "@angular/core";
-import { CentralService } from "../../stores/central.service";
-
+import { MemberDataStorageService } from "../member-data-storage/member-data-storage.service";
 @Injectable({
 	providedIn: "root",
 })
 export class ScrumboardStorageService {
-	spaceMembers: WritableSignal<any> = this.centralService.spaceMembers;
+	member: WritableSignal<any> = this.mdsService.member;
 	scrum: WritableSignal<any | null> = signal<any | null>(null);
 
-	constructor(private centralService: CentralService) {}
+	constructor(private mdsService: MemberDataStorageService) {}
 
 	updateScrumBoard(scrums: any) {
-		const spaceMember = this.spaceMembers()[0].memberObjects;
+		console.log("scrumboard-storage 서비스 : ", scrums);
+		const spaceMember = this.member()[0].memberObjects;
 		const my_scrum = scrums.scrum;
 
 		for (let scrum of my_scrum) {

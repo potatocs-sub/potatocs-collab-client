@@ -4,5 +4,7 @@ import { Injectable, WritableSignal, effect, inject, signal } from "@angular/cor
 	providedIn: "root",
 })
 export class MemberDataStorageService {
+	member: WritableSignal<any | null> = signal<any | null>(null);
+
 	constructor() {}
 }

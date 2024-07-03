@@ -12,6 +12,7 @@ import { DialogCreateSpaceComponent } from "../../dialogs/create-space-dialog/di
 import { SideNavService } from "../../../stores/side-nav/side-nav.service";
 import { DialogService } from "../../../stores/dialog/dialog.service";
 import { SpacesService } from "../../../services/spaces/spaces.service";
+import { SpaceListStorageService } from "../../../stores/space-list-storage.service";
 @Component({
 	selector: "app-side-nav-item",
 	standalone: true,
@@ -47,7 +48,7 @@ export class SideNavItemComponent {
 	spacesService = inject(SpacesService);
 	userProfileInfo: WritableSignal<any> = this.profilesService.userProfileInfo;
 	userCompanyInfo: WritableSignal<any> = this.profilesService.userCompanyInfo;
-	userSpaceInfo: WritableSignal<any> = this.spacesService.userSpaceInfo;
+	space: WritableSignal<any> = this.spaceListStorageService.space;
 
 	isLink = this.navigationService.isLink;
 	isDropdown = this.navigationService.isDropdown;
@@ -67,7 +68,8 @@ export class SideNavItemComponent {
 	constructor(
 		public dialog: MatDialog,
 		private sideNavService: SideNavService,
-		private dialogService: DialogService
+		private dialogService: DialogService,
+		private spaceListStorageService: SpaceListStorageService
 	) {
 		// Signal state change handling
 		effect(() => {
@@ -266,7 +268,7 @@ export class SideNavItemComponent {
 			///////////////
 			const space = data.navList[0].spaces[data.navList[0].spaces.length - 1];
 			console.log(space);
-			this.navItems = this.userSpaceInfo();
+			this.navItems = this.space();
 			const element = {
 				type: "link",
 				label: space.displayName,
@@ -275,7 +277,7 @@ export class SideNavItemComponent {
 				isReplacementDay: false,
 			};
 			this.navItems[1].children[1].children.push(element);
-			this.spacesService.userSpaceInfo.update(this.navItems);
+			this.spaceListStorageService.space.update(this.navItems);
 			this.router.navigate([
 				"/" + this.navItems[1].children[1].children[this.navItems[1].children[1].children.length - 1].route,
 			]);

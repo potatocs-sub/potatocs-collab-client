@@ -14,6 +14,7 @@ import { DialogSpaceMemberComponent } from "./dialogs/dialog-space-member/dialog
 import { CalendarListComponent } from "./calendar-list/calendar-list.component";
 import { CommonModule } from "@angular/common";
 import { ScrumboardListComponent } from "./scrumboard-list/scrumboard-list.component";
+import { MemberDataStorageService } from "../../stores/member-data-storage/member-data-storage.service";
 @Component({
 	selector: "app-spaces",
 	standalone: true,
@@ -28,14 +29,15 @@ export class SpacesComponent implements OnInit {
 	public adminInSpace;
 	public spaceTime: string;
 
-	spaceMembers: WritableSignal<any> = this.spacesService.spaceMembers;
+	spaceMembers: WritableSignal<any> = this.mdsService.member;
 	constructor(
 		public dialog: MatDialog,
 		private router: Router,
 		private route: ActivatedRoute,
 		private spacesService: SpacesService,
 		private docService: DocumentsService,
-		private commonService: CommonService
+		private commonService: CommonService,
+		private mdsService: MemberDataStorageService
 	) {}
 	ngOnInit(): void {
 		this.route.params.subscribe((params) => {

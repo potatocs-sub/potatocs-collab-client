@@ -12,7 +12,6 @@ import {
 import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray, transferArrayItem } from "@angular/cdk/drag-drop";
 import { FormControl, FormsModule } from "@angular/forms";
 import { SpacesService } from "../../../services/spaces/spaces.service";
-
 import moment from "moment";
 import { MatDialog } from "@angular/material/dialog";
 import { DialogService } from "../../../stores/dialog/dialog.service";
@@ -24,6 +23,7 @@ import { ScrumboardStorageService } from "../../../stores/scrumboard-storage/scr
 import { DocumentsService } from "../../../services/spaces/documents.service";
 import { SpaceAddStatusDialogComponent } from "./space-add-status-dialog/space-add-status-dialog.component";
 import { ScrumboardSummaryComponent } from "./scrumboard-summary/scrumboard-summary.component";
+import { MemberDataStorageService } from "../../../stores/member-data-storage/member-data-storage.service";
 
 export interface ScrumboardList {
 	// id: number;
@@ -61,7 +61,7 @@ export class ScrumboardListComponent implements OnInit {
 	docStatusList: ScrumboardList[];
 	list: ScrumboardList[];
 	basicProfile = "/assets/image/person.png";
-	spaceMembers: WritableSignal<any> = this.spacesService.spaceMembers;
+	spaceMembers: WritableSignal<any> = this.mdsService.member;
 	scrum: WritableSignal<any> = this.scrumService.scrum;
 	docsArray;
 
@@ -87,7 +87,8 @@ export class ScrumboardListComponent implements OnInit {
 		private route: ActivatedRoute,
 		private spacesService: SpacesService,
 		private scrumService: ScrumboardStorageService,
-		private docService: DocumentsService
+		private docService: DocumentsService,
+		private mdsService: MemberDataStorageService
 	) {
 		this.list = [];
 		effect(() => {

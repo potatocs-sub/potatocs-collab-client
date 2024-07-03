@@ -9,6 +9,8 @@ import { ProfilesService } from "../../../services/profiles/profiles.service";
 import { Component, HostBinding, Input, SimpleChanges, WritableSignal, inject, effect } from "@angular/core";
 import { NavigationService } from "../../../stores/navigation/navigation.service";
 import { SpacesService } from "../../../services/spaces/spaces.service";
+import { SpaceListStorageService } from "../../../stores/space-list-storage.service";
+
 @Component({
 	selector: "app-side-nav",
 	standalone: true,
@@ -25,11 +27,15 @@ export class SideNavComponent {
 
 	userProfileInfo: WritableSignal<any> = this.profilesService.userProfileInfo;
 	userCompanyInfo: WritableSignal<any> = this.profilesService.userCompanyInfo;
-	userSpaceInfo: WritableSignal<any> = this.spacesService.userSpaceInfo;
+	space: WritableSignal<any> = this.spaceListStorageService.space;
 
-	constructor(private sideNavService: SideNavService, private navigationService: NavigationService) {
+	constructor(
+		private sideNavService: SideNavService,
+		private navigationService: NavigationService,
+		private spaceListStorageService: SpaceListStorageService
+	) {
 		effect(() => {
-			console.log(this.userSpaceInfo());
+			console.log(this.space());
 		});
 	}
 	ngOnInit(): void {
@@ -47,7 +53,7 @@ export class SideNavComponent {
 					};
 					this.navItems[1].children[1].children.push(element);
 				}
-				this.spacesService.userSpaceInfo.set(this.navItems);
+				this.spaceListStorageService.space.set(this.navItems);
 			},
 			(err: any) => {
 				console.log("sideNavService error", err);

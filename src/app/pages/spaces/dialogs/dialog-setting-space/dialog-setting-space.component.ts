@@ -13,6 +13,7 @@ import { Subject } from "rxjs";
 import { MatTabsModule } from "@angular/material/tabs";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { FormsModule } from "@angular/forms";
+import { MemberDataStorageService } from "../../../../stores/member-data-storage/member-data-storage.service";
 
 @Component({
 	selector: "app-dialog-setting-space",
@@ -36,7 +37,7 @@ export class DialogSettingSpaceComponent implements OnInit {
 	public navItems;
 	private unsubscribe$ = new Subject<void>();
 
-	spaceMembers: WritableSignal<any> = this.spacesService.spaceMembers;
+	spaceMembers: WritableSignal<any> = this.mdsService.member;
 
 	constructor(
 		public spaceDialogRef: MatDialogRef<DialogSettingSpaceComponent>,
@@ -47,7 +48,8 @@ export class DialogSettingSpaceComponent implements OnInit {
 		private router: Router,
 		private dialogService: DialogService,
 		private navigationService: NavigationService,
-		private snackbar: MatSnackBar
+		private snackbar: MatSnackBar,
+		private mdsService: MemberDataStorageService
 	) {}
 	ngOnInit(): void {
 		this.getMembers();
