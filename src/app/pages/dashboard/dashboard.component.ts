@@ -62,6 +62,7 @@ export class DashboardComponent {
 
   resizeObservable$!: Observable<Event>;
   private unsubscribe$ = new Subject<void>(); // Used for unsubscribing
+  tenure_today: string = '';
 
   manager: any;
   leaveInfo: any; // 휴가정보
@@ -88,29 +89,40 @@ export class DashboardComponent {
       if (!this.userCompanyInfo()) {
         console.log("rollover");
         this.rolloverDate();
+        this.leavesService.getMyLeavesStatus().subscribe({
+          next: (res: any) => {
+            console.log(res)
+            this.leaveInfo = res;
+            this.leaveInfo.rollover = Math.min(this.leaveInfo.rollover, this.userCompanyInfo()?.rollover_max_day);
+          },
+          error: (err: any) => { err }
+        })
       }
     });
   }
 
+
   // rollover 사용기간
   rolloverDate() {
-    this.minDate = "";
-    this.maxDate = "";
+    this.minDate = '';
+    this.maxDate = '';
+
     if (this.userProfileInfo()) {
       this.isRollover = true;
       // n년차 계산
       const today = moment(new Date());
       const empStartDate = moment(this.userProfileInfo()?.emp_start_date);
-      const careerYear = today.diff(empStartDate, "years");
+      const careerYear = today.diff(empStartDate, 'years');
 
       // 계약 시작일에 n년 더해주고, max에는 회사 rollover 규정 더해줌
-      this.minDate = moment(this.userProfileInfo()?.emp_start_date).add(careerYear, "y").format("YYYY-MM-DD");
+      this.minDate = moment(this.userProfileInfo()?.emp_start_date).add(careerYear, 'y').format('YYYY-MM-DD');
 
       this.maxDate = moment(this.minDate)
-        .add(this.company.rollover_max_month, "M")
-        .subtract(1, "days")
-        .format("YYYY-MM-DD");
+        .add(this.userCompanyInfo()?.rollover_max_month, 'M')
+        .subtract(1, 'days')
+        .format('YYYY-MM-DD');
     }
+
   }
 
   calculateTenure(data: any) {
@@ -119,37 +131,37 @@ export class DashboardComponent {
     const start = this.commonService.dateFormatting(data.emp_start_date);
     const end = this.commonService.dateFormatting(data.emp_end_date);
 
-    const startDate = moment(start, "YYYY-MM-DD");
-    const endDate = moment(end, "YYYY-MM-DD");
-    const today = moment(this.commonService.dateFormatting(date), "YYYY-MM-DD");
-
-    data.tenure_today = this.yearMonth(startDate, today);
+    const startDate = moment(start, 'YYYY-MM-DD');
+    const endDate = moment(end, 'YYYY-MM-DD');
+    const today = moment(this.commonService.dateFormatting(date), 'YYYY-MM-DD');
+    this.tenure_today = this.yearMonth(startDate, today);
   }
   yearMonth(start: any, end: any) {
-    var monthDiffToday = end.diff(start, "months");
+    var monthDiffToday = end.diff(start, 'months');
     if (isNaN(monthDiffToday)) {
-      return "-";
+      return '-';
     }
     var tmp = monthDiffToday;
     monthDiffToday = tmp % 12;
     var yearDiffToday = (tmp - monthDiffToday) / 12;
 
-    return yearDiffToday + " Years " + monthDiffToday + " Months";
+    return yearDiffToday + ' Years ' + monthDiffToday + ' Months';
   }
 
   deleteCompany(companyId: any) {
-    this.dialogsService.openDialogConfirm("Do you want to delete the company?").subscribe((result: any) => {
+    this.dialogsService.openDialogConfirm('Do you want to delete the company?').subscribe((result: any) => {
       if (result) {
         this.companiesService.deleteCompanyRequest(companyId).subscribe({
           next: (res: any) => {
             this.userCompanyInfo.update(() => null);
-            this.dialogsService.openDialogPositive("Successfully, the process has done!");
+            this.dialogsService.openDialogPositive('Successfully, the process has done!');
           },
           error: (err: any) => {
             console.log(err);
             this.dialogsService.openDialogNegative(err);
-          },
-        });
+          }
+        }
+        );
       }
     });
   }
@@ -158,8 +170,11 @@ export class DashboardComponent {
     const dialogRef = this.dialog.open(ConnectCompanyDialogComponent);
   }
 
+
+
+
   deleteManager(managerId: any) {
-    this.dialogsService.openDialogConfirm("Do you want to delete the manager?").subscribe((result) => {
+    this.dialogsService.openDialogConfirm('Do you want to delete the manager?').subscribe(result => {
       if (result) {
         this.leavesService.checkPendingLeave().subscribe(
           (data: any) => {
@@ -168,9 +183,9 @@ export class DashboardComponent {
             if (data.pendingFlag) {
               this.managersService.deletePending(managerId).subscribe({
                 next: (res: any) => {
-                  if (res.message == "delete") {
-                    this.profilesService.userManagerInfo.update(() => null);
-                    this.dialogsService.openDialogPositive("Successfully, the process has done");
+                  if (res.message == 'delete') {
+                    this.profilesService.userManagerInfo.update(() => null)
+                    this.dialogsService.openDialogPositive('Successfully, the process has done');
                   }
                 },
                 error: (err: any) => {
@@ -180,20 +195,20 @@ export class DashboardComponent {
               });
             } else {
               this.dialogsService.openDialogNegative(
-                `current manager has the suspended leave you applied for.\nIf you want to change your manager, cancel your leave`
+                `current manager has the suspended leave you applied for.\nIf you want to change your manager, cancel your leave`,
               );
             }
           },
-          (err: any) => { }
+          (err: any) => { },
         );
       }
     });
   }
 
   openDialogFindMyManager() {
-    if (this.userCompanyInfo()?.status == "pending" || this.userCompanyInfo() == null) {
-      this.dialogsService.openDialogNegative("Please, register a company first.");
-      return 0;
+    if (this.userCompanyInfo()?.status == 'pending'
+      || this.userCompanyInfo() == null) {
+      this.dialogsService.openDialogNegative('Please, register a company first.');
     }
     const dialogRef = this.dialog.open(ConnectManagerDialogComponentComponent, {
       data: {
@@ -202,4 +217,5 @@ export class DashboardComponent {
     });
     return dialogRef.afterClosed();
   }
+
 }
