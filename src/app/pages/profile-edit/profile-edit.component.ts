@@ -1,60 +1,41 @@
-import { CommonModule } from '@angular/common';
-import { Component, effect } from '@angular/core';
-import { MaterialsModule } from '../../materials/materials.module';
-import { FormsModule } from '@angular/forms';
-import { DialogService } from '../../stores/dialog/dialog.service';
-import { ProfilesService } from '../../services/profiles/profiles.service';
+import { Component, OnInit } from "@angular/core";
+import { DialogService } from "./../../stores/dialog/dialog.service";
+import { MaterialsModule } from "../../materials/materials.module";
+import { ProfilesService } from "./../../services/profiles/profiles.service";
+import { CommonModule } from "@angular/common";
 
 @Component({
-  selector: 'app-profile-edit',
+  selector: "app-profile-edit",
+  templateUrl: "./profile-edit.component.html",
   standalone: true,
-  imports: [CommonModule, MaterialsModule, FormsModule],
-  templateUrl: './profile-edit.component.html',
-  styleUrl: './profile-edit.component.scss'
+  imports: [CommonModule, MaterialsModule],
+  styleUrls: ["./profile-edit.component.scss"],
 })
 export class ProfileEditComponent {
-  public userInfo: any;
-  public info: any = {
-    _id: '',
-    name: '',
-    new_password: '',
-    confirm_password: '',
-    mobile: '',
-    department: '',
-    position: '',
-  }
+  public userInfo;
+  public info = {
+    _id: "",
+    name: "",
+    new_password: "",
+    confirm_password: "",
+    mobile: "",
+    department: "",
+    position: "",
+  };
 
-  public flag: any = {
+  public flag = {
     nameFlag: true,
     passwordFlag: true,
     emailFlag: true,
     mobileFlag: true,
     departmentFlag: true,
     positionFlag: true,
-  }
+  };
 
-  constructor(
-    private profileService: ProfilesService,
-    // private dataService: DataService,
-    private dialogService: DialogService
-  ) {
-    effect(() => {
-      const userInfo = this.profileService.userProfileInfo();
-
-      if (!userInfo) return;
-
-      this.userInfo = userInfo;
-
-      this.info._id = this.userInfo._id;
-      this.info.name = this.userInfo.name;
-      this.info.mobile = this.userInfo.mobile;
-      this.info.department = this.userInfo.department;
-      this.info.position = this.userInfo.position;
-    })
-  }
+  constructor(private profileService: ProfilesService, private dialogService: DialogService) { }
 
   ngOnInit(): void {
-
+    // data service 안쓰고 profile service로 수정해야함
     // this.dataService.userProfile.subscribe(
     //   (data: any) => {
     //     this.userInfo = data;
@@ -64,46 +45,46 @@ export class ProfileEditComponent {
     //     this.info.mobile = this.userInfo.mobile;
     //     this.info.department = this.userInfo.department;
     //     this.info.position = this.userInfo.position;
-    //   }
-    //   , (err: any) => {
+    //   },
+    //   (err: any) => {
     //     console.log(err);
     //   }
-    // )
+    // );
+
+    console.log(this.profileService.userProfileInfo);
   }
 
-  onEdit(flagName: any) {
-    console.log('뭐여')
+  onEdit(flagName) {
+    console.log("플래그?", this.flag);
+    console.log("onEdit", flagName);
     this.flag[flagName] = false;
     // const Name = flagName.slice(0,-4);
-
   }
-  onCanel(flagName: any) {
+  onCancel(flagName) {
     this.flag[flagName] = true;
-    console.log(this.info)
+    console.log(this.info);
     const Name = flagName.slice(0, -4);
     this.info[Name] = this.userInfo[Name];
   }
-  onSave(flagName: any) {
-
+  onSave(flagName) {
     // console.log(this.info);
     this.flag[flagName] = true;
     const Name = flagName.slice(0, -4);
     // const res = confirm('Do you want to save?');
     // if(res) {
-    this.dialogService.openDialogConfirm('Do you want to save?').subscribe(result => {
+    this.dialogService.openDialogConfirm("Do you want to save?").subscribe((result) => {
       if (result) {
-
-        if (Name == 'password') {
+        if (Name == "password") {
           if (this.info.new_password.length < 4) {
-            return this.dialogService.openDialogNegative('The password must be at least 4 letters.');
+            return this.dialogService.openDialogNegative("The password must be at least 4 letters.");
             // return alert('The password must be at least 4 letters.');
           }
 
-          const isPwd = this.comparePwdEachOther(this.info.new_password, this.info.confirm_password)
+          const isPwd = this.comparePwdEachOther(this.info.new_password, this.info.confirm_password);
 
           if (!isPwd) {
             this.resetPwdInit();
-            return this.dialogService.openDialogNegative('Two passwords are different. Try again.');
+            return this.dialogService.openDialogNegative("Two passwords are different. Try again.");
             // return alert('Two passwords are different. Try again.');
           }
         }
@@ -112,26 +93,25 @@ export class ProfileEditComponent {
           (data: any) => {
             console.log(data);
             // console.log(data.profileChange);
-            if (data.message == 'changed') {
+            if (data.message == "changed") {
               this.dialogService.openDialogPositive(`${Name} has updated successfully.`);
               // alert(`${Name} has updated successfully.`);
-              // this.dataService.updateUserProfile(data.profileChange);
+              this.profileService.userProfileInfo = data.profileChange;
               this.resetPwdInit();
             }
-          }
-          , (err: any) => {
+          },
+          (err: any) => {
             console.log(err);
             this.resetPwdInit();
           }
-        )
-
+        );
       } else {
         return;
       }
     });
   }
 
-  comparePwdEachOther(newPwd: any, cfmPwd: any) {
+  comparePwdEachOther(newPwd, cfmPwd) {
     if (newPwd === cfmPwd) {
       return true;
     } else {
@@ -140,51 +120,50 @@ export class ProfileEditComponent {
   }
 
   resetPwdInit() {
-    this.info.new_password = null;
-    this.info.confirm_password = null;
+    // this.info.new_password = null;
+    // this.info.confirm_password = null;
   }
 
-
-
   /**
-     * profile 사진 변경
-     * @param fileInput image file
-     */
+   * profile 사진 변경
+   * @param fileInput image file
+   */
   fileChangeEvent(fileInput: any) {
-    console.log('fileChangeEvent');
+    console.log("fileChangeEvent");
     if (fileInput.target.files && fileInput.target.files[0]) {
-      if (fileInput.target.files[0].name.toLowerCase().endsWith('.jpg')
-        || fileInput.target.files[0].name.toLowerCase().endsWith('.png')) {
+      if (
+        fileInput.target.files[0].name.toLowerCase().endsWith(".jpg") ||
+        fileInput.target.files[0].name.toLowerCase().endsWith(".png")
+      ) {
         // Image resize and update
         this.changeProfileImage(fileInput.target.files[0]);
       } else {
-        this.dialogService.openDialogNegative('Profile photos are only available for PNG and JPG.');
+        this.dialogService.openDialogNegative("Profile photos are only available for PNG and JPG.");
         // alert('프로필 사진은 PNG와 JPG만 가능합니다.');
       }
     } else {
-      this.dialogService.openDialogNegative('Can not bring up pictures.');
+      this.dialogService.openDialogNegative("Can not bring up pictures.");
       // alert('사진을 불러올 수 없습니다.');
     }
   }
-  changeProfileImage(imgFile: any) {
+  changeProfileImage(imgFile) {
     console.log(imgFile);
-    this.profileService.changeProfileImage(imgFile).subscribe(
-      (data: any) => {
-        console.log(data);
-        // this.dataService.updateUserProfile(data.user);
-        // this.profileService.getUserProfile().subscribe(
-        // 	(data: any) => {
-        // 		console.log(data);
-        // 		this.dataService.updateUserProfile(data.user);
-        // 		//  console.log(this.userInfo);
-        // 	},
-        // 	(err: any) => {
-        // 		console.log(err);
-        // 	}
-        // )
-      }
-    ), (err: any) => {
-      console.log(err);
-    }
+    this.profileService.changeProfileImage(imgFile).subscribe((data: any) => {
+      console.log(data);
+      // this.dataService.updateUserProfile(data.user);
+      // this.profileService.getUserProfile().subscribe(
+      // 	(data: any) => {
+      // 		console.log(data);
+      // 		this.dataService.updateUserProfile(data.user);
+      // 		//  console.log(this.userInfo);
+      // 	},
+      // 	(err: any) => {
+      // 		console.log(err);
+      // 	}
+      // )
+    }),
+      (err: any) => {
+        console.log(err);
+      };
   }
 }
