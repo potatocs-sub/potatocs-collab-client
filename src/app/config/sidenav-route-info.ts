@@ -48,7 +48,8 @@ export const sidenavRouteInfo: NavigationItem[] = [
           {
             type: 'link',
             label: 'My Leave Status',
-            route: '/leave/my-status',
+            // route: '/leaves/status', 이정운 작업. 둘중 하나 선택
+            route: '/leaves/my-status',
             icon: 'update',
             isManager: false,
             isReplacementDay: false,
@@ -56,7 +57,7 @@ export const sidenavRouteInfo: NavigationItem[] = [
           {
             type: 'link',
             label: 'Leave Request',
-            route: '/leave/leave-request-list',
+            route: '/leaves/requests',
             icon: 'update',
             isManager: false,
             isReplacementDay: false,
@@ -64,7 +65,7 @@ export const sidenavRouteInfo: NavigationItem[] = [
           {
             type: 'link',
             label: 'Replacement Day Request',
-            route: '/leave/rd-request-list',
+            route: '/leaves/replacement-requests',
             icon: 'update',
             isManager: false,
             isReplacementDay: true,
@@ -79,16 +80,16 @@ export const sidenavRouteInfo: NavigationItem[] = [
         children: [
           {
             type: 'link',
-            label: 'Employee Leave Status',
-            route: '/employee-mngmt/employee-leave-status',
+            label: 'Employee List',
+            route: '/employees/list',
             icon: 'update',
             isManager: true,
             isReplacementDay: false,
           },
           {
             type: 'link',
-            label: 'Employee List',
-            route: '/employees/',
+            label: 'Employee Leave Status',
+            route: '/employees/leaves/status',
             icon: 'update',
             isManager: true,
             isReplacementDay: false,
@@ -96,7 +97,7 @@ export const sidenavRouteInfo: NavigationItem[] = [
           {
             type: 'link',
             label: 'Employee Leave Request',
-            route: '/approval-mngmt/leave-request',
+            route: '/employees/leaves/requests',
             icon: 'update',
             isManager: true,
             isReplacementDay: false,
@@ -104,7 +105,7 @@ export const sidenavRouteInfo: NavigationItem[] = [
           {
             type: 'link',
             label: 'RD Confirming Request',
-            route: '/employee-mngmt/employee-rd-request',
+            route: '/employees/leaves/replacement-requests',
             icon: 'update',
             isManager: true,
             isReplacementDay: true,
@@ -112,7 +113,7 @@ export const sidenavRouteInfo: NavigationItem[] = [
           {
             type: 'link',
             label: 'Employee Register Request',
-            route: '/employees/manager-connection-requests',
+            route: '/employees/registration/requests',
             icon: 'update',
             isManager: true,
             isReplacementDay: false,

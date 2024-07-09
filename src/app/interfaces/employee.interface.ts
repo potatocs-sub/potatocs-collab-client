@@ -1,4 +1,4 @@
-import { Company } from 'src/app/interfaces/company.interface';
+import { Company } from './company.interface';
 import { Manager } from './manager.interface';
 export interface Employee extends UsedLeaveData {
   _id: string,

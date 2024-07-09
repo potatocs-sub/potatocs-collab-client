@@ -1,10 +1,12 @@
+import { ProfilesService } from './../../../services/profiles/profiles.service';
 import { CommonModule } from '@angular/common';
-import { Component, HostBinding, Input, SimpleChanges, WritableSignal, inject } from '@angular/core';
+import { Component, HostBinding, Input, SimpleChanges, WritableSignal, inject, effect } from '@angular/core';
 import { MaterialsModule } from '../../../materials/materials.module';
 import { IsActiveMatchOptions, NavigationEnd, Router, RouterModule } from '@angular/router';
 import { NavigationService } from '../../../stores/navigation/navigation.service';
 import { NavigationDropdown, NavigationLink } from '../../../interfaces/navigation-item.interface';
 import { Subscription, filter } from 'rxjs';
+import { dropdownAnimation } from '../../../animations/dropdown.animation';
 
 @Component({
   selector: 'app-side-nav-item',
@@ -15,6 +17,8 @@ import { Subscription, filter } from 'rxjs';
     RouterModule,
     SideNavItemComponent,
   ],
+  animations: [dropdownAnimation],
+
   templateUrl: './side-nav-item.component.html',
   styleUrl: './side-nav-item.component.scss'
 })
@@ -30,6 +34,7 @@ export class SideNavItemComponent {
   //레벨, 얼마나 깊이 들어왔는지 파악하기 위함
   @Input() level!: number;
   @Input() user: boolean = false;
+  @Input() flag!: any;
 
   //열려있는지 파악하기 위함
   isOpen: boolean = false;
@@ -38,7 +43,10 @@ export class SideNavItemComponent {
   // 의존성 주입
   router = inject(Router)
   navigationService = inject(NavigationService)
-  // authService = inject(AuthService)
+  profilesService = inject(ProfilesService)
+
+  userProfileInfo: WritableSignal<any> = this.profilesService.userProfileInfo;
+  userCompanyInfo: WritableSignal<any> = this.profilesService.userCompanyInfo;
 
   isLink = this.navigationService.isLink;
   isDropdown = this.navigationService.isDropdown;
@@ -51,6 +59,17 @@ export class SideNavItemComponent {
   subscriptions!: Subscription;
   userLeaveData: any;
 
+  constructor() {
+    // Signal state change handling
+    effect(() => {
+      const item = this.selectedDropDownItem();
+      if (item !== null) {
+        this.onOpenChange(item);
+      }
+    });
+  }
+
+
   ngOnInit(): void {
     this.subscriptions = new Subscription();
     if (this.isDropdown(this.item)) {
@@ -58,7 +77,7 @@ export class SideNavItemComponent {
         filter(event => event instanceof NavigationEnd),
       ).subscribe(() => this.onRouteChange());
 
-      this.subscriptions.add(sub1)
+      this.subscriptions.add(sub1);
     }
 
   }
@@ -142,7 +161,7 @@ export class SideNavItemComponent {
     }
     return parent?.children
       .filter((child: NavigationLink | NavigationDropdown) => this.isDropdown(child as NavigationDropdown))
-      .filter((child: NavigationLink | NavigationDropdown) => this.isChildrenOf(child as NavigationDropdown, item)).length
+      .some((child: NavigationLink | NavigationDropdown) => this.isChildrenOf(child as NavigationDropdown, item))
   }
 
   /**
@@ -173,13 +192,13 @@ export class SideNavItemComponent {
   }
 
 
-  isReplacement(item: NavigationLink) {
-    if (item.isReplacementDay == false || item.isReplacementDay == undefined) {
-      return true;
-    }
+  // isReplacement(item: NavigationLink) {
+  //   if (item.isReplacementDay == false || item.isReplacementDay == undefined) {
+  //     return true;
+  //   }
 
-    return item.isReplacementDay == true && this.userLeaveData?.isReplacementDay == true
-  }
+  //   return item.isReplacementDay == true && this.userLeaveData?.isReplacementDay == true
+  // }
 
   signOut() {
     // this.authService.signOut();
@@ -188,5 +207,106 @@ export class SideNavItemComponent {
   closeEvent() {
     console.log('close')
     // this.isSideNavOpen.set(false);
+  }
+
+
+  createSpaceDialog(): void {
+    // console.log();
+    // const spaceDialogRef = this.dialog2.open(DialogCreateSpaceComponent, {
+
+    //   // width: '270px',
+    //   data: {
+    //     spaceFlag: this.spaceFlag,
+    //     spaceName: '',
+    //     spaceBrief: '',
+    //     folderList: this.folderList
+    //   }
+    // });
+
+    // spaceDialogRef.afterClosed().subscribe(result => {
+    //   console.log('The space dialog was closed');
+
+
+    //   console.log(result);
+
+    //   // console.log(result);
+    //   if (result == null || result == '') {
+    //     console.log('not data')
+    //   }
+    //   else {
+    //     if (result.spaceFlag.spaceFlag == 'collab') {
+    //       console.log('createSpace')
+    //       this.createSpace(result);
+    //     }
+    //     else if (result.spaceFlag.spaceFlag == 'menuList') {
+    //       console.log('updateSpacePlace')
+    //       this.updateSpacePlace(result);
+    //     }
+    //   }
+    // });
+  }
+  createSpace(spaceData: any) {
+    // console.log(spaceData);
+    // this.sideNavService.createSpace(spaceData).subscribe(
+    //   (data: any) => {
+    //     if (data.message = 'created') {
+    //       this.dialogService.openDialogPositive('space created!');
+    //       this.updateSideMenu();
+
+    //     }
+    //   },
+    //   err => {
+    //     console.log(err);
+    //   }
+    // );
+  }
+  updateSideMenu() {
+    // this.sideNavService.updateSideMenu().subscribe(
+    //   (data: any) => {
+    //     // console.log(data);
+    //     // console.log(data.navList);
+    //     console.log('sidenav-item component');
+    //     ///////////////
+    //     const space = data.navList[0].spaces[data.navList[0].spaces.length - 1]
+    //     console.log(space);
+    //     this.navItems = this.navigationService.items;
+
+    //     const element = {
+    //       type: 'link',
+    //       label: space.displayName,
+    //       route: 'collab/space/' + space._id,
+    //       isManager: false,
+    //       isReplacementDay: false
+    //     }
+    //     this.navItems[1].children[1].children.push(element);
+    //     this.spaceListStorageService.updateSpaceList(this.navItems);
+
+    //     this.router.navigate(['/' + this.navItems[1].children[1].children[this.navItems[1].children[1].children.length - 1].route]);
+    //     ///////////////
+
+    //     const sideNavLists = {
+    //       folder_list: data.navList[0].folders,
+    //       space_list: data.navList[0].spaces
+    //     }
+    //     // this.sideNavService.setTrueForSideNavFlag();
+    //     this.folderList = data.folderNav
+    //     this.sideNavService.updateMenuData(sideNavLists);
+    //   }
+    // );
+  }
+  updateSpacePlace(data: any) {
+    // this.sideNavService.updateSpacePlace(data).subscribe(
+    //   (data: any) => {
+    //     // console.log(data.message);
+    //     if (data.message = 'update space place data') {
+    //       this.dialogService.openDialogPositive('succeed move space');
+    //       this.updateSideMenu();
+    //     }
+    //   },
+    //   err => {
+    //     console.log(err);
+    //   }
+    // );
+
   }
 }

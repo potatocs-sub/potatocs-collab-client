@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LeavesComponent } from './leaves.component';
+import { LeavesRequestsComponent } from './leaves-requests.component';
 
-describe('LeavesComponent', () => {
-  let component: LeavesComponent;
-  let fixture: ComponentFixture<LeavesComponent>;
+describe('LeavesRequestsComponent', () => {
+  let component: LeavesRequestsComponent;
+  let fixture: ComponentFixture<LeavesRequestsComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [LeavesComponent]
+      imports: [LeavesRequestsComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(LeavesComponent);
+    fixture = TestBed.createComponent(LeavesRequestsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

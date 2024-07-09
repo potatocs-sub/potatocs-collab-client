@@ -68,7 +68,7 @@ export class EmployeesListComponent {
             return [];
           }
           this.isRateLimitReached.set(false);
-          this.resultsLength.set(res.total_count);
+          this.resultsLength.set(res.myEmployeeList.length);
           // this.calculateTenure(res.myEmployeeList);
           return res.myEmployeeList;
         }),
