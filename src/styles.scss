@@ -1,4 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -7,28 +8,28 @@ $sidenav-width: 279px;
 $sidenav-toolbar-height: 64px; // material default
 $sidenav-toolbar-height-mobile: 56px; // material default <599px
 //$sidenav-bgColor: #1a202e;
-$sidenav-bgColor: #00154F;
+$sidenav-bgColor: #00154f;
 //$sidenav-active-color: #141924;
-$sidenav-active-color: #F4AF1B;
+$sidenav-active-color: #f4af1b;
 
 html,
 body {
-  height: 100%;
+	height: 100%;
 }
 
 body {
-  margin: 0;
-  font-family: "Noto Sans KR", sans-serif !important;
+	margin: 0;
+	font-family: "Noto Sans KR", sans-serif !important;
 }
-
 
 /* 각 sccs에 넣으면 적용이 안되는 Angular Material */
 
 .mat-mdc-card {
-  box-shadow: none !important;
+	box-shadow: none !important;
 }
 
-.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field .mdc-notched-outline__notch {
-  border-right-style: hidden !important;
-  box-shadow: none !important;
+.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field
+	.mdc-notched-outline__notch {
+	border-right-style: hidden !important;
+	box-shadow: none !important;
 }

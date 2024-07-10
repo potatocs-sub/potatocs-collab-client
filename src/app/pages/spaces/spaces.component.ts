@@ -15,10 +15,11 @@ import { CalendarListComponent } from "./calendar-list/calendar-list.component";
 import { CommonModule } from "@angular/common";
 import { ScrumboardListComponent } from "./scrumboard-list/scrumboard-list.component";
 import { MemberDataStorageService } from "../../stores/member-data-storage/member-data-storage.service";
+import { DocListComponent } from "./doc-list/doc-list.component";
 @Component({
 	selector: "app-spaces",
 	standalone: true,
-	imports: [MaterialsModule, CalendarListComponent, CommonModule, ScrumboardListComponent],
+	imports: [MaterialsModule, CalendarListComponent, CommonModule, ScrumboardListComponent, DocListComponent],
 	templateUrl: "./spaces.component.html",
 	styleUrl: "./spaces.component.scss",
 })
@@ -83,7 +84,7 @@ export class SpacesComponent implements OnInit {
 					docStatus: data[0].docStatus,
 					labels: data[0].labels,
 				};
-				// console.log(this.spaceInfo);
+				console.log(this.spaceInfo);
 				this.memberInSpace = data[0].memberObjects;
 				this.adminInSpace = data[0].admins;
 
@@ -95,6 +96,14 @@ export class SpacesComponent implements OnInit {
 		}
 	}
 
+	checkArray(data, arrayData) {
+		const isInArray = arrayData.includes(data._id);
+		if (isInArray) {
+			return (data.isAdmin = true);
+		} else {
+			return (data.IsAdmin = false);
+		}
+	}
 	openSpaceOption(): void {
 		const dialogRef = this.dialog.open(DialogSettingSpaceComponent, {
 			// width: '600px',

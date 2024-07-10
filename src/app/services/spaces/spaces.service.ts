@@ -22,6 +22,7 @@ export class SpacesService {
 	) {}
 
 	getSpaceMembers(spaceTime) {
+		console.log("이리미", this.baseUrl);
 		return this.http.get(this.baseUrl + "/collab/space/" + spaceTime).pipe(
 			tap((res: any) => {
 				console.log("스페이스 서비스", res.scrumBoard);
@@ -64,5 +65,41 @@ export class SpacesService {
 
 	inviteSpaceMember(data) {
 		return this.http.put(this.baseUrl + "/collab/inviteSpaceMember", data);
+	}
+
+	//hokyun 2022-08-16
+	addSpaceLabel(data) {
+		return this.http.put(this.baseUrl + "/collab/add-space-label", data).subscribe((res: any) => {
+			this.getSpaceMembers(res.spaceTime);
+		});
+	}
+
+	deleteSpaceLabel(data) {
+		return this.http.put(this.baseUrl + "/collab/delete-space-label", data).pipe(
+			tap(async (res: any) => {
+				// this.getSpaceMembers(res.spaceTime).subscribe((res: any) => {
+
+				// })
+				this.member.set(res.spaceMembers);
+				// await this.scrumService.updateScrumBoard(res.scrumBoard);
+				// await this.ddsService.updateDocs(res.spaceDocs);
+				return res.message;
+			})
+		);
+	}
+
+	editSpaceLabel(data) {
+		return this.http.put(this.baseUrl + "/collab/edit-space-label", data).pipe(
+			tap(async (res: any) => {
+				// this.getSpaceMembers(res.spaceTime).subscribe((res: any) => {
+
+				// })
+
+				this.member.set(res.spaceMembers);
+				// this.scrumService.updateScrumBoard(res.scrumBoard);
+				// this.ddsService.updateDocs(res.spaceDocs);
+				return res.message;
+			})
+		);
 	}
 }

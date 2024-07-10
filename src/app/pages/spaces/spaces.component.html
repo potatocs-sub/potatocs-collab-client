@@ -132,18 +132,20 @@
 				<app-scrumboard-list [spaceInfo]="spaceInfo" [memberInSpace]="memberInSpace"></app-scrumboard-list>
 			</div>
 		</mat-tab>
-		<!-- <mat-tab label="Calendar">
+		<mat-tab label="Calendar">
 			<app-calendar-list [memberInSpace]="memberInSpace"></app-calendar-list>
 		</mat-tab>
-		<mat-tab label="Meeting">
+		<!-- <mat-tab label="Meeting">
 			<app-meeting-list
 				*ngIf="spaceInfo"
 				[spaceInfo]="spaceInfo"
 				[memberInSpace]="memberInSpace"
 			></app-meeting-list>
-		</mat-tab>
-		<mat-tab label="Document">
-			<app-doc-list *ngIf="spaceInfo" [spaceInfo]="spaceInfo" [spaceTime]="spaceTime"></app-doc-list>
 		</mat-tab> -->
+		<mat-tab label="Document">
+			@if(spaceInfo){
+			<app-doc-list [spaceInfo]="spaceInfo" [spaceTime]="spaceTime"></app-doc-list>
+			}
+		</mat-tab>
 	</mat-tab-group>
 </div>

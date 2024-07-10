@@ -2,6 +2,7 @@ import { Route } from "@angular/router";
 import { SpacesComponent } from "./spaces.component";
 import { CalendarListComponent } from "./calendar-list/calendar-list.component";
 import { EditorComponent } from "./editor/editor.component";
+import { DocumentComponent } from "./document/document.component";
 export const SPACES_ROUTES: Route[] = [
 	{
 		path: ":spaceTime",
@@ -13,13 +14,13 @@ export const SPACES_ROUTES: Route[] = [
 		loadComponent: () => EditorComponent,
 		// canActivate: [SpaceGuard]
 	},
-	// {
-	//   path: 'space/:spaceTime/doc',
-	//   loadComponent: () => DocumentComponent,
-	//   canActivate: [SpaceGuard]
-	// },
 	{
-		path: "space/calendar",
+		path: ":spaceTime/doc",
+		loadComponent: () => DocumentComponent,
+		// canActivate: [SpaceGuard],
+	},
+	{
+		path: "calendar",
 		loadComponent: () => CalendarListComponent,
 		// canActivate: [SpaceGuard]
 	},

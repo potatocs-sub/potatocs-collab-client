@@ -40,7 +40,7 @@ import { MatSliderModule } from "@angular/material/slider";
 import { FlexLayoutModule } from "@angular/flex-layout";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { DragDropModule } from "@angular/cdk/drag-drop";
-import { FlatpickrModule } from "angularx-flatpickr";
+
 @NgModule({
 	exports: [
 		FlexLayoutModule,
@@ -86,7 +86,6 @@ import { FlatpickrModule } from "angularx-flatpickr";
 		MatSnackBarModule,
 		DragDropModule,
 		MatChipsModule,
-		FlatpickrModule,
 	],
 })
 export class MaterialsModule {}

@@ -90,8 +90,8 @@ export class EditorComponent implements OnInit {
 			this.selectedStatus = this.spaceInfoObj.status;
 		});
 
-		this.spacesService.getSpaceMembers(this.spaceTime).subscribe(
-			(data: any) => {
+		this.spacesService.getSpaceMembers(this.spaceTime).subscribe({
+			next: (data: any) => {
 				console.log(data);
 				// console.log(data.spaceMembers[0].docStatus);
 				this.docStatus = data.spaceMembers[0].docStatus;
@@ -100,8 +100,8 @@ export class EditorComponent implements OnInit {
 				console.log("스페이스멤버:", this.member_list);
 				// this.selectedStatus = this.docStatus[0];
 			},
-			(err: any) => {}
-		);
+			error: (err: any) => {},
+		});
 
 		//현재 로그인 되있는 유저 정보 불러오기
 		console.log("에디터 컴포넌트", this.profilesService.userProfileInfo());

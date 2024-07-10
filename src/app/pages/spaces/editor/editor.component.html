@@ -13,11 +13,8 @@
 				matInput
 				type="text"
 				class="period-picker"
-				mwlFlatpickr
-				[convertModelValue]="true"
 				[(ngModel)]="startDate"
 				(ngModelChange)="refresh.next()"
-				[enableTime]="true"
 				dateFormat="Y-m-d H:i"
 				placeholder="Not set"
 			/>
@@ -29,11 +26,8 @@
 				matInput
 				class="period-picker"
 				type="text"
-				mwlFlatpickr
 				[(ngModel)]="endDate"
 				(ngModelChange)="refresh.next()"
-				[convertModelValue]="true"
-				[enableTime]="true"
 				dateFormat="Y-m-d H:i"
 				placeholder="Not set"
 			/>
@@ -82,11 +76,8 @@
 					matInput
 					type="text"
 					class="period-picker"
-					mwlFlatpickr
-					[convertModelValue]="true"
 					[(ngModel)]="startDate"
 					(ngModelChange)="refresh.next()"
-					[enableTime]="true"
 					dateFormat="Y-m-d H:i"
 					placeholder="Not set"
 				/>
@@ -98,11 +89,8 @@
 					matInput
 					class="period-picker"
 					type="text"
-					mwlFlatpickr
 					[(ngModel)]="endDate"
 					(ngModelChange)="refresh.next()"
-					[convertModelValue]="true"
-					[enableTime]="true"
 					dateFormat="Y-m-d H:i"
 					placeholder="Not set"
 				/>
