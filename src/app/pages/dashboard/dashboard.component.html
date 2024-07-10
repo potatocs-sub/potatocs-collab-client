@@ -5,8 +5,8 @@
     </div>
 
     <div fxLayout="column" fxLayoutGap="30px" class="dashWrap">
-      <div fxLayout.gt-sm="row" fxLayoutAlign.gt-sm="start center" fxLayoutGap.gt-sm="30px" fxLayout.lt-sm="column"
-        fxLayoutAlign.lt-sm="start" fxLayoutGap.lt-sm="30px">
+      <div class="leave_line_container" fxLayout.gt-sm="row" fxLayoutAlign.gt-sm="start center" fxLayoutGap.gt-sm="30px"
+        fxLayout.lt-sm="column" fxLayoutAlign.lt-sm="start" fxLayoutGap.lt-sm="30px">
         <div #dash id="dash" class="dash dashBoxBuild" fxFlex.gt-sm="50" fxFlex.lt-sm="100" fxLayout="row"
           fxLayoutAlign="start center" fxLayoutGap="20px">
           <div>
@@ -21,7 +21,7 @@
                 Contract Start : {{ userProfileInfo()?.emp_start_date | date:'YYYY-MM-dd' }}
               </div>
               <div>
-                Tenure today : {{ userProfileInfo()?.tenure_today }}
+                Tenure today : {{ tenure_today }}
               </div>
               <div *ngIf="isRollover">
                 Rollover Period : {{ minDate }} ~ {{ maxDate }}

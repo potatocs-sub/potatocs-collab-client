@@ -61,7 +61,7 @@ export class DashboardComponent {
 	@ViewChild("leaveBalance") leaveBalanceElement!: ElementRef<HTMLDivElement>;
 
 	resizeObservable$!: Observable<Event>;
-	private unsubscribe$ = new Subject<void>(); // Used for unsubscribing
+	private unsubscribe$ = new Subject<void>(); // Used for unsubscribing₩₩₩
 
 	manager: any;
 	leaveInfo: any; // 휴가정보
@@ -77,17 +77,30 @@ export class DashboardComponent {
 	userCompanyInfo: WritableSignal<any> = this.profilesService.userCompanyInfo;
 	userManagerInfo: WritableSignal<any> = this.profilesService.userManagerInfo;
 
+	tenure_today: string = "";
 	constructor() {
 		effect(() => {
-			if (!this.userProfileInfo()) {
+			if (this.userProfileInfo()) {
 				console.log("rollover");
-				this.rolloverDate();
+				this.calculateTenure(this.userProfileInfo());
 			}
 		});
 		effect(() => {
-			if (!this.userCompanyInfo()) {
-				console.log("rollover");
+			if (this.userCompanyInfo()) {
 				this.rolloverDate();
+				this.leavesService.getMyLeavesStatus().subscribe({
+					next: (res: any) => {
+						console.log(res);
+						this.leaveInfo = res;
+						this.leaveInfo.rollover = Math.min(
+							this.leaveInfo.rollover,
+							this.userCompanyInfo()?.rollover_max_day
+						);
+					},
+					error: (err: any) => {
+						err;
+					},
+				});
 			}
 		});
 	}
@@ -96,6 +109,7 @@ export class DashboardComponent {
 	rolloverDate() {
 		this.minDate = "";
 		this.maxDate = "";
+
 		if (this.userProfileInfo()) {
 			this.isRollover = true;
 			// n년차 계산
@@ -107,7 +121,7 @@ export class DashboardComponent {
 			this.minDate = moment(this.userProfileInfo()?.emp_start_date).add(careerYear, "y").format("YYYY-MM-DD");
 
 			this.maxDate = moment(this.minDate)
-				.add(this.company.rollover_max_month, "M")
+				.add(this.userCompanyInfo()?.rollover_max_month, "M")
 				.subtract(1, "days")
 				.format("YYYY-MM-DD");
 		}
@@ -122,8 +136,7 @@ export class DashboardComponent {
 		const startDate = moment(start, "YYYY-MM-DD");
 		const endDate = moment(end, "YYYY-MM-DD");
 		const today = moment(this.commonService.dateFormatting(date), "YYYY-MM-DD");
-
-		data.tenure_today = this.yearMonth(startDate, today);
+		this.tenure_today = this.yearMonth(startDate, today);
 	}
 	yearMonth(start: any, end: any) {
 		var monthDiffToday = end.diff(start, "months");
@@ -193,7 +206,7 @@ export class DashboardComponent {
 	openDialogFindMyManager() {
 		if (this.userCompanyInfo()?.status == "pending" || this.userCompanyInfo() == null) {
 			this.dialogsService.openDialogNegative("Please, register a company first.");
-			return 0;
+			return;
 		}
 		const dialogRef = this.dialog.open(ConnectManagerDialogComponentComponent, {
 			data: {

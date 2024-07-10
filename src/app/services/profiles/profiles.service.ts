@@ -42,10 +42,9 @@ export class ProfilesService {
 		return this.http.put("/api/v1/user/profileChange", data);
 	}
 
-	changeProfileImage(imgFile) {
+	changeProfileImage(imgFile: any) {
 		const imgData = new FormData();
 		imgData.append("file", imgFile);
-		console.log();
-		return this.http.post("/api/v1/user/profileImageChange", imgData);
+		return this.http.post(this.baseUrl + "/user/profileImageChange", imgData);
 	}
 }

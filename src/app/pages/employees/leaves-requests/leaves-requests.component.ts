@@ -109,6 +109,7 @@ export class LeavesRequestsComponent {
 
   rejectLeave(data: any, event: MouseEvent) {
     event.stopPropagation();
+    data.reject = true;
     this.openDialogPendingLeaveDetail(data);
   }
 

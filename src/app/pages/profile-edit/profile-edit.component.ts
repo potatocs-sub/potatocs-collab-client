@@ -1,19 +1,20 @@
-import { Component, OnInit } from "@angular/core";
-import { DialogService } from "./../../stores/dialog/dialog.service";
-import { MaterialsModule } from "../../materials/materials.module";
-import { ProfilesService } from "./../../services/profiles/profiles.service";
 import { CommonModule } from "@angular/common";
+import { Component, effect } from "@angular/core";
+import { MaterialsModule } from "../../materials/materials.module";
+import { FormsModule } from "@angular/forms";
+import { DialogService } from "../../stores/dialog/dialog.service";
+import { ProfilesService } from "../../services/profiles/profiles.service";
 
 @Component({
 	selector: "app-profile-edit",
-	templateUrl: "./profile-edit.component.html",
 	standalone: true,
-	imports: [CommonModule, MaterialsModule],
-	styleUrls: ["./profile-edit.component.scss"],
+	imports: [CommonModule, MaterialsModule, FormsModule],
+	templateUrl: "./profile-edit.component.html",
+	styleUrl: "./profile-edit.component.scss",
 })
 export class ProfileEditComponent {
-	public userInfo;
-	public info = {
+	public userInfo: any;
+	public info: any = {
 		_id: "",
 		name: "",
 		new_password: "",
@@ -23,7 +24,7 @@ export class ProfileEditComponent {
 		position: "",
 	};
 
-	public flag = {
+	public flag: any = {
 		nameFlag: true,
 		passwordFlag: true,
 		emailFlag: true,
@@ -32,41 +33,54 @@ export class ProfileEditComponent {
 		positionFlag: true,
 	};
 
-	constructor(private profileService: ProfilesService, private dialogService: DialogService) {}
+	constructor(
+		private profileService: ProfilesService,
+		// private dataService: DataService,
+		private dialogService: DialogService
+	) {
+		effect(() => {
+			const userInfo = this.profileService.userProfileInfo();
+
+			if (!userInfo) return;
+
+			this.userInfo = userInfo;
+
+			this.info._id = this.userInfo._id;
+			this.info.name = this.userInfo.name;
+			this.info.mobile = this.userInfo.mobile;
+			this.info.department = this.userInfo.department;
+			this.info.position = this.userInfo.position;
+		});
+	}
 
 	ngOnInit(): void {
-		// data service 안쓰고 profile service로 수정해야함
 		// this.dataService.userProfile.subscribe(
 		//   (data: any) => {
 		//     this.userInfo = data;
-
 		//     this.info._id = this.userInfo._id;
 		//     this.info.name = this.userInfo.name;
 		//     this.info.mobile = this.userInfo.mobile;
 		//     this.info.department = this.userInfo.department;
 		//     this.info.position = this.userInfo.position;
-		//   },
-		//   (err: any) => {
+		//   }
+		//   , (err: any) => {
 		//     console.log(err);
 		//   }
-		// );
-
-		console.log(this.profileService.userProfileInfo);
+		// )
 	}
 
-	onEdit(flagName) {
-		console.log("플래그?", this.flag);
-		console.log("onEdit", flagName);
+	onEdit(flagName: any) {
+		console.log("뭐여");
 		this.flag[flagName] = false;
 		// const Name = flagName.slice(0,-4);
 	}
-	onCancel(flagName) {
+	onCanel(flagName: any) {
 		this.flag[flagName] = true;
 		console.log(this.info);
 		const Name = flagName.slice(0, -4);
 		this.info[Name] = this.userInfo[Name];
 	}
-	onSave(flagName) {
+	onSave(flagName: any) {
 		// console.log(this.info);
 		this.flag[flagName] = true;
 		const Name = flagName.slice(0, -4);
@@ -96,7 +110,7 @@ export class ProfileEditComponent {
 						if (data.message == "changed") {
 							this.dialogService.openDialogPositive(`${Name} has updated successfully.`);
 							// alert(`${Name} has updated successfully.`);
-							this.profileService.userProfileInfo = data.profileChange;
+							// this.dataService.updateUserProfile(data.profileChange);
 							this.resetPwdInit();
 						}
 					},
@@ -111,7 +125,7 @@ export class ProfileEditComponent {
 		});
 	}
 
-	comparePwdEachOther(newPwd, cfmPwd) {
+	comparePwdEachOther(newPwd: any, cfmPwd: any) {
 		if (newPwd === cfmPwd) {
 			return true;
 		} else {
@@ -120,8 +134,8 @@ export class ProfileEditComponent {
 	}
 
 	resetPwdInit() {
-		// this.info.new_password = null;
-		// this.info.confirm_password = null;
+		this.info.new_password = null;
+		this.info.confirm_password = null;
 	}
 
 	/**
@@ -146,7 +160,7 @@ export class ProfileEditComponent {
 			// alert('사진을 불러올 수 없습니다.');
 		}
 	}
-	changeProfileImage(imgFile) {
+	changeProfileImage(imgFile: any) {
 		console.log(imgFile);
 		this.profileService.changeProfileImage(imgFile).subscribe((data: any) => {
 			console.log(data);

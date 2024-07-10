@@ -171,7 +171,7 @@ export class LeavesRequestsAddComponent {
 
   datePickChange(dateValue: any) {
     // this.checkEmpYear(dateValue);
-    // this.employeeLeaveForm.get('leave_end_date').setValue('');
+    // this.employeeLeaveForm.get('leave_end_date')?.setValue('');
   }
 
   // 시작 날짜와 종료 날짜의 차이를 계산하는 함수
