@@ -206,7 +206,7 @@ export class DashboardComponent {
 	openDialogFindMyManager() {
 		if (this.userCompanyInfo()?.status == "pending" || this.userCompanyInfo() == null) {
 			this.dialogsService.openDialogNegative("Please, register a company first.");
-			return;
+			return 0;
 		}
 		const dialogRef = this.dialog.open(ConnectManagerDialogComponentComponent, {
 			data: {
