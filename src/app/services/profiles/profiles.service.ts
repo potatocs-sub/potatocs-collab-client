@@ -43,4 +43,14 @@ export class ProfilesService {
         )
       );
   }
+
+  changeUserProfile(data: any) {
+    return this.http.put(this.baseUrl + '/user/profileChange', data);
+  }
+
+  changeProfileImage(imgFile: any) {
+    const imgData = new FormData();
+    imgData.append('file', imgFile);
+    return this.http.post(this.baseUrl + '/user/profileImageChange', imgData);
+  }
 }

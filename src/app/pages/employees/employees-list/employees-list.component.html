@@ -35,8 +35,8 @@
             <option [value]="item" *ngFor="let item of filter?.options">{{item}}</option>
           </select>
         </mat-form-field>
-        &nbsp;
-        <button mat-flat-button color="warn" (click)="resetFilters()">Reset</button>
+        <!-- &nbsp; -->
+        <!-- <button mat-flat-button color="warn" (click)="resetFilters()">Reset</button> -->
       </div>
 
       <table mat-table [dataSource]="employeeList()" class="mat-elevation-z8 historyTable" matSort
