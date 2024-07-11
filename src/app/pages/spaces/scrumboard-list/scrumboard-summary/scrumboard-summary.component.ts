@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, Signal, ViewChild, effect } from "@angular/core";
+import { Component, Inject, OnInit, Signal, ViewChild, WritableSignal, effect } from "@angular/core";
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { saveAs } from "file-saver";
 import { DocumentsService } from "../../../../services/spaces/documents.service";
@@ -15,6 +15,7 @@ import { MatPaginator } from "@angular/material/paginator";
 import { DialogService } from "../../../../stores/dialog/dialog.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { WhiteBoardComponent } from "./white-board/white-board.component";
+import { Subject, takeUntil } from "rxjs";
 @Component({
 	selector: "app-scrumboard-summary",
 	standalone: true,
@@ -48,8 +49,9 @@ export class ScrumboardSummaryComponent implements OnInit {
 	//hokyun
 	labels: any[] = [1, 2, 3, 4];
 
+	private unsubscribe$ = new Subject<void>();
 	//signal
-	files: Signal<any> = this.ddsService.files;
+	files: WritableSignal<any> = this.ddsService.files;
 
 	constructor(
 		public dialogRef: MatDialogRef<ScrumboardSummaryComponent>,
@@ -64,14 +66,7 @@ export class ScrumboardSummaryComponent implements OnInit {
 		private snackbar: MatSnackBar,
 		private spacesService: SpacesService
 	) {
-		effect(() => {
-			if (this.files()) {
-				// upload file data
-				this.filesArray = data;
-				// this.filesArray = new MatTableDataSource<PeriodicElementFile>(data);
-				this.filesArray.paginator = this.paginator;
-			}
-		});
+		this.getUploadFileList(this.data.document.doc_id);
 	}
 
 	ngOnInit(): void {
@@ -110,6 +105,12 @@ export class ScrumboardSummaryComponent implements OnInit {
 			}
 		}
 
+		// upload file data
+		this.ddsService.file$.pipe(takeUntil(this.unsubscribe$)).subscribe((data: any) => {
+			this.filesArray = data;
+			// this.filesArray = new MatTableDataSource<PeriodicElementFile>(data);
+			this.filesArray.paginator = this.paginator;
+		});
 
 		// comment data
 		this.getChatInDoc(this.data.document.doc_id);
@@ -135,7 +136,7 @@ export class ScrumboardSummaryComponent implements OnInit {
 			next: (data: any) => {
 				// console.log(data);
 				const uploadFileList = data.findFileList;
-				this.files().set(uploadFileList);
+				this.ddsService.updataFiles(uploadFileList);
 			},
 			error: (err: any) => {
 				console.log(err);
