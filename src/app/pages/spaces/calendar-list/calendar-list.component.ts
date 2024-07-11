@@ -72,7 +72,6 @@ export class CalendarListComponent implements OnInit {
 	) {
 		effect(() => {
 			if (this.docs()) {
-				console.log(this.docs());
 				this.docsArray = this.docs();
 				this.initializeEvents();
 			}

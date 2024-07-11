@@ -135,17 +135,15 @@
 		<mat-tab label="Calendar">
 			<app-calendar-list [memberInSpace]="memberInSpace"></app-calendar-list>
 		</mat-tab>
-		<!-- <mat-tab label="Meeting">
-			<app-meeting-list
-				*ngIf="spaceInfo"
-				[spaceInfo]="spaceInfo"
-				[memberInSpace]="memberInSpace"
-			></app-meeting-list>
-		</mat-tab> -->
-		<mat-tab label="Document">
+		<mat-tab label="Meeting">
+			@if(spaceInfo){
+			<app-meeting-list [spaceInfo]="spaceInfo" [memberInSpace]="memberInSpace"></app-meeting-list>
+			}
+		</mat-tab>
+		<!-- <mat-tab label="Document">
 			@if(spaceInfo){
 			<app-doc-list [spaceInfo]="spaceInfo" [spaceTime]="spaceTime"></app-doc-list>
 			}
-		</mat-tab>
+		</mat-tab> -->
 	</mat-tab-group>
 </div>
