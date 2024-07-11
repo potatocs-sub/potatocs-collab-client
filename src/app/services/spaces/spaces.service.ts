@@ -22,10 +22,8 @@ export class SpacesService {
 	) {}
 
 	getSpaceMembers(spaceTime) {
-		console.log("이리미", this.baseUrl);
 		return this.http.get(this.baseUrl + "/collab/space/" + spaceTime).pipe(
 			tap((res: any) => {
-				console.log("스페이스 서비스", res.scrumBoard);
 				this.member.set(res.spaceMembers);
 				this.docs.set(res.spaceDocs);
 				this.scrumService.updateScrumBoard(res.scrumBoard);

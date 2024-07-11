@@ -94,7 +94,6 @@ export class ScrumboardListComponent implements OnInit {
 		effect(() => {
 			if (this.scrum()) {
 				const data = this.scrum();
-				console.log(data);
 				this.temp = data.scrum;
 				this.docStatusList = this.temp;
 				// this.memberFilter()
@@ -103,10 +102,7 @@ export class ScrumboardListComponent implements OnInit {
 		});
 	}
 
-	ngOnInit(): void {
-		console.log("스크럼보드 리스트 : ", this.spaceMembers());
-		console.log(this.spaceInfo);
-	}
+	ngOnInit(): void {}
 
 	ngOnChanges(): void {
 		if (this.memberInSpace == undefined) {
@@ -168,9 +164,7 @@ export class ScrumboardListComponent implements OnInit {
 			swapCur: event.currentIndex,
 		};
 		this.docService.scrumEditDocStatus(data).subscribe(
-			(data: any) => {
-				console.log(data);
-			},
+			(data: any) => {},
 			(err: any) => {
 				// console.log(err);
 			}
@@ -314,8 +308,6 @@ export class ScrumboardListComponent implements OnInit {
 	//park
 	//카드 만들기
 	createCardAble(status, i) {
-		console.log(status);
-		console.log(i);
 		this.createCardFlag = i;
 	}
 
@@ -336,11 +328,9 @@ export class ScrumboardListComponent implements OnInit {
 			// memberId: this.selectedMember._id
 			memberId: this.loginId,
 		};
-		console.log(docData);
 		this.docService.createDoc(docData).subscribe(
 			(data: any) => {
 				if (data.message == "created") {
-					console.log("만들어버렸다");
 					this.initializeScrumBoard(this.member.value);
 					this.createCardFlag = -1;
 				}
@@ -356,7 +346,7 @@ export class ScrumboardListComponent implements OnInit {
 	}
 	initializeScrumBoard(member?) {
 		this.docStatusList = this.temp;
-		console.log(this.docStatusList);
+
 		for (let i = 0; i < this.docStatusList?.length; i++) {
 			const children = this.docStatusList[i].children;
 

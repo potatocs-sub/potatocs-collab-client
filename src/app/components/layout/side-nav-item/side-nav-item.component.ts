@@ -143,7 +143,6 @@ export class SideNavItemComponent {
 	 * - 2. 하위 자식 중 active가 없음: dropdown 닫기
 	 */
 	onRouteChange() {
-		console.log("엥?");
 		// 내 하위 Menu에 active child가 있는 경우
 		if (this.hasActiveChilds(this.item as NavigationDropdown)) {
 			this.isActive = true;
@@ -217,7 +216,6 @@ export class SideNavItemComponent {
 	}
 
 	createSpaceDialog(): void {
-		console.log();
 		const spaceDialogRef = this.dialog.open(DialogCreateSpaceComponent, {
 			// width: '270px',
 			data: {
@@ -228,8 +226,6 @@ export class SideNavItemComponent {
 			},
 		});
 		spaceDialogRef.afterClosed().subscribe((result) => {
-			console.log("The space dialog was closed");
-			console.log(result);
 			// console.log(result);
 			if (result == null || result == "") {
 				console.log("not data");
@@ -262,9 +258,6 @@ export class SideNavItemComponent {
 	//sideMenu Update
 	updateSideMenu() {
 		this.sideNavService.updateSideMenu().subscribe((data: any) => {
-			// console.log(data);
-			// console.log(data.navList);
-			console.log("sidenav-item component");
 			///////////////
 			const space = data.navList[0].spaces[data.navList[0].spaces.length - 1];
 			console.log(space);
