@@ -35,7 +35,6 @@
 		@switch(view){ @case ('month'){
 		<mwl-calendar-month-view
 			(dayClicked)="dayClicked($event.day)"
-			(eventClicked)="moveToDoc($event.event)"
 			(eventTimesChanged)="eventTimesChanged($event)"
 			[activeDayIsOpen]="activeDayIsOpen"
 			[events]="events"
@@ -45,7 +44,6 @@
 		</mwl-calendar-month-view>
 		} @case('week'){
 		<mwl-calendar-week-view
-			(eventClicked)="moveToDoc($event.event)"
 			(eventTimesChanged)="eventTimesChanged($event)"
 			[events]="events"
 			[refresh]="refresh"
@@ -54,7 +52,6 @@
 		</mwl-calendar-week-view>
 		} @case('day'){
 		<mwl-calendar-day-view
-			(eventClicked)="moveToDoc($event.event)"
 			(eventTimesChanged)="eventTimesChanged($event)"
 			[events]="events"
 			[refresh]="refresh"

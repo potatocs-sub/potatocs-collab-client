@@ -5,22 +5,24 @@ import { CommonService } from "../common/common.service";
 import { environment } from "../../../environments/environment";
 import { ScrumboardStorageService } from "../../stores/scrumboard-storage/scrumboard-storage.service";
 import { AuthService } from "../auth/auth.service";
+import { MeetingListStorageService } from "../../stores/meeting-list-storage.service";
 @Injectable({
 	providedIn: "root",
 })
 export class DocumentsService {
 	private baseUrl = environment.apiUrl;
-	meetingList: WritableSignal<any | null> = signal<any | null>(null);
+	meeting: WritableSignal<any | null> = this.meetingListStorageService.meeting;
 	docs: WritableSignal<any | null> = signal<any | null>(null);
 
 	constructor(
 		private http: HttpClient,
 		private commonService: CommonService,
 		private scrumService: ScrumboardStorageService,
-		private authService: AuthService
+		private authService: AuthService,
+		private meetingListStorageService: MeetingListStorageService
 	) {
 		effect(() => {
-			if (this.meetingList()) {
+			if (this.meeting()) {
 			}
 		});
 	}
@@ -58,7 +60,7 @@ export class DocumentsService {
 					)),
 						"dateOnly";
 				}
-				this.meetingList.set(res.meetingList);
+				this.meeting.set(res.meetingList);
 				return res.message;
 			})
 		);
@@ -118,6 +120,63 @@ export class DocumentsService {
 		);
 	}
 
+	statusInMeeting(data: any) {
+		return data.map((data) => {
+			if (data.status == "pending") {
+				data.clicked = false;
+				data.isButton = false;
+			} else if (data.status == "Open") {
+				data.clicked = true;
+				data.isButton = true;
+			} else if (data.status == "Close") {
+				data.clicked = false;
+				data.isButton = true;
+			}
+			return data;
+		});
+	}
+
+	// 호스트가 미팅을 열었을때
+	openMeeting(data) {
+		return this.http.post(this.baseUrl + "/collab/space/doc/openMeeting", data).pipe(
+			shareReplay(1),
+			tap((res: any) => {
+				console.log(res);
+				// this.pendingCompReqStorageService.updatePendingRequest(res.pendingCompanyData);
+
+				// commonservice
+				for (let index = 0; index < res.meetingList.length; index++) {
+					(res.meetingList[index].start_date = this.commonService.dateFormatting(
+						res.meetingList[index].start_date
+					)),
+						"dateOnly";
+				}
+				this.meeting.set(res.meetingList);
+				return res.message;
+			})
+		);
+	}
+
+	// 호스트가 미팅을 닫았을때
+	closeMeeting(data) {
+		return this.http.post(this.baseUrl + "/collab/space/doc/closeMeeting", data).pipe(
+			shareReplay(1),
+			tap((res: any) => {
+				console.log(res);
+				// this.pendingCompReqStorageService.updatePendingRequest(res.pendingCompanyData);
+
+				// commonservice
+				for (let index = 0; index < res.meetingList.length; index++) {
+					(res.meetingList[index].start_date = this.commonService.dateFormatting(
+						res.meetingList[index].start_date
+					)),
+						"dateOnly";
+				}
+				this.meeting.set(res.meetingList);
+				return res.message;
+			})
+		);
+	}
 	//done 상태 변경
 	updateDoneEntry(updateDoneEntry) {
 		return this.http.put(this.baseUrl + "/collab/space/doc/docCheckDone", updateDoneEntry).pipe(
@@ -129,18 +188,71 @@ export class DocumentsService {
 		);
 	}
 
+	// 미팅에 올라온 pdf 삭제
+	deleteMeetingPdfFile(data) {
+		console.log(data);
+		return this.http.delete("https://test-potatocs.com/apim/v1/whiteBoard/deleteMeetingPdfFile", { params: data });
+		// http://localhost:4300/room/61d28a9ab53f13467d3f7991
+	}
+
+	// 미팅에서 채팅한 내용 삭제
+	deleteAllOfChat(data) {
+		console.log(data);
+		return this.http.delete("https://test-potatocs.com/apim/v1/collab/deleteAllOfChat.", { params: data });
+		// return this.http.delete('http://localhost:4300/apim/v1/collab/deleteAllOfChat', {params: data} );
+	}
+
+	// 미팅 삭제
+	deleteMeeting(data) {
+		return this.http.delete(this.baseUrl + "/collab/space/doc/deleteMeeting", { params: data }).pipe(
+			shareReplay(1),
+			tap((res: any) => {
+				console.log(res);
+				// this.pendingCompReqStorageService.updatePendingRequest(res.pendingCompanyData);
+
+				// commonservice
+				for (let index = 0; index < res.meetingList.length; index++) {
+					(res.meetingList[index].start_date = this.commonService.dateFormatting(
+						res.meetingList[index].start_date
+					)),
+						"dateOnly";
+				}
+				this.meeting.set(res.meetingList);
+				return res.message;
+			})
+		);
+	}
 	getInfo(docId) {
 		const httpParams = new HttpParams({
 			fromObject: {
 				docId,
 			},
 		});
-		console.log(httpParams);
 		// const paramData = {
 		// 	spaceTime
 		// }
 
 		return this.http.get(this.baseUrl + "/collab/space/doc/getDocInfo", { params: httpParams });
+	}
+
+	// 미팅 생성
+	createMeeting(data) {
+		return this.http.post(this.baseUrl + "/collab/space/doc/createMeeting", data).pipe(
+			shareReplay(1),
+			tap((res: any) => {
+				console.log(res);
+				// this.pendingCompReqStorageService.updatePendingRequest(res.pendingCompanyData);
+				// commonservice
+				for (let index = 0; index < res.meetingList.length; index++) {
+					(res.meetingList[index].start_date = this.commonService.dateFormatting(
+						res.meetingList[index].start_date
+					)),
+						"dateOnly";
+				}
+				this.meeting.set(res.meetingList);
+				return res.message;
+			})
+		);
 	}
 
 	// doc 에 올려진 파일 목록 가져오기
@@ -177,7 +289,6 @@ export class DocumentsService {
 
 	// doc에 있는 채팅들 가져오기
 	getChatInDoc(docId) {
-		console.log(docId);
 		return this.http.get(this.baseUrl + "/collab/space/doc/getChatInDoc", { params: docId });
 	}
 
