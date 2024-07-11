@@ -231,38 +231,32 @@
 }
 
 .member-filter {
-	width: 0px;
-	height: 0px;
-	right: 100px;
 	position: fixed;
-	bottom: 90px;
+	bottom: 35px;
+	right: 50px;
+	width: auto; /* 필요에 따라 너비 설정 */
+	height: auto; /* 필요에 따라 높이 설정 */
+	pointer-events: none; /* 이 요소에 대한 이벤트 처리 비활성화 */
 
 	.filter-btn {
-		background-color: #00154f;
+		position: absolute; /* 절대 위치로 설정 */
+		top: 0;
+		left: 0;
+		width: 56px; /* 버튼의 너비 */
+		height: 56px; /* 버튼의 높이 */
+		background-color: #00154f; /* 원하는 배경색 */
+		pointer-events: auto; /* 버튼에 대한 이벤트 처리 활성화 */
+		z-index: 100; /* 필요에 따라 다른 요소보다 위로 */
 	}
 
-	.mat-option {
-		background-color: #4caf50;
-	}
-	.mat-icon {
-		width: 58px;
-	}
-	::ng-deep.mat-select-arrow {
-		opacity: 0;
-	}
-	::ng-deep .mat-form-field-wrapper {
-		padding: 0px;
-		// width: 50px;
-	}
-
-	::ng-deep .mat-form-field-infix {
-		top: -3px;
-		padding: 0px 0px 0px 0px;
-		border: 0px;
-	}
-
-	::ng-deep .mat-form-field-outline {
-		background-color: white;
+	.mat-select {
+		position: absolute; /* 절대 위치로 설정 */
+		left: 0; /* 왼쪽 정렬 */
+		top: 56px; /* 버튼 아래에 배치 */
+		width: auto; /* 필요에 따라 너비 설정 */
+		background-color: #ffffff; /* 원하는 배경색 */
+		pointer-events: auto; /* select에 대한 이벤트 처리 활성화 */
+		z-index: 99; /* 필요에 따라 다른 요소보다 아래로 */
 	}
 }
 
