@@ -15,11 +15,7 @@ export class ProfilesService {
 	userManagerInfo: WritableSignal<any | null> = signal<any | null>(null);
 
 	constructor() {
-		effect(() => {
-			console.log(this.userProfileInfo());
-			console.log(this.userCompanyInfo());
-			console.log(this.userManagerInfo());
-		});
+		effect(() => {});
 	}
 	getUserProfile() {
 		return this.http.get(this.baseUrl + "/user/profile").pipe(

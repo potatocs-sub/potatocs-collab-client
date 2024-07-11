@@ -10,7 +10,6 @@ export class ScrumboardStorageService {
 	constructor(private mdsService: MemberDataStorageService) {}
 
 	updateScrumBoard(scrums: any) {
-		console.log("scrumboard-storage 서비스 : ", scrums);
 		const spaceMember = this.member()[0].memberObjects;
 		const my_scrum = scrums.scrum;
 

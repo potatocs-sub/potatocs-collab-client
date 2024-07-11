@@ -75,10 +75,8 @@ export class ScrumboardSummaryComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		console.log("스크럼보드 써머리", this.data);
 		this.docService.getInfo(this.data.document.doc_id).subscribe({
 			next: (docData: any) => {
-				console.log(docData);
 				this.docDescription = docData.docInfo.docDescription;
 				//this.docTitle = docData.docInfo.docTitle;
 			},
@@ -91,7 +89,6 @@ export class ScrumboardSummaryComponent implements OnInit {
 		this.selectedMember = this.data.document.creator.map((a) => a._id);
 
 		this.selectedLabel = this.data.document.labels;
-		console.log(this.selectedLabel);
 
 		const userId = this.authService.getTokenInfo()._id;
 		// extracting creator data from injected data
@@ -112,7 +109,7 @@ export class ScrumboardSummaryComponent implements OnInit {
 				this.user = this.data.member[index];
 			}
 		}
-		console.log(this.data.document.creator);
+
 
 		// comment data
 		this.getChatInDoc(this.data.document.doc_id);

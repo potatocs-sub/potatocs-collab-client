@@ -16,10 +16,18 @@ import { CommonModule } from "@angular/common";
 import { ScrumboardListComponent } from "./scrumboard-list/scrumboard-list.component";
 import { MemberDataStorageService } from "../../stores/member-data-storage/member-data-storage.service";
 import { DocListComponent } from "./doc-list/doc-list.component";
+import { MeetingListComponent } from "./meeting-list/meeting-list.component";
 @Component({
 	selector: "app-spaces",
 	standalone: true,
-	imports: [MaterialsModule, CalendarListComponent, CommonModule, ScrumboardListComponent, DocListComponent],
+	imports: [
+		MaterialsModule,
+		CalendarListComponent,
+		CommonModule,
+		ScrumboardListComponent,
+		DocListComponent,
+		MeetingListComponent,
+	],
 	templateUrl: "./spaces.component.html",
 	styleUrl: "./spaces.component.scss",
 })
@@ -43,11 +51,9 @@ export class SpacesComponent implements OnInit {
 	ngOnInit(): void {
 		this.route.params.subscribe((params) => {
 			this.spaceTime = this.route.snapshot.params["spaceTime"];
-			console.log(params);
 
 			this.spacesService.getSpaceMembers(params["spaceTime"]).subscribe({
 				next: (data: any) => {
-					console.log("스페이스서비스");
 					this.getMembers();
 				},
 				error: (err: any) => {
@@ -56,9 +62,7 @@ export class SpacesComponent implements OnInit {
 			});
 
 			this.docService.getMeetingList({ spaceId: this.spaceTime }).subscribe({
-				next: (data: any) => {
-					console.log(data);
-				},
+				next: (data: any) => {},
 				error: (err: any) => {
 					console.log(err);
 				},
@@ -69,8 +73,6 @@ export class SpacesComponent implements OnInit {
 	getMembers() {
 		try {
 			const data = this.spaceMembers();
-			console.log(data);
-
 			if (data.length == 0) {
 				this.router.navigate(["collab"]);
 			} else {
@@ -84,7 +86,6 @@ export class SpacesComponent implements OnInit {
 					docStatus: data[0].docStatus,
 					labels: data[0].labels,
 				};
-				console.log(this.spaceInfo);
 				this.memberInSpace = data[0].memberObjects;
 				this.adminInSpace = data[0].admins;
 
@@ -115,14 +116,12 @@ export class SpacesComponent implements OnInit {
 		});
 
 		dialogRef.afterClosed().subscribe((result) => {
-			console.log("The dialog setting was closed");
 			if (result == null || result == "") {
 			} else {
 			}
 		});
 	}
 	openSpaceMemeber(): void {
-		console.log("openSpaceMemeber this.spaceTime : ", this.spaceTime);
 		const dialogRef = this.dialog.open(DialogSpaceMemberComponent, {
 			width: "600px",
 			height: "300px",
@@ -132,7 +131,6 @@ export class SpacesComponent implements OnInit {
 		});
 
 		dialogRef.afterClosed().subscribe((result) => {
-			console.log("The dialog setting was closed");
 			this.getMembers();
 			if (result == null || result == "") {
 			} else {
