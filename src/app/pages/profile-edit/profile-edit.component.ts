@@ -4,6 +4,8 @@ import { MaterialsModule } from "../../materials/materials.module";
 import { FormsModule } from "@angular/forms";
 import { DialogService } from "../../stores/dialog/dialog.service";
 import { ProfilesService } from "../../services/profiles/profiles.service";
+import { CameraDialogComponent } from "./camera-dialog/camera-dialog.component"
+import { MatDialog } from "@angular/material/dialog";
 
 @Component({
     selector: "app-profile-edit",
@@ -35,7 +37,8 @@ export class ProfileEditComponent {
 
     constructor(
         private profileService: ProfilesService,
-        private dialogService: DialogService
+        private dialogService: DialogService,
+        public dialog: MatDialog,
     ) {
         effect(() => {
             const userInfo = this.profileService.userProfileInfo();
@@ -176,5 +179,23 @@ export class ProfileEditComponent {
             (err: any) => {
                 console.log(err);
             };
+    }
+
+    openCamera(): void {
+        const dialogRef = this.dialog.open(CameraDialogComponent, {
+            // width: '600px',
+            // height: '500px',
+            // data: {
+            //     spaceInfo: this.spaceInfo,
+            //     memberInSpace: this.memberInSpace,
+            // },
+        });
+
+        dialogRef.afterClosed().subscribe((result) => {
+            console.log("The dialog setting was closed");
+            if (result == null || result == "") {
+            } else {
+            }
+        });
     }
 }
