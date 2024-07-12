@@ -73,7 +73,6 @@
 
           <mat-select
             class="Member-select"
-            style="width: 0px; height: 0px"
             #mySelect
             multiple
             [(value)]="selectedMember"
@@ -92,14 +91,15 @@
                   [src]="member.profile_img"
                   alt=""
                 />
-                } @else{ class="profile-img-select" [src]="basicProfile" alt=""
-                /> }
+                <img class="profile-img-select" [src]="basicProfile" alt="" />
+                } @else{
                 <div fxLayout="column" fxLayoutAlign="center">
                   <div class="member-select-option-name">{{ member.name }}</div>
                   <div class="member-select-option-email">
                     {{ member.email }}
                   </div>
                 </div>
+                }
               </div>
             </mat-option>
             }
@@ -112,9 +112,9 @@
         >
           <mat-chip-listbox>
             @for(label of data.document.labels ; track label){
-            <mat-chip-option selected [ngStyle]="{ background: label.color }">{{
+            <mat-chip [ngStyle]="{ background: label.color }">{{
               label.title
-            }}</mat-chip-option>
+            }}</mat-chip>
             }
             <div class="label-plus-button-container">
               <button
@@ -427,6 +427,12 @@
 
       <mat-divider></mat-divider>
       <div class="comment-row" fxLayout="column" fxLayoutAlign="none">
+        <div>
+          <div fxFlex="8">
+            <mat-icon>chat</mat-icon>
+          </div>
+          <div fxFlex="80">COMMENTS</div>
+        </div>
         <div class="comment">
           <div fxFlex="8"></div>
           <div fxFlex="85">

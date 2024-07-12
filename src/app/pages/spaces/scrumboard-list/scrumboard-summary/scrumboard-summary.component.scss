@@ -37,7 +37,7 @@
 }
 .member-select-option-email {
   font-size: 12px;
-  margin-top: -32px;
+  margin-top: -8px;
   margin-left: 6px;
 }
 
@@ -286,7 +286,7 @@ table {
     margin-bottom: 5px;
   }
   .chat-profile-img {
-    width: 40px;
+    width: 45px;
     border: 0;
     height: auto;
     border-radius: 100%;
@@ -322,7 +322,7 @@ table {
   justify-content: center;
   width: 40px;
 
-  .mat-fab {
+  button {
     width: 40px;
     height: 40px;
     background-color: #7c7c7c;
@@ -331,10 +331,9 @@ table {
     &::ng-deep .mat-button-wrapper {
       line-height: 40px;
       padding: 0;
-
-      .mat-icon {
-        color: #fff;
-      }
+    }
+    mat-icon {
+      color: #fff;
     }
   }
 }
@@ -344,7 +343,7 @@ table {
   justify-content: center;
   width: 40px;
 
-  .mat-mini-fab {
+  button {
     width: 30px;
     height: 30px;
     background-color: #7c7c7c;
@@ -356,10 +355,9 @@ table {
     &::ng-deep .mat-button-wrapper {
       line-height: 30px;
       padding: 0;
-
-      .mat-icon {
-        color: #fff;
-      }
+    }
+    .mat-icon {
+      color: #fff;
     }
   }
 }
@@ -385,7 +383,7 @@ table {
 
 ::ng-deep .label_box {
   padding: 8px;
-  width: 500px;
+  min-width: 550px;
 
   .dropdown-body {
     padding: 3px 0;
@@ -465,10 +463,9 @@ table {
         &::ng-deep .mat-button-wrapper {
           line-height: 35px;
           padding: 0;
-
-          .mat-icon {
-            color: #000;
-          }
+        }
+        .mat-icon {
+          color: #000;
         }
       }
 
@@ -532,4 +529,13 @@ table {
       box-sizing: border-box;
     }
   }
+}
+
+//mat-select 눌렀을 때 나오는 조금한 창 크기 수정
+.mat-mdc-select {
+  width: 50%;
+}
+
+.mat-mdc-menu-panel {
+  min-width: none;
 }
