@@ -22,7 +22,7 @@ import {
 } from "angular-calendar";
 import { addDays, addHours, endOfDay, endOfMonth, isSameDay, isSameMonth, startOfDay, subDays } from "date-fns";
 import { ActivatedRoute, Router } from "@angular/router";
-import { FormControl } from "@angular/forms";
+import { FormControl, FormsModule } from "@angular/forms";
 import { DocDataStorageService } from "../../../stores/doc-data-storage.service";
 import { CalendarEditComponent } from "./calendar-edit/calendar-edit.component";
 import { MaterialsModule } from "../../../materials/materials.module";
@@ -31,7 +31,7 @@ import { CommonModule } from "@angular/common";
 @Component({
 	selector: "app-calendar-list",
 	standalone: true,
-	imports: [MaterialsModule, CommonModule, CalendarModule],
+	imports: [MaterialsModule, CommonModule, CalendarModule, FormsModule],
 	templateUrl: "./calendar-list.component.html",
 	styleUrl: "./calendar-list.component.scss",
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -46,7 +46,7 @@ export class CalendarListComponent implements OnInit {
 	view: CalendarView = CalendarView.Month;
 	CalendarView = CalendarView;
 	viewDate: Date = new Date();
-	refresh: Subject<any> = new Subject();
+	refresh = new Subject<void>();
 	actions: CalendarEventAction[] = [
 		{
 			label: '<i class="fa fa-fw fa-pencil"></i>',
@@ -73,6 +73,7 @@ export class CalendarListComponent implements OnInit {
 		effect(() => {
 			if (this.docs()) {
 				this.docsArray = this.docs();
+				console.log("독어레이 변함", this.docsArray);
 				this.initializeEvents();
 			}
 		});
@@ -141,9 +142,9 @@ export class CalendarListComponent implements OnInit {
 						color: color,
 						draggable: true,
 					};
-
 					this.events.push(data);
 				}
+				this.refresh.next();
 			} else {
 				return;
 			}
@@ -197,20 +198,17 @@ export class CalendarListComponent implements OnInit {
 	}
 	// 옯겨서 다른곳에 놓으면 다이어로그가 열림
 	handleEvent(action: string, event: CalendarEvent): void {
-		const dialogRef = this.dialog.open(CalendarEditComponent, {
-			data: event,
-		});
+		const dialogRef = this.dialog.open(CalendarEditComponent, { data: event });
 
 		dialogRef.afterClosed().subscribe((result) => {
 			if (result) {
 				event = result;
+				console.log(event);
 				this.snackbar.open("Updated Event: " + event.title, "Close", {
 					duration: 3000,
 					horizontalPosition: "center",
 				});
-
-				this.initializeEvents();
-				this.cdr.detectChanges();
+				this.refresh.next();
 			}
 		});
 	}
