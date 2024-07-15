@@ -3,6 +3,21 @@
 	flex-direction: column;
 	height: 100%;
 }
+button.mat-icon-button {
+	display: flex; /* Flexbox 사용 */
+	justify-content: space-between; /* 좌우 정렬 */
+	align-items: center; /* 세로 정렬 */
+	white-space: nowrap; /* 줄바꿈 방지 */
+	width: 100%; /* 버튼 전체 너비 차지 */
+}
+
+.member-text {
+	flex-grow: 1; /* 텍스트가 가능한 공간 차지 */
+}
+
+.mat-icon {
+	margin-left: 10px; /* 아이콘과 텍스트 사이의 간격 */
+}
 
 .contentContainer {
 	// width: 100%;
