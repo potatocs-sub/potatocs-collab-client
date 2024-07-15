@@ -8,7 +8,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
   standalone: true,
   imports: [MaterialsModule, CommonModule],
   templateUrl: './negative-dialog.component.html',
-  styleUrl: './negative-dialog.component.scss'
+  styleUrl: './negative-dialog.component.scss',
 })
 export class NegativeDialogComponent {
   flag: boolean | undefined;
@@ -16,7 +16,7 @@ export class NegativeDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<NegativeDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.data.flag = true;

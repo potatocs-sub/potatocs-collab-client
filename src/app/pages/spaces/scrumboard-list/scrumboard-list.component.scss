@@ -5,6 +5,7 @@
 .main-container {
   min-height: 100%;
   overflow: auto;
+  overflow-y: hidden;
 }
 .main-container::-webkit-scrollbar-track {
   background-color: #f5f5f5;
