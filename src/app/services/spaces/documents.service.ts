@@ -6,20 +6,22 @@ import { environment } from "../../../environments/environment";
 import { ScrumboardStorageService } from "../../stores/scrumboard-storage/scrumboard-storage.service";
 import { AuthService } from "../auth/auth.service";
 import { MeetingListStorageService } from "../../stores/meeting-list-storage.service";
+import { DocDataStorageService } from "../../stores/doc-data-storage.service";
 @Injectable({
     providedIn: "root",
 })
 export class DocumentsService {
     private baseUrl = environment.apiUrl;
     meeting: WritableSignal<any | null> = this.meetingListStorageService.meeting;
-    docs: WritableSignal<any | null> = signal<any | null>(null);
+    docs: WritableSignal<any | null> = this.ddsService.docs;
 
     constructor(
         private http: HttpClient,
         private commonService: CommonService,
         private scrumService: ScrumboardStorageService,
         private authService: AuthService,
-        private meetingListStorageService: MeetingListStorageService
+        private meetingListStorageService: MeetingListStorageService,
+        private ddsService: DocDataStorageService
     ) {
         effect(() => {
             if (this.meeting()) {

@@ -1,35 +1,48 @@
-import { Component, Inject, OnInit, Signal, ViewChild, effect } from "@angular/core";
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
-import { saveAs } from "file-saver";
-import { DocumentsService } from "../../../../services/spaces/documents.service";
-import { CommonService } from "../../../../services/common/common.service";
-import { DocDataStorageService } from "../../../../stores/doc-data-storage.service";
-import moment from "moment";
-import { MaterialsModule } from "../../../../materials/materials.module";
-import { Router } from "@angular/router";
-import { FileUploadDescriptionComponent } from "../../document/doc-tab/doc-file-upload/file-upload-description/file-upload-description.component";
-import { FileUploadDetailsComponent } from "../../document/doc-tab/doc-file-upload/file-upload-details/file-upload-details.component";
-import { AuthService } from "../../../../services/auth/auth.service";
-import { SpacesService } from "../../../../services/spaces/spaces.service";
-import { MatPaginator } from "@angular/material/paginator";
-import { DialogService } from "../../../../stores/dialog/dialog.service";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { WhiteBoardComponent } from "./white-board/white-board.component";
+import {
+    Component,
+    Inject,
+    OnInit,
+    Signal,
+    ViewChild,
+    WritableSignal,
+    effect,
+} from '@angular/core';
+import {
+    MatDialog,
+    MatDialogRef,
+    MAT_DIALOG_DATA,
+} from '@angular/material/dialog';
+import { saveAs } from 'file-saver';
+import { DocumentsService } from '../../../../services/spaces/documents.service';
+import { CommonService } from '../../../../services/common/common.service';
+import { DocDataStorageService } from '../../../../stores/doc-data-storage.service';
+import moment from 'moment';
+import { MaterialsModule } from '../../../../materials/materials.module';
+import { Router } from '@angular/router';
+import { FileUploadDescriptionComponent } from '../../document/doc-tab/doc-file-upload/file-upload-description/file-upload-description.component';
+import { FileUploadDetailsComponent } from '../../document/doc-tab/doc-file-upload/file-upload-details/file-upload-details.component';
+import { AuthService } from '../../../../services/auth/auth.service';
+import { SpacesService } from '../../../../services/spaces/spaces.service';
+import { MatPaginator } from '@angular/material/paginator';
+import { DialogService } from '../../../../stores/dialog/dialog.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { WhiteBoardComponent } from './white-board/white-board.component';
+import { Subject, takeUntil } from 'rxjs';
 @Component({
-    selector: "app-scrumboard-summary",
+    selector: 'app-scrumboard-summary',
     standalone: true,
     imports: [MaterialsModule, WhiteBoardComponent],
-    templateUrl: "./scrumboard-summary.component.html",
-    styleUrl: "./scrumboard-summary.component.scss",
+    templateUrl: './scrumboard-summary.component.html',
+    styleUrl: './scrumboard-summary.component.scss',
 })
 export class ScrumboardSummaryComponent implements OnInit {
     pageSizeOptions;
-    displayedFile: string[] = ["name", "creator", "download", "delete"];
+    displayedFile: string[] = ['name', 'creator', 'download', 'delete'];
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
     creators: any[] = [];
     user;
-    basicProfile = "/assets/image/person.png";
+    basicProfile = '/assets/image/person.png';
     filesArray;
     chatArray;
     docTitle;
@@ -41,15 +54,16 @@ export class ScrumboardSummaryComponent implements OnInit {
     docDescription;
     // meetingArray;
     public fileData: File;
-    public fileName = "";
+    public fileName = '';
     textareaFlag: boolean;
     chatContent;
 
     //hokyun
     labels: any[] = [1, 2, 3, 4];
 
+    private unsubscribe$ = new Subject<void>();
     //signal
-    files: Signal<any> = this.ddsService.files;
+    files: WritableSignal<any> = this.ddsService.files;
 
     constructor(
         public dialogRef: MatDialogRef<ScrumboardSummaryComponent>,
@@ -64,21 +78,14 @@ export class ScrumboardSummaryComponent implements OnInit {
         private snackbar: MatSnackBar,
         private spacesService: SpacesService
     ) {
-        effect(() => {
-            if (this.files()) {
-                // upload file data
-                this.filesArray = data;
-                // this.filesArray = new MatTableDataSource<PeriodicElementFile>(data);
-                this.filesArray.paginator = this.paginator;
-            }
-        });
+        this.getUploadFileList(this.data.document.doc_id);
     }
 
     ngOnInit(): void {
         this.docService.getInfo(this.data.document.doc_id).subscribe({
             next: (docData: any) => {
                 this.docDescription = docData.docInfo.docDescription;
-                //this.docTitle = docData.docInfo.docTitle;
+                this.docTitle = docData.docInfo.docTitle;
             },
             error: (err: any) => {
                 console.log(err);
@@ -110,6 +117,14 @@ export class ScrumboardSummaryComponent implements OnInit {
             }
         }
 
+        // upload file data
+        this.ddsService.file$
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((data: any) => {
+                this.filesArray = data;
+                // this.filesArray = new MatTableDataSource<PeriodicElementFile>(data);
+                this.filesArray.paginator = this.paginator;
+            });
 
         // comment data
         this.getChatInDoc(this.data.document.doc_id);
@@ -120,7 +135,7 @@ export class ScrumboardSummaryComponent implements OnInit {
         this.docService.getInfo(this.data.document.doc_id).subscribe({
             next: (data: any) => {
                 this.docDescription = data.docInfo.docDescription;
-                console.log("aa");
+                console.log('aa');
             },
             error: (err: any) => {
                 console.log(err);
@@ -135,7 +150,7 @@ export class ScrumboardSummaryComponent implements OnInit {
             next: (data: any) => {
                 // console.log(data);
                 const uploadFileList = data.findFileList;
-                this.files().set(uploadFileList);
+                this.ddsService.updataFiles(uploadFileList);
             },
             error: (err: any) => {
                 console.log(err);
@@ -160,14 +175,14 @@ export class ScrumboardSummaryComponent implements OnInit {
     }
     // upload file cancel
     uploadFileDelete() {
-        this.fileName = "";
+        this.fileName = '';
         this.fileData = undefined;
     }
 
     // file upload btn
     fileUpload() {
         if (!this.fileData) {
-            this.dialogService.openDialogNegative("Please, select a file to upload.");
+            this.dialogService.openDialogNegative('Please, select a file to upload.');
         } else {
             this.openFileUploadDescription();
         }
@@ -183,22 +198,25 @@ export class ScrumboardSummaryComponent implements OnInit {
         });
 
         dialogRef.afterClosed().subscribe((result) => {
-            console.log("the file upload description dialog closed");
+            console.log('the file upload description dialog closed');
             // result 에 값이 오면 업로드
-
             if (result) {
-                this.docService.fileUpload(result.fileData, result.docId, result.description).subscribe({
-                    next: (data: any) => {
-                        if (data.message == "filesend") {
-                            this.getUploadFileList(this.data.document.doc_id);
-                            console.log("connected");
-                            this.dialogService.openDialogPositive("Successfully, the file has been uploaded.");
-                        }
-                    },
-                    error: (err: any) => {
-                        console.log(err);
-                    },
-                });
+                this.docService
+                    .fileUpload(result.fileData, result.docId, result.description)
+                    .subscribe({
+                        next: (data: any) => {
+                            if (data.message == 'filesend') {
+                                this.getUploadFileList(this.data.document.doc_id);
+                                console.log('connected');
+                                this.dialogService.openDialogPositive(
+                                    'Successfully, the file has been uploaded.'
+                                );
+                            }
+                        },
+                        error: (err: any) => {
+                            console.log(err);
+                        },
+                    });
             }
         });
     }
@@ -213,7 +231,7 @@ export class ScrumboardSummaryComponent implements OnInit {
         });
 
         dialogRef.afterClosed().subscribe((result) => {
-            console.log("the file upload detail dialog closed");
+            console.log('the file upload detail dialog closed');
         });
     }
 
@@ -228,20 +246,24 @@ export class ScrumboardSummaryComponent implements OnInit {
     // table 에서 휴지통 누르면 삭제
     deleteUploadFile(fileId, docId) {
         // console.log('delete upload fileeeee');
-        this.dialogService.openDialogConfirm("Do you want to delete the file?").subscribe((result) => {
-            if (result) {
-                this.docService.deleteUploadFile({ fileId }).subscribe(
-                    (data: any) => {
-                        // console.log(data);
-                        this.getUploadFileList(docId);
-                        this.dialogService.openDialogPositive("Successfully, the file has been deleted.");
-                    },
-                    (err: any) => {
-                        console.log(err);
-                    }
-                );
-            }
-        });
+        this.dialogService
+            .openDialogConfirm('Do you want to delete the file?')
+            .subscribe((result) => {
+                if (result) {
+                    this.docService.deleteUploadFile({ fileId }).subscribe(
+                        (data: any) => {
+                            // console.log(data);
+                            this.getUploadFileList(docId);
+                            this.dialogService.openDialogPositive(
+                                'Successfully, the file has been deleted.'
+                            );
+                        },
+                        (err: any) => {
+                            console.log(err);
+                        }
+                    );
+                }
+            });
     }
 
     ////////////// COMMENT //////////////////////
@@ -249,7 +271,7 @@ export class ScrumboardSummaryComponent implements OnInit {
     getChatInDoc(docId) {
         const data = {
             docId: docId,
-            from: "scrum",
+            from: 'scrum',
         };
         const today = new Date();
         this.docService.getChatInDoc(data).subscribe({
@@ -257,7 +279,10 @@ export class ScrumboardSummaryComponent implements OnInit {
                 this.chatArray = data.getChatInDoc;
 
                 for (let i = 0; i < this.chatArray.length; i++) {
-                    const date = this.commonService.dateFormatting(this.chatArray[i].createdAt, "chatDate");
+                    const date = this.commonService.dateFormatting(
+                        this.chatArray[i].createdAt,
+                        'chatDate'
+                    );
                     this.chatArray[i].createdAt = moment(date).from(moment(today));
 
                     for (let j = 0; j < this.data.member.length; j++) {
@@ -286,7 +311,7 @@ export class ScrumboardSummaryComponent implements OnInit {
         this.docService.createChat(data).subscribe({
             next: (data: any) => {
                 this.getChatInDoc(docId);
-                this.chatContent = "";
+                this.chatContent = '';
             },
             error: (err: any) => {
                 console.log(err);
@@ -317,7 +342,9 @@ export class ScrumboardSummaryComponent implements OnInit {
         const docQuery = {
             id: this.data.document.doc_id,
         };
-        this.router.navigate(["space/" + this.data.space_id + "/doc"], { queryParams: docQuery });
+        this.router.navigate(['space/' + this.data.space_id + '/doc'], {
+            queryParams: docQuery,
+        });
     }
 
     // 문서 삭제하기
@@ -328,7 +355,7 @@ export class ScrumboardSummaryComponent implements OnInit {
 
         this.dialogService
             .openDialogConfirm(
-                "All files uploaded to the document will also be deleted. Do you still want to delete this document?"
+                'All files uploaded to the document will also be deleted. Do you still want to delete this document?'
             )
             .subscribe((result) => {
                 if (result) {
@@ -336,7 +363,9 @@ export class ScrumboardSummaryComponent implements OnInit {
 
                     this.docService.deleteDoc({ docId }).subscribe(
                         (data: any) => {
-                            this.dialogService.openDialogPositive("Successfully,the document has been deleted.");
+                            this.dialogService.openDialogPositive(
+                                'Successfully,the document has been deleted.'
+                            );
                             this.dialogRef.close();
                         },
                         (err: any) => {
@@ -352,8 +381,8 @@ export class ScrumboardSummaryComponent implements OnInit {
 
     //문서 타이틀 바꾸기
     titleChange(value) {
-        if (value.replace(/\s/g, "").length === 0) {
-            this.dialogService.openDialogNegative("Please");
+        if (value.replace(/\s/g, '').length === 0) {
+            this.dialogService.openDialogNegative('Please');
             return;
         }
 
@@ -371,9 +400,9 @@ export class ScrumboardSummaryComponent implements OnInit {
 
         this.docService.titleChange(data).subscribe({
             next: (data: any) => {
-                this.snackbar.open("doc title change", "Close", {
+                this.snackbar.open('doc title change', 'Close', {
                     duration: 3000,
-                    horizontalPosition: "center",
+                    horizontalPosition: 'center',
                 });
 
                 this.textareaFlag = false;
@@ -395,7 +424,7 @@ export class ScrumboardSummaryComponent implements OnInit {
 
         if (this.selectedMember.length === 0) {
             this.selectedMember = [this.data.document.creator[0]._id];
-            this.dialogService.openDialogNegative("Please one people");
+            this.dialogService.openDialogNegative('Please one people');
             return;
         }
         for (const member of this.data.member) {
@@ -408,7 +437,7 @@ export class ScrumboardSummaryComponent implements OnInit {
 
         this.docService.updateDocEntry(updateDocEntry).subscribe({
             next: (data: any) => {
-                if (data.message == "updated") {
+                if (data.message == 'updated') {
                     // this.dialogService.openDialogPositive('succeed document save!');
                     // this.router.navigate(['/collab/space/' + this.spaceTime]);
                 }
@@ -438,8 +467,8 @@ export class ScrumboardSummaryComponent implements OnInit {
 
         this.docService.updateLabelsEntry(updateDocEntry).subscribe(
             (data: any) => {
-                if (data.message == "updated") {
-                    console.log("성공!!");
+                if (data.message == 'updated') {
+                    console.log('성공!!');
                 }
             },
             (err: any) => {
@@ -454,8 +483,16 @@ export class ScrumboardSummaryComponent implements OnInit {
     };
 
     //hokyun 2022-08-18
-    labelsColors = ["plum", "lightCoral", "LightSalmon", "Pink", "SkyBlue", "Thistle", "lime"];
-    selectedLabelColor: String = "plum";
+    labelsColors = [
+        'plum',
+        'lightCoral',
+        'LightSalmon',
+        'Pink',
+        'SkyBlue',
+        'Thistle',
+        'lime',
+    ];
+    selectedLabelColor: String = 'plum';
     // editLabelFlag: boolean = false;
 
     labelTitle: String;
@@ -470,19 +507,24 @@ export class ScrumboardSummaryComponent implements OnInit {
         //색이랑 값이 겹치는게 있으면 수행하지 않음
         if (
             this.data.labels.some((item) => {
-                return item.color == this.selectedLabelColor && item.title == this.labelTitle;
+                return (
+                    item.color == this.selectedLabelColor && item.title == this.labelTitle
+                );
             })
         ) {
             return;
         }
         //위 조건문을 통과하면 값을 먼저 클라이언트에 반영함
-        this.data.labels.push({ color: this.selectedLabelColor, title: this.labelTitle });
+        this.data.labels.push({
+            color: this.selectedLabelColor,
+            title: this.labelTitle,
+        });
         //이후 서버에 넘겨 값을 DB에 저장함
         this.spacesService.addSpaceLabel(data);
     }
 
     deleteLabel(label: any) {
-        console.log("test", label);
+        console.log('test', label);
         const data = {
             spaceTime: this.data.space_id,
             color: label.color,
@@ -511,18 +553,19 @@ export class ScrumboardSummaryComponent implements OnInit {
     }
 
     editLabelTitle(i: any) {
-        let inputs = document.getElementById("labelTitle" + i);
+        let inputs = document.getElementById('labelTitle' + i);
         inputs.focus();
-        inputs.style.pointerEvents = "auto";
-        document.getElementById("labelButton" + i).style.display = "none";
-        document.getElementById("labelcheckButton" + i).style.display = "block";
+        inputs.style.pointerEvents = 'auto';
+        document.getElementById('labelButton' + i).style.display = 'none';
+        document.getElementById('labelcheckButton' + i).style.display = 'block';
     }
 
     editDoneLabelTitle(i: any, label: any) {
-        let title = (<HTMLInputElement>document.getElementById("labelTitle" + i)).value;
-        document.getElementById("labelTitle" + i).style.pointerEvents = "none";
-        document.getElementById("labelButton" + i).style.display = "block";
-        document.getElementById("labelcheckButton" + i).style.display = "none";
+        let title = (<HTMLInputElement>document.getElementById('labelTitle' + i))
+            .value;
+        document.getElementById('labelTitle' + i).style.pointerEvents = 'none';
+        document.getElementById('labelButton' + i).style.display = 'block';
+        document.getElementById('labelcheckButton' + i).style.display = 'none';
         this.editLabel(title, label);
     }
 
