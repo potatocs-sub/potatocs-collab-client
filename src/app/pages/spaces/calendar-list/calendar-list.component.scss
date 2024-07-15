@@ -79,3 +79,17 @@
     width: 70%;
   }
 }
+
+.dateContent {
+	display: flex; /* Flexbox 사용 */
+	align-items: center; /* 세로 정렬 */
+	justify-content: space-between; /* 요소 간격 균등 분배 */
+}
+
+.monthBtn {
+	margin: 0 5px; /* 버튼 사이의 간격 조정 */
+}
+
+.date {
+	margin: 0 10px; /* 날짜 텍스트 주변 여백 */
+}

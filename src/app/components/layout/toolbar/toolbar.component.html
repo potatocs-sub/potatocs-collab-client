@@ -21,8 +21,8 @@
             [src]="profilesService.userProfileInfo()?.profile_img"
             alt=""
           />
-          <span *ngIf="userInfo()" class="profileName">{{
-            userInfo().name
+          <span *ngIf="userProfileInfo()" class="profileName">{{
+            userProfileInfo().name
           }}</span>
         </div>
       </button>
@@ -40,7 +40,7 @@
                 alt=""
               />
               <div class="dropdown-profile-heading text-white">
-                {{ userInfo()?.name }}
+                {{ userProfileInfo()?.name }}
               </div>
             </div>
             <mat-icon>apps</mat-icon>
