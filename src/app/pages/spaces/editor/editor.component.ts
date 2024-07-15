@@ -245,7 +245,7 @@ export class EditorComponent implements OnInit {
     this.docService.createDoc(docData).subscribe(
       (data: any) => {
         if (data.message == 'created') {
-          this.router.navigate(['/collab/space/' + this.spaceTime]);
+          this.router.navigate(['/space/' + this.spaceTime]);
         }
       },
       (err: any) => {
