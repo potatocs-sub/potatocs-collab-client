@@ -151,6 +151,7 @@ export class SideNavItemComponent {
 		}
 		// 내 하위 Menu에 active child가 없는 경우
 		else {
+			console.log("라우트체인지 하기전");
 			this.isActive = false;
 			this.isOpen = false;
 			this.navigationService.openItems.set(this.item as NavigationDropdown);
@@ -258,6 +259,7 @@ export class SideNavItemComponent {
 	//sideMenu Update
 	updateSideMenu() {
 		this.sideNavService.updateSideMenu().subscribe((data: any) => {
+			console.log("사이드 메뉴", data);
 			///////////////
 			const space = data.navList[0].spaces[data.navList[0].spaces.length - 1];
 			console.log(space);
@@ -270,7 +272,7 @@ export class SideNavItemComponent {
 				isReplacementDay: false,
 			};
 			this.navItems[1].children[1].children.push(element);
-			this.spaceListStorageService.space.update(this.navItems);
+			this.space.set(this.navItems);
 			this.router.navigate([
 				"/" + this.navItems[1].children[1].children[this.navItems[1].children[1].children.length - 1].route,
 			]);
