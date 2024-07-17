@@ -80,3 +80,7 @@ body {
     padding: 0px !important;
   }
 }
+
+.mat-mdc-raised-button .mat-mdc-button-touch-target {
+  height: 0px !important;
+}

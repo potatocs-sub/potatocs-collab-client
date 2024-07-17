@@ -15,15 +15,21 @@ import { LeaveRequestDetailDialogComponent } from '../../../components/dialogs/l
   standalone: true,
   imports: [CommonModule, MaterialsModule],
   templateUrl: './status.component.html',
-  styleUrl: './status.component.scss'
+  styleUrl: './status.component.scss',
 })
 export class StatusComponent {
-
-  dialogsService = inject(DialogService)
-  profilesService = inject(ProfilesService)
-  leavesService = inject(LeavesService)
-  dialog = inject(MatDialog)
-  displayedColumns: string[] = ['createAt', 'leaveStartDate', 'duration', 'leaveType', 'approver', 'status'];
+  dialogsService = inject(DialogService);
+  profilesService = inject(ProfilesService);
+  leavesService = inject(LeavesService);
+  dialog = inject(MatDialog);
+  displayedColumns: string[] = [
+    'createAt',
+    'leaveStartDate',
+    'duration',
+    'leaveType',
+    'approver',
+    'status',
+  ];
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
@@ -32,17 +38,17 @@ export class StatusComponent {
   isLoadingResults = signal<boolean>(true);
   isRateLimitReached = signal<boolean>(false);
 
-  dataSource = signal<any[]>([])
+  dataSource = signal<any[]>([]);
 
-  userCompanyInfo = this.profilesService.userCompanyInfo
+  userCompanyInfo = this.profilesService.userCompanyInfo;
   leaveInfo: any;
 
   viewType: any = {
-    'annual_leave': 'Annual Leave',
-    'rollover': 'Rollover',
-    'sick_leave': 'Sick Leave',
-    'replacement_leave': 'Replacement Day'
-  }
+    annual_leave: 'Annual Leave',
+    rollover: 'Rollover',
+    sick_leave: 'Sick Leave',
+    replacement_leave: 'Replacement Day',
+  };
 
   constructor() {
     effect(() => {
@@ -52,32 +58,36 @@ export class StatusComponent {
             // console.log('get userLeaveStatus');
             this.leaveInfo = res;
             // leaveInfo의 rollover 값을 userCompanyInfo의 rollover_max_day와 비교하여 더 작은 값으로 설정
-            this.leaveInfo.rollover = Math.min(this.leaveInfo.rollover, this.userCompanyInfo()?.rollover_max_day);
+            this.leaveInfo.rollover = Math.min(
+              this.leaveInfo.rollover,
+              this.userCompanyInfo()?.rollover_max_day
+            );
           },
           error: (err: any) => {
-            console.log(err)
-          }
-        })
+            console.log(err);
+          },
+        });
       }
-    })
+    });
   }
 
   ngAfterViewInit() {
-    this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+    this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
 
     merge(this.sort.sortChange, this.paginator.page)
       .pipe(
         startWith({}),
         switchMap(() => this.getMyLeaveList()),
         map((res: any) => {
-          console.log(res)
+          console.log(res);
           this.isLoadingResults.set(false);
           if (res === null) {
             this.isRateLimitReached.set(true);
             return [];
           }
           this.isRateLimitReached.set(false);
-          this.resultsLength.set(res.total_count);
+          console.log(res.totalCount);
+          this.resultsLength.set(res.totalCount);
           return res;
         }),
         catchError(() => {
@@ -89,24 +99,23 @@ export class StatusComponent {
       .subscribe((data: any) => {
         if (data) {
           this.dataSource.set(data.leaveRequestList);
-          if (data.length > 0) this.resultsLength.set(data.leaveRequestList.length)
+          if (data.length > 0) this.resultsLength.set(data.totalCount);
         }
       });
   }
 
   getMyLeaveList() {
-    return this.leavesService.getMyLeaveList(
-      this.sort.active,
-      this.sort.direction,
-      this.paginator.pageIndex,
-      this.paginator.pageSize,).pipe(
-        catchError(() => of(null))
-      );
+    return this.leavesService
+      .getMyLeaveList(
+        this.sort.active,
+        this.sort.direction,
+        this.paginator.pageIndex,
+        this.paginator.pageSize
+      )
+      .pipe(catchError(() => of(null)));
   }
 
-
   openDialogPendingLeaveDetail(data: any) {
-
     const dialogRef = this.dialog.open(LeaveRequestDetailDialogComponent, {
       // width: '600px',
       // height: '614px',
@@ -121,13 +130,12 @@ export class StatusComponent {
         leave_reason: data.leave_reason,
         status: data.status,
         createdAt: data.createdAt,
-        approver: data.approver
-      }
+        approver: data.approver,
+      },
     });
 
     dialogRef.afterClosed().subscribe((result: any) => {
       console.log('dialog close');
-    })
+    });
   }
 }
-
