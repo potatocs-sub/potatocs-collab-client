@@ -264,6 +264,7 @@ export class MeetingListComponent implements OnInit {
 		});
 	}
 	enterMeeting(data) {
+		console.log(this.MEETING_FRONT_URL);
 		// if( this.isMeetingOpen ) {
 		window.open(this.MEETING_FRONT_URL + "/room/" + data._id);
 		// }
