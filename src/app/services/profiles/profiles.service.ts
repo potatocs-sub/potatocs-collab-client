@@ -50,7 +50,12 @@ export class ProfilesService {
 
     changeProfileImage(imgFile: any) {
         const imgData = new FormData();
-        imgData.append("file", imgFile);
-        return this.http.post(this.baseUrl + "/user/profileImageChange", imgData);
+        imgData.append("profile_img", imgFile);
+        return this.http.post(this.baseUrl + "/user/profileImageChange", imgData).pipe(
+            tap((res: any) => {
+                console.log(res)
+                this.userProfileInfo.set(res.user);
+            })
+        )
     }
 }
