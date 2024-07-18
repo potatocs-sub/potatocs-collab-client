@@ -92,6 +92,7 @@ export class LeavesStatusComponent {
 			.subscribe((data: any) => {
 				if (data) {
 					console.log("ㅎㅇㅎㅇㅎㅇㅎㅇ", data);
+
 					this.dataSource.set(data.myEmployeeLeaveListSearch);
 
 					this.options = data.myEmployeeList;
@@ -146,8 +147,61 @@ export class LeavesStatusComponent {
 	openDialogPendingLeaveDetail(data: any) {
 		console.log(data);
 		data.isManager = true;
-		this.dialog.open(LeaveRequestDetailDialogComponent, {
-			data: data,
+		const dialogRef = this.dialog.open(LeaveRequestDetailDialogComponent, {
+			data: {
+				_id: data.requestId,
+				requestor: data._id,
+				requestorName: data.name,
+				leaveType: data.leaveType,
+				leaveDuration: data.duration,
+				leave_end_date: data.endDate,
+				leave_start_date: data.startDate,
+				leave_reason: data.leave_reason,
+				status: data.status,
+				createdAt: data.createdAt,
+				approver: data.approver,
+				rejectReason: data.rejectReason,
+				isManager: true,
+			},
+		});
+		//닫힌후에 테이블 갱신
+		dialogRef.afterClosed().subscribe((result) => {
+			merge(this.sort.sortChange, this.paginator.page)
+				.pipe(
+					startWith({}),
+					switchMap(() => this.getLeavesStatus(this.getFormValue())),
+					map((res: any) => {
+						this.isLoadingResults.set(false);
+						if (res === null) {
+							this.isRateLimitReached.set(true);
+							return [];
+						}
+						this.isRateLimitReached.set(false);
+						this.resultsLength.set(res.total_count);
+						return res;
+					}),
+					catchError(() => {
+						this.isLoadingResults.set(false);
+						this.isRateLimitReached.set(true);
+						return of([]);
+					})
+				)
+				.subscribe((data: any) => {
+					if (data) {
+						console.log("ㅎㅇㅎㅇㅎㅇㅎㅇ", data);
+
+						this.dataSource.set(data.myEmployeeLeaveListSearch);
+
+						this.options = data.myEmployeeList;
+						if (this.options.length > 0) {
+							// 매니저가 관리하는 유저 수가 한명 이상일 경우
+							this.filteredOptions = this.myControl.valueChanges.pipe(
+								startWith(""),
+								map((value: any) => this._filter(value.email || ""))
+							);
+						}
+					}
+				});
 		});
 	}
 }
