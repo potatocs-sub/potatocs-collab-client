@@ -44,6 +44,10 @@ export const routes: Routes = [
 				loadChildren: () => import("./pages/spaces/routes").then((m) => m.SPACES_ROUTES),
 			},
 			{
+				path: "chat",
+				loadChildren: () => import('./pages/chat/routes').then((m) => m.CHAT_ROUTES),
+			},
+			{
 				path: "documents",
 				loadComponent: () => import("./pages/dashboard/dashboard.component").then((m) => m.DashboardComponent),
 			},
