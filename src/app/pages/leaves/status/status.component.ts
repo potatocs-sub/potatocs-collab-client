@@ -79,7 +79,8 @@ export class StatusComponent {
 						return [];
 					}
 					this.isRateLimitReached.set(false);
-					this.resultsLength.set(res.total_count);
+					console.log(res.totalCount);
+					this.resultsLength.set(res.totalCount);
 					return res;
 				}),
 				catchError(() => {
@@ -91,7 +92,7 @@ export class StatusComponent {
 			.subscribe((data: any) => {
 				if (data) {
 					this.dataSource.set(data.leaveRequestList);
-					if (data.length > 0) this.resultsLength.set(data.leaveRequestList.length);
+					if (data.length > 0) this.resultsLength.set(data.totalCount);
 				}
 			});
 	}
@@ -103,7 +104,6 @@ export class StatusComponent {
 	}
 
 	openDialogPendingLeaveDetail(data: any) {
-		console.log(data);
 		const dialogRef = this.dialog.open(LeaveRequestDetailDialogComponent, {
 			// width: '600px',
 			// height: '614px',
