@@ -9,12 +9,12 @@
 				<table mat-table [dataSource]="pendingList()" class="mat-elevation-z8">
 					<ng-container matColumnDef="name">
 						<th mat-header-cell *matHeaderCellDef class="w-30">Name</th>
-						<td mat-cell *matCellDef="let element">{{element.name}}</td>
+						<td mat-cell *matCellDef="let element">{{ element.name }}</td>
 					</ng-container>
 
 					<ng-container matColumnDef="email">
 						<th mat-header-cell *matHeaderCellDef class="w-30">Email</th>
-						<td mat-cell *matCellDef="let element">{{element.email}}</td>
+						<td mat-cell *matCellDef="let element">{{ element.email }}</td>
 					</ng-container>
 
 					<ng-container matColumnDef="acceptButton">
@@ -44,7 +44,7 @@
 					</ng-container> -->
 
 					<tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-					<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+					<tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 					<!-- <tr class="mat-row" *matNoDataRow>
 						<td class="mat-cell" colspan="9999">
 						  No data
@@ -61,6 +61,12 @@
 		<div>There is no employee who has requested you to be a manager.</div>
 	</div>
 	}
+</div>
+
+<div class="no-data" *ngIf="pendingList().length == 0" fxLayout="column" fxLayoutAlign="center center">
+	<mat-icon class="flag-icon"> outlined_flag </mat-icon>
+
+	<div>There is no employee who has requested you to be a manager.</div>
 </div>
 
 <!-- <div>
