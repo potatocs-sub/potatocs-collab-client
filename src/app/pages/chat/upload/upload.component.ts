@@ -3,7 +3,7 @@ import { ChatService } from '../../../services/chat/chat.service';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { DndDirective } from '../../../directives/dnd.directive';
 import { ProfilesService } from '../../../services/profiles/profiles.service';
@@ -19,7 +19,7 @@ export class UploadComponent {
   company: string = '';
   files: any[] = [];
 
-  constructor(private chatService: ChatService, private profilesService: ProfilesService) {
+  constructor(private chatService: ChatService, private profilesService: ProfilesService, private router: Router) {
 
   }
   userCompanyInfo: WritableSignal<any> = this.profilesService.userCompanyInfo;
@@ -46,7 +46,7 @@ export class UploadComponent {
     console.log(this.company, this.files)
 
     this.chatService.addDocs(this.userCompanyInfo()._id, this.files).subscribe((res) => {
-      console.log(res);
+      this.router.navigate(['/chat/list'])
     })
   }
 
