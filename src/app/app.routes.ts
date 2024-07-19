@@ -6,26 +6,29 @@ import { isLoggedInGuard } from "./guards/is-logged-in.guard";
 
 export const routes: Routes = [
 	{
-		path: "",
+		path: "intro",
 		component: IndexComponent,
 		canActivate: [isLoggedInGuard],
 	},
 	{
 		path: "sign-in",
-		component: SignInComponent,
+		loadComponent: () => import("./pages/auth/sign-in/sign-in.component").then((m) => m.SignInComponent),
+		canActivate: [isLoggedInGuard],
 	},
 	{
 		path: "sign-up",
 		loadComponent: () => import("./pages/auth/sign-up/sign-up.component").then((m) => m.SignUpComponent),
+		canActivate: [isLoggedInGuard],
 	},
 	{
 		path: "find-pw",
-		loadComponent: () => import(`./pages/auth/find-pw/find-pw.component`).then((m) => m.FindPwComponent),
+		loadComponent: () => import("./pages/auth/find-pw/find-pw.component").then((m) => m.FindPwComponent),
+		canActivate: [isLoggedInGuard],
 	},
 	{
 		path: "",
 		component: LayoutComponent,
-		canActivate: [],
+		canActivate: [isLoggedInGuard],
 		children: [
 			{
 				path: "main",
@@ -45,7 +48,7 @@ export const routes: Routes = [
 			},
 			{
 				path: "chat",
-				loadChildren: () => import('./pages/chat/routes').then((m) => m.CHAT_ROUTES),
+				loadChildren: () => import("./pages/chat/routes").then((m) => m.CHAT_ROUTES),
 			},
 			{
 				path: "documents",
@@ -58,7 +61,7 @@ export const routes: Routes = [
 			},
 			{
 				path: "",
-				redirectTo: "dashboard",
+				redirectTo: "main",
 				pathMatch: "full",
 			},
 		],
@@ -67,7 +70,7 @@ export const routes: Routes = [
 	{
 		path: "**",
 		// redirectTo: 'welcome',
-		redirectTo: "main",
+		redirectTo: "intro",
 		pathMatch: "full",
 	},
 ];
