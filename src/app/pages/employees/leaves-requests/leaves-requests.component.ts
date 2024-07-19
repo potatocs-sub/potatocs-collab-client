@@ -84,6 +84,7 @@ export class LeavesRequestsComponent {
 	}
 
 	refreshTable() {
+		console.log("리프레쉬");
 		this.fetchLeaves().subscribe((data) => {
 			this.leavesRequestList.set(new MatTableDataSource(data));
 			this.resultsLength.set(data.length);
