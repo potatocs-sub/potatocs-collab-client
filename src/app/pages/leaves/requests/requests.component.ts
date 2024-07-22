@@ -93,6 +93,10 @@ export class RequestsComponent {
 
   ngOnInit() {}
   ngAfterViewInit() {
+    this.getEmployeeLeaveRequest();
+  }
+
+  getEmployeeLeaveRequest() {
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
 
     merge(
@@ -187,42 +191,6 @@ export class RequestsComponent {
       data: data,
     });
 
-    // 다이얼로그 닫힌 후에 mat table 수정
-    dialogRef.afterClosed().subscribe((result) => {
-      merge(
-        this.sort.sortChange,
-        this.paginator.page,
-        this.router.events.pipe(
-          filter((event) => event instanceof NavigationEnd)
-        )
-      )
-        .pipe(
-          startWith({}),
-          switchMap(() => {
-            this.isLoadingResults.set(true);
-            return this.getLeaveRequests(this.getEmployeeInfo());
-          }),
-          map((res: any) => {
-            this.isLoadingResults.set(false);
-            if (res === null) {
-              this.isRateLimitReached.set(true);
-              return [];
-            }
-            this.isRateLimitReached.set(false);
-            this.resultsLength.set(res.total_count);
-            return res;
-          }),
-          catchError(() => {
-            this.isLoadingResults.set(false);
-            this.isRateLimitReached.set(true);
-            return of([]);
-          })
-        )
-        .subscribe((data: any) => {
-          if (data) {
-            this.myRequestList.set(data);
-          }
-        });
-    });
+    this.getEmployeeLeaveRequest();
   }
 }
