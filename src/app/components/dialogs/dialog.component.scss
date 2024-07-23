@@ -1,149 +1,94 @@
-// .dialog_container {
-//     color: #636363;
-// 	width: 400px;
-//     padding: 20px;
-// }
-
-// .progress_dialog_container {
-//     color: #636363;
-//     width: 200px;
-//     padding: 20px;
-// }
-
-// .making_sure {
-//     font-size :30px;
-// }
-
-// .confirm_icon {
-//     font-size: 80px;
-//     width: 80px;
-//     height: 80px;
-//     color: var(--point-color);
-// }
-
-// .confirm_content {
-//     color: #999;
-//     font-size : 14px;
-// }
-
-// .btn_box {
-//     margin-top: 20px;
-// }
-
-// .confirm_button {
-//     background-color: var(--point-color) !important;
-//     color: #fff !important;
-//     padding: 0 30px;
-// }
-
-// .cancel_button {
-//     // background-color: #c1c1c1 !important;
-//     // color: #fff !important;
-//     padding: 0 30px;
-// }
-//  //-------------------------------------
-// .ok_icon {
-//     font-size: 80px;
-//     width: 80px;
-//     height: 80px;
-//     color: var(--point-color); 
-// }
-
-// .ok_button_box {
-//     margin-top: 20px;
-//     width: 100%;
-// }
-
-// .ok_button {
-//     background: var(--point-color) !important;
-//     color: #fff !important;
-//     width: 100%;
-// }
-
-// //--------------------------------------
-// .negative_icon {
-//     font-size: 80px;
-//     width: 80px;
-//     height: 80px;
-//     color: var(--error-color);
-// }
-
-// .negative_button_box {
-//     margin-top: 20px;
-//     width: 100%;
-// }
-
-// .negative_button {
-//     background-color: var(--error-color) !important;
-//     color: #fff !important;
-//     width: 100%;
-// }
-
-// @media screen and (max-width: 780px){
-//     .dialog_container {
-//         width: 100%;
-//         padding: 0;
-//     }
-
-//     .ok_button_box {
-//         width: 250px;
-//     }
-
-//     .negative_button_box {
-//         width: 250px;
-//     }
-// }
-
-// ::ng-deep .mat-dialog-container {
-//     @media screen and (max-width: 780px){
-//         padding: 15px !important;
-//         max-width: 94vw !important;
-//     }
-// }
-
-
-.confirm_icon,
-.ok_icon {
-  font-size: 80px;
-  width: 80px;
-  height: 80px;
-  color: var(--point-color);
+.dialogContainer {
+	color: #636363;
+	width: 400px;
+	padding: 20px;
 }
 
-.negative_icon {
-  font-size: 80px;
-  width: 80px;
-  height: 80px;
-  color: var(--error-color);
+.makingSure {
+	font-size: 30px;
 }
 
-.making_sure {
-  font-size: 30px;
+.confirm-icon {
+	font-size: 120px;
+	width: 120px;
+	height: 120px;
+	color: #00154f;
 }
 
-.confirm_content {
-  color: #999;
-  font-size: 14px;
-  margin: 40px 0;
+.confirm-content {
+	color: #999;
+	font-size: 14px;
 }
 
-.button_box {
-  display: flex;
-  gap: 20px;
-
-  .cancelBtn {
-    background: #F0F2F5 !important;
-    color: #6A6E80 !important;
-  }
+.btnBox {
+	margin-top: 20px;
 }
 
-.ok_button {
-  background: var(--point-color) !important;
-  color: #fff !important;
-  width: 100%;
+.confirmBtn {
+	background: #00154f;
+	color: #fff;
+	padding: 0 30px;
 }
 
-.negative_button {
-  background-color: var(--error-color) !important;
-  color: #fff !important;
+.cancelBtn {
+	background: #c1c1c1;
+	color: #fff;
+	padding: 0 30px;
+}
+//-----------------------------------------------
+.ok-icon {
+	font-size: 120px;
+	width: 120px;
+	height: 120px;
+	color: rgba(23, 133, 23, 1);
+}
+
+.okBtnBox {
+	margin-top: 20px;
+	width: 100%;
+}
+
+.okBtn {
+	background: rgba(23, 133, 23, 1);
+	color: #fff;
+	width: 100%;
+}
+//-----------------------------------------------
+.negative-icon {
+	font-size: 120px;
+	width: 120px;
+	height: 120px;
+	color: #f15e5e;
+}
+.ngOkBtnBox {
+	margin-top: 20px;
+	width: 100%;
+}
+
+.ngOkBtn {
+	background: #f15e5e;
+	color: #fff;
+	width: 100%;
+}
+
+@media screen and (max-width: 780px) {
+	.dialogContainer {
+		width: 100%;
+		padding: 0;
+	}
+
+	.okBtnBox {
+		width: 250px;
+	}
+
+	.ngOkBtnBox {
+		width: 250px;
+	}
+}
+
+::ng-deep .mat-dialog-container {
+	@media screen and (max-width: 780px) {
+		padding: 15px !important;
+		max-width: 94vw !important;
+	}
 }

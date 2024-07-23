@@ -8,11 +8,11 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
   standalone: true,
   imports: [CommonModule, MaterialsModule],
   templateUrl: './confirm-dialog.component.html',
-  styleUrl: './confirm-dialog.component.scss'
+  styleUrl: './confirm-dialog.component.scss',
 })
 export class ConfirmDialogComponent {
-  public dialogRef = inject(MatDialogRef<ConfirmDialogComponent>)
-  public data = inject(MAT_DIALOG_DATA)
+  public dialogRef = inject(MatDialogRef<ConfirmDialogComponent>);
+  public data = inject(MAT_DIALOG_DATA);
 
   ngOnInit(): void {
     this.data.flag = true;

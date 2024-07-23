@@ -1,6 +1,12 @@
 import { ProfilesService } from './../../../../services/profiles/profiles.service';
 import { CommonModule } from '@angular/common';
-import { Component, WritableSignal, effect, inject, signal } from '@angular/core';
+import {
+  Component,
+  WritableSignal,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
 import { MaterialsModule } from '../../../../materials/materials.module';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LeavesService } from '../../../../services/leaves/leaves.service';
@@ -14,20 +20,19 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [CommonModule, MaterialsModule],
   templateUrl: './leaves-requests-add.component.html',
-  styleUrl: './leaves-requests-add.component.scss'
+  styleUrl: './leaves-requests-add.component.scss',
 })
 export class LeavesRequestsAddComponent {
+  fb = inject(FormBuilder);
+  router = inject(Router);
+  profilesService = inject(ProfilesService);
+  leavesService = inject(LeavesService);
+  commonService = inject(CommonService);
+  dialogsService = inject(DialogService);
 
-  fb = inject(FormBuilder)
-  router = inject(Router)
-  profilesService = inject(ProfilesService)
-  leavesService = inject(LeavesService)
-  commonService = inject(CommonService)
-  dialogsService = inject(DialogService)
-
-  userProfileInfo: WritableSignal<any> = this.profilesService.userProfileInfo
-  userCompanyInfo: WritableSignal<any> = this.profilesService.userCompanyInfo
-  myLeaves: WritableSignal<any | null> = signal(null)
+  userProfileInfo: WritableSignal<any> = this.profilesService.userProfileInfo;
+  userCompanyInfo: WritableSignal<any> = this.profilesService.userCompanyInfo;
+  myLeaves: WritableSignal<any | null> = signal(null);
 
   employeeLeaveForm: FormGroup = this.fb.group({
     leaveType1: ['', [Validators.required]],
@@ -54,7 +59,6 @@ export class LeavesRequestsAddComponent {
   weeks: any;
   leaveDays: any;
 
-
   myInfo: any;
   // 원하는 총 휴가 기간
 
@@ -63,15 +67,15 @@ export class LeavesRequestsAddComponent {
   company: any;
   user: any;
 
-
   holidayDateFilter = (d: Date | null): boolean => {
     if (!d) return false;
     const day = d.getDay();
     const formattedDate = moment(d);
-    const isHoliday = this.holidayList.some((holiday) => moment(holiday).isSame(formattedDate, 'day'));
+    const isHoliday = this.holidayList.some((holiday) =>
+      moment(holiday).isSame(formattedDate, 'day')
+    );
     return day !== 0 && day !== 6 && !isHoliday;
   };
-
 
   constructor() {
     effect(() => {
@@ -88,7 +92,7 @@ export class LeavesRequestsAddComponent {
               ),
             ];
           },
-          error: () => { },
+          error: () => {},
         });
       }
 
@@ -104,15 +108,13 @@ export class LeavesRequestsAddComponent {
           next: (res) => {
             this.myLeaves.set(res);
           },
-          error: () => { },
+          error: () => {},
         });
       }
     });
   }
 
-  ngAfterViewInit() {
-
-  }
+  ngAfterViewInit() {}
 
   // 휴가 분류 변경 시 호출되는 함수
   classificationChange(value: any) {
@@ -126,11 +128,13 @@ export class LeavesRequestsAddComponent {
 
   // 휴가 단위 변경 시 호출되는 함수 (연차, 반차)
   typeSecondChange(value: any) {
-    if (value === 'half') { // 반차인 경우
+    if (value === 'half') {
+      // 반차인 경우
       this.employeeLeaveForm.controls['leave_start_date'].enable(); // 시작 날짜 활성화
       this.employeeLeaveForm.controls['leave_end_date'].disable(); // 종료 날짜 비활성화
       this.isHalf = true; // 반차 설정
-    } else { // 하루인 경우
+    } else {
+      // 하루인 경우
       this.employeeLeaveForm.controls['leave_start_date'].enable(); // 시작 날짜 활성화
       this.employeeLeaveForm.controls['leave_end_date'].enable(); // 종료 날짜 활성화
       this.isHalf = false; // 하루 설정
@@ -146,17 +150,21 @@ export class LeavesRequestsAddComponent {
     const currentClassification = formValue.leaveType1;
     const matchedLeaveDay = this.availableLeaveCount(currentClassification);
 
-    if (this.checkEmpYear(start_date, end_date)) { // 근속 년수 체크
-      if (this.isHalf) { // 반차인 경우
+    if (this.checkEmpYear(start_date, end_date)) {
+      // 근속 년수 체크
+      if (this.isHalf) {
+        // 반차인 경우
         this.leaveDuration = 0.5;
-        if (!this.userCompanyInfo().isMinusAnnualLeave) { // 연차 감소 허용 여부
+        if (!this.userCompanyInfo().isMinusAnnualLeave) {
+          // 연차 감소 허용 여부
           if (this.leaveDuration > matchedLeaveDay || this.leaveDuration < 0) {
             this.dialogsService.openDialogNegative('Wrong period, Try again.');
             this.allReset();
             return;
           }
         }
-      } else { // 하루인 경우
+      } else {
+        // 하루인 경우
         this.leaveDuration = this.calculateDiff(start_date, end_date);
         if (!this.userCompanyInfo().isMinusAnnualLeave) {
           if (this.leaveDuration > matchedLeaveDay || this.leaveDuration < 0) {
@@ -186,7 +194,8 @@ export class LeavesRequestsAddComponent {
     const diff = end_date_sec - start_date_sec; // 두 날짜 간의 밀리초 차이 계산
     let days = Math.ceil(diff / millisecondsPerDay); // 일수로 변환
 
-    if (start_date_sec >= end_date_sec) { // 시작 날짜가 종료 날짜보다 뒤인 경우
+    if (start_date_sec >= end_date_sec) {
+      // 시작 날짜가 종료 날짜보다 뒤인 경우
       this.dialogsService.openDialogNegative('Wrong period, Try again.');
       this.datePickReset();
       return 0;
@@ -237,28 +246,46 @@ export class LeavesRequestsAddComponent {
     this.datePickDisabled();
   }
 
-
   // 휴가 쓰는 기간이 N년차 범위에 속하는지, 안속하면 안돼
   checkEmpYear(start_date: any, end_date: any) {
-    const cal_start_date = this.commonService.dateFormatting(start_date, 'timeZone');
-    const cal_end_date = this.commonService.dateFormatting(end_date, 'timeZone');
-    const startYear = this.commonService.dateFormatting(this.myLeaves().startYear, 'timeZone');
-    const endYear = this.commonService.dateFormatting(this.myLeaves().endYear, 'timeZone');
+    const cal_start_date = this.commonService.dateFormatting(
+      start_date,
+      'timeZone'
+    );
+    const cal_end_date = this.commonService.dateFormatting(
+      end_date,
+      'timeZone'
+    );
+    const startYear = this.commonService.dateFormatting(
+      this.myLeaves().startYear,
+      'timeZone'
+    );
+    const endYear = this.commonService.dateFormatting(
+      this.myLeaves().endYear,
+      'timeZone'
+    );
 
     if (this.isHalf) return true; // 반차인 경우 바로 반환
 
-    if (cal_start_date >= startYear && cal_start_date <= endYear && cal_end_date >= startYear && cal_end_date <= endYear) {
+    if (
+      cal_start_date >= startYear &&
+      cal_start_date <= endYear &&
+      cal_end_date >= startYear &&
+      cal_end_date <= endYear
+    ) {
       return true; // 휴가가 같은 근무 연한 내에 있는 경우
     } else if (cal_start_date > endYear && cal_end_date > endYear) {
-      this.dialogsService.openDialogConfirm(
-        `Your current contract period: ${startYear} ~ ${endYear}.\nThis annual leave request will be counted on next year's annual leave. Do you want to proceed?`
-      ).subscribe((result) => {
-        if (result) return true;
-        else {
-          this.datePickReset();
-          return false;
-        }
-      });
+      this.dialogsService
+        .openDialogConfirm(
+          `Your current contract period: ${startYear} ~ ${endYear}.\nThis annual leave request will be counted on next year's annual leave. Do you want to proceed?`
+        )
+        .subscribe((result) => {
+          if (result) return true;
+          else {
+            this.datePickReset();
+            return false;
+          }
+        });
       return true; // 휴가가 다음 근무 연한 내에 있는 경우
     } else {
       this.dialogsService.openDialogNegative(
@@ -270,36 +297,43 @@ export class LeavesRequestsAddComponent {
   }
   requestLeave() {
     // '휴가 요청을 제출하시겠습니까?' 확인 대화상자를 열고 사용자의 응답을 구독
-    this.dialogsService.openDialogConfirm('Would you like to submit the leave request?').subscribe({
-      next: (res) => {
-        // 사용자가 '확인'을 클릭한 경우
-        if (res) {
-          // 휴가 요청 데이터를 준비하는 메서드 호출
-          this.prepareLeaveRequestData();
-          // 휴가 요청을 제출하는 메서드 호출
-          this.submitLeaveRequest();
-        }
-      },
-      error: (err: any) => {
-        this.dialogsService.openDialogNegative(err.error.message);
-      }
-    });
+    this.dialogsService
+      .openDialogConfirm('Would you like to submit the leave request?')
+      .subscribe({
+        next: (res) => {
+          // 사용자가 '확인'을 클릭한 경우
+          if (res) {
+            // 휴가 요청 데이터를 준비하는 메서드 호출
+            this.prepareLeaveRequestData();
+            // 휴가 요청을 제출하는 메서드 호출
+            this.submitLeaveRequest();
+          }
+        },
+        error: (err: any) => {
+          this.dialogsService.openDialogNegative(err.error.message);
+        },
+      });
   }
 
   prepareLeaveRequestData() {
     const formValue = this.employeeLeaveForm.value;
     // 시작 날짜를 공통 서비스의 날짜 포맷팅 메서드를 사용하여 포맷팅
-    const leaveStartDate = this.commonService.dateFormatting(formValue.leave_start_date);
+    const leaveStartDate = this.commonService.dateFormatting(
+      formValue.leave_start_date
+    );
     // 반차인 경우 시작 날짜와 동일하게 설정하고, 그렇지 않은 경우 종료 날짜를 포맷팅
-    const leaveEndDate = this.leaveDuration == 0.5 ? leaveStartDate : this.commonService.dateFormatting(formValue.leave_end_date);
+    const leaveEndDate =
+      this.leaveDuration == 0.5
+        ? leaveStartDate
+        : this.commonService.dateFormatting(formValue.leave_end_date);
 
     this.leaveRequestData = {
       leaveType: formValue.leaveType1, // 휴가 타입
-      leaveDay: formValue.leaveType2,// 휴가 단위 (하루 또는 반차)
-      leaveDuration: this.leaveDuration,// 휴가 기간
-      leave_start_date: leaveStartDate,// 시작 날짜
-      leave_end_date: leaveEndDate,// 종료 날짜
-      leave_reason: formValue.leave_reason,// 휴가 사유
+      leaveDay: formValue.leaveType2, // 휴가 단위 (하루 또는 반차)
+      leaveDuration: this.leaveDuration, // 휴가 기간
+      leave_start_date: leaveStartDate, // 시작 날짜
+      leave_end_date: leaveEndDate, // 종료 날짜
+      leave_reason: formValue.leave_reason, // 휴가 사유
       status: 'pending', // 요청 상태를 '대기 중'으로 설정
     };
   }
@@ -309,15 +343,18 @@ export class LeavesRequestsAddComponent {
       next: (data: any) => {
         if (data.message === 'requested') {
           this.router.navigate(['leaves/requests']);
-          this.dialogsService.openDialogPositive('Successfully, the request has been submitted.');
+          this.dialogsService.openDialogPositive(
+            'Successfully, the request has been submitted.'
+          );
         }
       },
       error: (err: any) => {
         this.dialogsService.openDialogNegative(err.error.message);
-      }
+      },
     });
   }
 
-
-  toBack() { }
+  toBack() {
+    this.router.navigate(['/leaves/requests']);
+  }
 }

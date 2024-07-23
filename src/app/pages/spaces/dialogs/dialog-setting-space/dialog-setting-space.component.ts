@@ -136,7 +136,7 @@ export class DialogSettingSpaceComponent implements OnInit {
 					const element = {
 						type: "link",
 						label: space[index].displayName,
-						route: "collab/space/" + space[index]._id,
+						route: "space/" + space[index]._id,
 						isManager: false,
 						isReplacementDay: false,
 					};

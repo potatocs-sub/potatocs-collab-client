@@ -17,15 +17,22 @@ import { LeaveRequestDetailDialogComponent } from '../../../components/dialogs/l
   standalone: true,
   imports: [CommonModule, MaterialsModule],
   templateUrl: './leaves-requests.component.html',
-  styleUrl: './leaves-requests.component.scss'
+  styleUrl: './leaves-requests.component.scss',
 })
 export class LeavesRequestsComponent {
-  displayedColumns: string[] = ['period', 'leaveDuration', 'leaveType', 'requestorName', 'status', 'btns'];
+  displayedColumns: string[] = [
+    'period',
+    'leaveDuration',
+    'leaveType',
+    'requestorName',
+    'status',
+    'btns',
+  ];
 
-  approvalService = inject(ApprovalService)
-  commonService = inject(CommonService)
-  dialogsService = inject(DialogService)
-  dialog = inject(MatDialog)
+  approvalService = inject(ApprovalService);
+  commonService = inject(CommonService);
+  dialogsService = inject(DialogService);
+  dialog = inject(MatDialog);
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
@@ -35,17 +42,16 @@ export class LeavesRequestsComponent {
   isRateLimitReached = signal<boolean>(false);
 
   viewType: any = {
-    'annual_leave': 'Annual Leave',
-    'rollover': 'Rollover',
-    'sick_leave': 'Sick Leave',
-    'replacement_leave': 'Replacement Day'
+    annual_leave: 'Annual Leave',
+    rollover: 'Rollover',
+    sick_leave: 'Sick Leave',
+    replacement_leave: 'Replacement Day',
   };
 
   leavesRequestList = signal<MatTableDataSource<any>>(new MatTableDataSource());
 
   ngAfterViewInit() {
     this.loadData();
-
   }
 
   loadData() {
@@ -56,7 +62,7 @@ export class LeavesRequestsComponent {
           this.isLoadingResults.set(true);
           return this.fetchLeaves().pipe(catchError(() => of([])));
         }),
-        map(data => {
+        map((data) => {
           this.isLoadingResults.set(false);
           if (!data) {
             this.isRateLimitReached.set(true);
@@ -66,27 +72,40 @@ export class LeavesRequestsComponent {
           this.resultsLength.set(data.length);
           return data;
         })
-      ).subscribe(data => this.leavesRequestList.set(new MatTableDataSource(data)));
+      )
+      .subscribe((data) =>
+        this.leavesRequestList.set(new MatTableDataSource(data))
+      );
   }
 
   fetchLeaves() {
-    return this.approvalService.getLeaveRequest(
-      this.sort.active,
-      this.sort.direction,
-      this.paginator.pageIndex,
-      this.paginator.pageSize,
-    )
+    return this.approvalService
+      .getLeaveRequest(
+        this.sort.active,
+        this.sort.direction,
+        this.paginator.pageIndex,
+        this.paginator.pageSize
+      )
       .pipe(
-        map((res: any) => res.pendingLeaveReqList.map((item: any) => ({
-          ...item,
-          leave_start_date: this.commonService.dateFormatting(item.leave_start_date, 'timeZone'),
-          leave_end_date: this.commonService.dateFormatting(item.leave_end_date, 'timeZone')
-        })))
+        map((res: any) =>
+          res.pendingLeaveReqList.map((item: any) => ({
+            ...item,
+            leave_start_date: this.commonService.dateFormatting(
+              item.leave_start_date,
+              'timeZone'
+            ),
+            leave_end_date: this.commonService.dateFormatting(
+              item.leave_end_date,
+              'timeZone'
+            ),
+          }))
+        )
       );
   }
 
   refreshTable() {
-    this.fetchLeaves().subscribe(data => {
+    console.log('리프레쉬');
+    this.fetchLeaves().subscribe((data) => {
       this.leavesRequestList.set(new MatTableDataSource(data));
       this.resultsLength.set(data.length);
     });
@@ -94,16 +113,22 @@ export class LeavesRequestsComponent {
 
   approveLeave(data: any, event: MouseEvent) {
     event.stopPropagation();
-    this.dialogsService.openDialogConfirm('Do you approve this leave request?')
-      .pipe(
-        switchMap(result => result ? this.approvalService.approvedLeaveRequest(data) : of(null))
-      )
-      .subscribe({
-        next: () => {
-          this.dialogsService.openDialogPositive('Successfully, the request has been approved');
-          this.refreshTable();
-        },
-        error: error => this.dialogsService.openDialogNegative(error.error.message)
+    this.dialogsService
+      .openDialogConfirm('Do you approve this leave request?')
+      .subscribe((result) => {
+        if (result) {
+          this.approvalService.approvedLeaveRequest(data).subscribe(
+            (data: any) => {
+              this.dialogsService.openDialogPositive(
+                'Successfully, the request has been approved'
+              );
+              this.refreshTable();
+            },
+            (err: any) => {
+              this.dialogsService.openDialogNegative(err.error.message);
+            }
+          );
+        }
       });
   }
 
@@ -114,7 +139,10 @@ export class LeavesRequestsComponent {
   }
 
   openDialogPendingLeaveDetail(data: any) {
-    const dialogRef = this.dialog.open(LeaveRequestDetailDialogComponent, { data });
+    console.log(data);
+    const dialogRef = this.dialog.open(LeaveRequestDetailDialogComponent, {
+      data,
+    });
     dialogRef.afterClosed().subscribe(() => {
       this.refreshTable();
     });

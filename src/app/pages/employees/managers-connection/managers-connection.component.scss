@@ -1,7 +1,7 @@
 .mainContentContainer {
   padding: 40px 40px;
   margin: 0 auto;
-  height: 100%;
+  //   height: 100%;
 }
 
 .mainTitle {
@@ -14,9 +14,7 @@
   box-shadow: 0 1px 4px 0 rgb(0 0 0 / 14%);
   // min-width: 1200px;
   margin-right: 0px;
-
 }
-
 
 .historyTable {
   width: 100%;
@@ -38,7 +36,7 @@
 }
 
 .confirmBtn {
-  background: #00154F;
+  background: #00154f;
   color: #fff;
   padding: 0 30px;
 }
@@ -51,7 +49,7 @@
 
 .mat-header-row {
   // background-color: #273da0;
-  background-color: #00154F;
+  background-color: #00154f;
 
   th {
     color: #fff;
@@ -71,7 +69,6 @@
 .titleBtn {
   float: right;
   vertical-align: middle;
-
 }
 
 .tableContainer {
@@ -113,10 +110,8 @@ th {
   }
 }
 
-
 /* Extra large devices (large laptops and desktops, 1200px and up) */
 @media screen and (max-width: 780px) {
-
   .mainContentContainer {
     padding: 10px 10px;
   }
@@ -127,7 +122,6 @@ th {
 
   .historyTable {
     word-break: break-all;
-
 
     th {
       padding: 0 10px;
@@ -148,7 +142,7 @@ th {
   .no-data {
     width: 100vw;
     display: flex;
-    padding: 0px 15px
+    padding: 0px 15px;
   }
 
   .no-dataBtn {
@@ -156,7 +150,6 @@ th {
     margin: 0 0;
     font-size: 13px;
   }
-
 
   .requestBtn {
     flex-direction: column !important;
