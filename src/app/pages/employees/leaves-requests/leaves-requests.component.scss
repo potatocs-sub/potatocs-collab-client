@@ -19,7 +19,8 @@
   width: 100%;
   text-align: center;
 
-  th {
+  th,
+  td {
     text-align: center;
   }
 
@@ -27,7 +28,7 @@
 }
 
 .confirmBtn {
-  background: #00154F;
+  background: #00154f;
   color: #fff;
   padding: 0 30px;
 }
@@ -40,7 +41,7 @@
 
 .mat-header-row {
   // background-color: #273da0;
-  background-color: #00154F;
+  background-color: #00154f;
 
   th {
     color: #fff;
@@ -62,7 +63,6 @@
   text-align: left;
   border-top: 1px solid rgb(221, 221, 221);
   border-collapse: collapse;
-
 }
 
 .modal-table tr {
@@ -82,7 +82,6 @@
   padding: 16px 24px 16px 16px;
   white-space: pre-line;
 }
-
 
 .modal-table th:first-child,
 td:first-child {
@@ -105,10 +104,8 @@ td:first-child {
   text-decoration: underline;
 }
 
-
 /* Extra large devices (large laptops and desktops, 1200px and up) */
 @media screen and (max-width: 780px) {
-
   .mainContentContainer {
     padding: 10px 10px;
   }
@@ -119,7 +116,6 @@ td:first-child {
 
   .historyTable {
     word-break: break-all;
-
 
     th {
       padding: 0 10px;
@@ -141,5 +137,4 @@ td:first-child {
       }
     }
   }
-
 }
