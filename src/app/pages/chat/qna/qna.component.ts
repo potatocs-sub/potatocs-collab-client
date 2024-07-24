@@ -17,6 +17,7 @@ import { ProfilesService } from '../../../services/profiles/profiles.service';
 })
 export class QnaComponent {
   history: Array<any> = []; // 대화 내역 저장용 
+  chatHistory: Array<any> = [];
   qustion: string = ''; // 질문 
   company: string = ''; // 회사 
 
@@ -39,14 +40,19 @@ export class QnaComponent {
     if (this.waiting) return;
 
     this.waiting = true;
-    this.chatService.ask(this.qustion, this.history, this.userCompanyInfo()._id).subscribe((res: any) => {
+    const temp = [];
+    this.chatService.ask(this.qustion, this.chatHistory, this.userCompanyInfo()._id).subscribe((res: any) => {
       if (res.status) {
         this.history.push('<article class="answer">' + res.answer.kwargs.content + '</article>')
+        temp.push(res.answer.kwargs.content)
+
       }
       this.waiting = false;
     })
     this.history.push('<article class="question">' + this.qustion + '</article>');
+    temp.push(this.qustion)
     this.qustion = '';
+    this.chatHistory.push(temp);
   }
 
 
