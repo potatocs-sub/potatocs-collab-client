@@ -7,17 +7,19 @@ import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { DndDirective } from '../../../directives/dnd.directive';
 import { ProfilesService } from '../../../services/profiles/profiles.service';
+import { MaterialsModule } from '../../../materials/materials.module';
 
 @Component({
   selector: 'app-upload',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatIconModule, DndDirective, RouterModule, FormsModule],
+  imports: [CommonModule, MatButtonModule, MatIconModule, DndDirective, RouterModule, FormsModule, MaterialsModule],
   templateUrl: './upload.component.html',
   styleUrl: './upload.component.scss'
 })
 export class UploadComponent {
   company: string = '';
   files: any[] = [];
+  uploading: boolean = false;
 
   constructor(private chatService: ChatService, private profilesService: ProfilesService, private router: Router) {
 
@@ -43,9 +45,9 @@ export class UploadComponent {
 
   // submit file and company name
   submit() {
-    console.log(this.company, this.files)
-
+    this.uploading = true;
     this.chatService.addDocs(this.userCompanyInfo()._id, this.files).subscribe((res) => {
+      this.uploading = false;
       this.router.navigate(['/chat/list'])
     })
   }
