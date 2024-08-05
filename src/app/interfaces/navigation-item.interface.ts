@@ -7,56 +7,57 @@ export type NavigationItem = NavigationLink | NavigationDropdown | NavigationSub
  * Subheading: no link
  */
 export interface NavigationSubheading {
-	// kje
-	// https://stackoverflow.com/questions/26855423/how-to-require-a-specific-string-in-typescript-interface
-	// https://www.typescriptlang.org/docs/handbook/release-notes/typescript-1-8.html#string-literal-types
-	type: "subheading";
-	label: string;
-	children: Array<NavigationLink | NavigationDropdown | NavigationCreateSpace>;
-	isManager?: boolean;
+    // kje
+    // https://stackoverflow.com/questions/26855423/how-to-require-a-specific-string-in-typescript-interface
+    // https://www.typescriptlang.org/docs/handbook/release-notes/typescript-1-8.html#string-literal-types
+    type: "subheading";
+    label: string;
+    children: Array<NavigationLink | NavigationDropdown | NavigationCreateSpace>;
+    isManager?: boolean;
 }
 
 /**
  * Drop Down item (no link)
  */
 export interface NavigationDropdown {
-	type: "dropdown";
-	label: string;
-	icon?: string;
-	children: Array<NavigationLink | NavigationDropdown>;
-	isManager?: boolean;
+    type: "dropdown";
+    label: string;
+    icon?: string;
+    children: Array<NavigationLink | NavigationDropdown>;
+    isManager?: boolean;
 }
 
 /**
  *  일반 Link item (no child)
  */
 export interface NavigationLink {
-	type: "link";
-	route: string; // 원본은 function이 들어올 수 있어서  |any 추가됨 -> 여기서는 삭제
-	fragment?: string;
-	label: string;
-	icon?: string;
-	routerLinkActive?: { exact: boolean };
-	isManager?: boolean;
+    type: "link";
+    route: string; // 원본은 function이 들어올 수 있어서  |any 추가됨 -> 여기서는 삭제
+    fragment?: string;
+    label: string;
+    icon?: string;
+    routerLinkActive?: { exact: boolean };
+    isManager?: boolean;
 
-	isReplacementDay?: boolean;
+    isReplacementDay?: boolean;
 
-	isSuperManager?: boolean;
+    isSuperManager?: boolean;
+    faceAuthentication?: boolean
 }
 
 /**
  *  일반 Click item (no child)
  */
 export interface NavigationCreateSpace {
-	type: "click";
-	// route: string; // 원본은 function이 들어올 수 있어서  |any 추가됨 -> 여기서는 삭제
-	// fragment?: string;
-	label: string;
-	icon?: string;
-	// routerLinkActive?: { exact: boolean };
-	isManager?: boolean;
+    type: "click";
+    // route: string; // 원본은 function이 들어올 수 있어서  |any 추가됨 -> 여기서는 삭제
+    // fragment?: string;
+    label: string;
+    icon?: string;
+    // routerLinkActive?: { exact: boolean };
+    isManager?: boolean;
 }
 
 export interface SidenavViewPolicy {
-	isManager?: boolean;
+    isManager?: boolean;
 }
