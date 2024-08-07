@@ -65,4 +65,11 @@ export class ProfilesService {
         }
         return this.http.post(this.baseUrl + "/user/faceDetection", faceData)
     }
+
+    faceRecognition(frame) {
+        const faceData = {
+            frame: frame,
+        }
+        return this.http.post(this.baseUrl + "/user/faceDetection", faceData)
+    }
 }

@@ -3,8 +3,11 @@ import { Router, ActivatedRouteSnapshot, RouterStateSnapshot, CanActivateFn } fr
 import { DialogService } from "../stores/dialog/dialog.service";
 import { AuthService } from "../services/auth/auth.service";
 import { SideNavService } from "../stores/side-nav/side-nav.service";
+import { FaceRecognitionDialogComponent } from "../components/dialogs/face-recognition-dialog/face-recognition-dialog.component"
 
-export const SpaceGuard: CanActivateFn = async (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
+
+export const FaceGuard: CanActivateFn = async (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
+    const authService = inject(AuthService);
     const dialogService = inject(DialogService);
     const router = inject(Router);
     const sidenavService = inject(SideNavService);

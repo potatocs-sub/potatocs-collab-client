@@ -54,6 +54,7 @@ export class SideNavComponent {
                     };
                     this.navItems[1].children[1].children.push(element);
                 }
+                console.log('space set')
                 this.spaceListStorageService.space.set(this.navItems);
             },
             (err: any) => {
