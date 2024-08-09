@@ -1,5 +1,7 @@
-import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit, inject } from '@angular/core';
 import { ProfilesService } from '../../../services/profiles/profiles.service';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { DialogService } from '../../../stores/dialog/dialog.service';
 
 @Component({
     selector: 'app-camera-dialog',
@@ -11,9 +13,11 @@ import { ProfilesService } from '../../../services/profiles/profiles.service';
 export class CameraDialogComponent {
     @ViewChild('video') video: ElementRef<HTMLVideoElement>;
     @ViewChild('canvas') canvas: ElementRef<HTMLCanvasElement>;
+    private dialogRef = inject(MatDialogRef<CameraDialogComponent>);
 
     constructor(
         private profileService: ProfilesService,
+        private dialogService: DialogService,
     ) { }
 
     ngOnInit() {
@@ -48,6 +52,14 @@ export class CameraDialogComponent {
                 // console.log(data);
                 // console.log(data.profileChange);
                 console.log(data)
+                if (data.message == 'Not Detection') {
+                    this.dialogService.openDialogNegative(`Face Detection Fail. Please check again.`);
+                }
+                else {
+                    this.dialogService.openDialogPositive(`Your Face has updated successfully.`);
+                    this.closeModal()
+                }
+
             },
             (err: any) => {
                 console.log(err)
@@ -55,6 +67,10 @@ export class CameraDialogComponent {
         );
         // }, 1000);
 
+    }
+
+    closeModal(): void {
+        this.dialogRef.close({ result: 'some data' });
     }
 
     // startCamera() {

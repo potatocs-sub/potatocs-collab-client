@@ -193,6 +193,7 @@ export class ProfileEditComponent {
 
         dialogRef.afterClosed().subscribe((result) => {
             console.log("The dialog setting was closed");
+            console.log('result : ', result)
             if (result == null || result == "") {
             } else {
             }
