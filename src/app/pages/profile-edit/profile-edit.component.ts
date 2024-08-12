@@ -6,6 +6,7 @@ import { DialogService } from "../../stores/dialog/dialog.service";
 import { ProfilesService } from "../../services/profiles/profiles.service";
 import { CameraDialogComponent } from "./camera-dialog/camera-dialog.component"
 import { MatDialog } from "@angular/material/dialog";
+import { WebcamDeviceService } from "../../services/webcam/webcam-device.service"
 
 @Component({
     selector: "app-profile-edit",
@@ -39,6 +40,7 @@ export class ProfileEditComponent {
         private profileService: ProfilesService,
         private dialogService: DialogService,
         public dialog: MatDialog,
+        private webcamDevice: WebcamDeviceService,
     ) {
         effect(() => {
             const userInfo = this.profileService.userProfileInfo();
@@ -181,22 +183,31 @@ export class ProfileEditComponent {
             };
     }
 
-    openCamera(): void {
-        const dialogRef = this.dialog.open(CameraDialogComponent, {
-            // width: '600px',
-            // height: '500px',
-            // data: {
-            //     spaceInfo: this.spaceInfo,
-            //     memberInSpace: this.memberInSpace,
-            // },
-        });
+    async openCamera(): Promise<void> {
+        let webcamConnected = await this.webcamDevice.isWebcamConnected()
+        console.log(webcamConnected)
 
-        dialogRef.afterClosed().subscribe((result) => {
-            console.log("The dialog setting was closed");
-            console.log('result : ', result)
-            if (result == null || result == "") {
-            } else {
-            }
-        });
+        if (webcamConnected) {
+            const dialogRef = this.dialog.open(CameraDialogComponent, {
+                // width: '600px',
+                // height: '500px',
+                // data: {
+                //     spaceInfo: this.spaceInfo,
+                //     memberInSpace: this.memberInSpace,
+                // },
+            });
+
+            dialogRef.afterClosed().subscribe((result) => {
+                console.log("The dialog setting was closed");
+                console.log('result : ', result)
+                if (result == null || result == "") {
+                } else {
+                }
+            });
+        }
+        else {
+            this.dialogService.openDialogNegative('Not Connected webcam')
+        }
+
     }
 }
