@@ -4,7 +4,14 @@
     <section class="title_section">
         <h1 class="title">File Upload</h1>
     </section>
+
+    @if(uploading) {
+    <mat-progress-bar class="example-margin" mode="query">
+    </mat-progress-bar>
+    }@else {
+    <hr />
     <section class="input_section">
+
         <div class="dropzone" appDnd (fileDropped)="onFileDropped($event)">
             <input type="file" (change)="fileBrowseHandler($event.target)" multiple />
             <mat-icon class="upload_icon" fontSet="material-icons-outlined">cloud_upload</mat-icon>
@@ -33,4 +40,6 @@
         <button [routerLink]="['/chat/list']" (click)="$event.preventDefault()" mat-flat-button
             class="cancel_button">cancel</button>
     </section>
+    }
+
 </form>

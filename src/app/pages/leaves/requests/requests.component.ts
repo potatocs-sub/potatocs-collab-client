@@ -77,6 +77,10 @@ export class RequestsComponent {
 
 	ngOnInit() {}
 	ngAfterViewInit() {
+		this.getEmployeeLeaveRequest();
+	}
+
+	getEmployeeLeaveRequest() {
 		this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
 
 		merge(

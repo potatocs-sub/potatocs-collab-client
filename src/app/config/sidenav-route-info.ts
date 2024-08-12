@@ -117,4 +117,27 @@ export const sidenavRouteInfo: NavigationItem[] = [
 			},
 		],
 	},
+	// chat 
+	{
+		type: "subheading",
+		label: "Chat",
+		children: [
+			{
+				type: "link",
+				label: "Q & A",
+				route: "/chat/qna",
+				icon: "chat",
+				isManager: false,
+				isReplacementDay: false,
+			},
+			{
+				type: "link",
+				label: "Information Management",
+				route: "/chat/list",
+				icon: "list_alt",
+				isManager: true,
+				isReplacementDay: false,
+			},
+		]
+	}
 ];

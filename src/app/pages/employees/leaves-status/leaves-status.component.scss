@@ -59,7 +59,7 @@
 .searchBtn {
   margin-top: 10px;
   font-size: 16px;
-  background-color: #00154F;
+  background-color: #00154f;
 }
 
 .historyTableBox {
@@ -81,7 +81,7 @@
 
 .mat-header-row {
   // background-color: #273da0;
-  background-color: #00154F;
+  background-color: #00154f;
 
   th {
     color: #fff;
@@ -102,9 +102,7 @@
   color: red;
 }
 
-
 @media screen and (max-width: 780px) {
-
   .mainContentContainer {
     padding: 10px 10px;
   }
@@ -126,10 +124,8 @@
     width: 100%;
   }
 
-
   .historyTableBox {
     word-break: break-all;
-
 
     th {
       padding: 0 10px;
@@ -140,4 +136,8 @@
       font-size: 0.7em;
     }
   }
+}
+
+.center-text {
+  text-align: center;
 }

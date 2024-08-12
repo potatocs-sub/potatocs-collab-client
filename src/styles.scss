@@ -84,3 +84,8 @@ body {
 .mat-mdc-raised-button .mat-mdc-button-touch-target {
   height: 0px !important;
 }
+
+// toolbar dropdown-content width 조절
+.mat-mdc-menu-panel {
+  max-width: 350px !important;
+}
