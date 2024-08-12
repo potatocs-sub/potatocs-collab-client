@@ -45,7 +45,7 @@ export class EmployeesService {
 	// 매니저가 관리중인 직원 휴가 리스트
 	getMyEmployeesLeavesListSearch(data: any, active: string, direction: string, pageIndex: number, pageSize: number) {
 		return this.http
-			.get(this.baseUrl + "/employees/leaves/status", {
+			.get(this.baseUrl + "/leave//myEmployee-leaveList-search", {
 				params: { ...data, active, direction, pageIndex, pageSize },
 			})
 			.pipe(
