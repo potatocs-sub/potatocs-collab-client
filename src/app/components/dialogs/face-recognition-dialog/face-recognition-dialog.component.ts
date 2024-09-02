@@ -1,5 +1,6 @@
+import { MatDialogRef } from '@angular/material/dialog';
 import { ProfilesService } from '../../../services/profiles/profiles.service';
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, ViewChild } from '@angular/core';
 
 @Component({
     selector: 'app-face-recogniton-dialog',
@@ -11,6 +12,8 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 export class FaceRecognitionDialogComponent {
     @ViewChild('video') video: ElementRef<HTMLVideoElement>;
     @ViewChild('canvas') canvas: ElementRef<HTMLCanvasElement>;
+    private dialogRef = inject(MatDialogRef<FaceRecognitionDialogComponent>);
+
 
     constructor(
         private profileService: ProfilesService,
@@ -42,12 +45,12 @@ export class FaceRecognitionDialogComponent {
         // setInterval(() => {
         // context.drawImage(this.video.nativeElement, 0, 0, canvas.width, canvas.height);
         // const dataUrl = canvas.toDataURL('image/jpeg');
-        console.log(frame)
         this.profileService.faceRecognition(frame).subscribe(
             (data: any) => {
                 // console.log(data);
                 // console.log(data.profileChange);
                 console.log(data)
+                this.closeModal(data)
             },
             (err: any) => {
                 console.log(err)
@@ -55,6 +58,10 @@ export class FaceRecognitionDialogComponent {
         );
         // }, 1000);
 
+    }
+
+    closeModal(data): void {
+        this.dialogRef.close(data);
     }
 
     // startCamera() {

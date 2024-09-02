@@ -14,17 +14,17 @@ export const SPACES_ROUTES: Route[] = [
     {
         path: "editor/ctDoc",
         loadComponent: () => EditorComponent,
-        // canActivate: [SpaceGuard]
+        canActivate: [SpaceGuard]
     },
     {
         path: ":spaceTime/doc",
         loadComponent: () => DocumentComponent,
-        // canActivate: [SpaceGuard],
+        canActivate: [SpaceGuard],
     },
     {
         path: "calendar",
         loadComponent: () => CalendarListComponent,
-        // canActivate: [SpaceGuard]
+        canActivate: [SpaceGuard]
     },
     {
         path: "",
