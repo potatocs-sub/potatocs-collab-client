@@ -6,6 +6,7 @@ import { MaterialsModule } from '../../../materials/materials.module';
 import { ChatService } from '../../../services/chat/chat.service';
 import { ProfilesService } from '../../../services/profiles/profiles.service';
 import { ProgressBarMode } from '@angular/material/progress-bar';
+import { DialogService } from '../../../stores/dialog/dialog.service';
 
 @Component({
   selector: 'app-list',
@@ -25,7 +26,8 @@ export class ListComponent {
 
   constructor(
     private chatService: ChatService,
-    private profilesService: ProfilesService
+    private profilesService: ProfilesService,
+    private dialogService: DialogService
   ) {
     const effectRef = effect(() => {
       if (this.userProfileInfo() && this.userCompanyInfo()) {
@@ -89,14 +91,19 @@ export class ListComponent {
 
   // 삭제
   delete(_id: string) {
-    this.chatService.deleteDoc(_id).subscribe({
-      next: (response) => {
-        console.log(response);
-        this.refresh();
-      },
-      error: (err) => {
-        console.error("Error deleting document", err);
+    this.dialogService.openDialogConfirm('Do you want delete this file?').subscribe((res: any) => {
+      if (res) {
+        this.chatService.deleteDoc(_id).subscribe({
+          next: (response) => {
+            console.log(response);
+            this.refresh();
+          },
+          error: (err) => {
+            console.error("Error deleting document", err);
+          }
+        })
       }
     })
+
   }
 }

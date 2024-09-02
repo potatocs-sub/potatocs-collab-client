@@ -31,7 +31,9 @@ export class EmployeesService {
 
 	// 매니저가 관리 중인 직원들 리스트
 	getMyEmployeeList(active: string, direction: string, pageIndex: number, pageSize: number) {
-		return this.http.get(this.baseUrl + "/employees", { params: { active, direction, pageIndex, pageSize } });
+		return this.http.get(this.baseUrl + "/employees", {
+			params: { active, direction, pageIndex, pageSize },
+		});
 	}
 
 	getEmployeeInfo(id: any) {
@@ -45,17 +47,16 @@ export class EmployeesService {
 	// 매니저가 관리중인 직원 휴가 리스트
 	getMyEmployeesLeavesListSearch(data: any, active: string, direction: string, pageIndex: number, pageSize: number) {
 		return this.http
-			.get(this.baseUrl + "/employees/leaves/status", {
+			.get(this.baseUrl + "/leave/myEmployee-leaveList-search", {
 				params: { ...data, active, direction, pageIndex, pageSize },
 			})
 			.pipe(
 				tap((res: any) => {
 					console.log(res);
-
 					res.myEmployeeLeaveListSearch = res.myEmployeeLeaveListSearch?.map((item: any) => ({
 						...item,
-						startDate: this.commonService.dateFormatting(item.leave_start_date, "timeZone"),
-						endDate: this.commonService.dateFormatting(item.leave_end_date, "timeZone"),
+						// startDate: this.commonService.dateFormatting(item.leave_start_date, "timeZone"),
+						// endDate: this.commonService.dateFormatting(item.leave_end_date, "timeZone"),
 					}));
 				})
 			);
@@ -64,6 +65,8 @@ export class EmployeesService {
 
 	// admin 이 관리하는 manager의 employee 리스트 가져오기
 	getMyManagerEmployeeList(managerID: any) {
-		return this.http.get(this.baseUrl + "/leave/myManager-employee-list", { params: managerID });
+		return this.http.get(this.baseUrl + "/leave/myManager-employee-list", {
+			params: managerID,
+		});
 	}
 }
