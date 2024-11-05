@@ -13,7 +13,7 @@ export class FaceRecognitionDialogComponent {
     @ViewChild('video') video: ElementRef<HTMLVideoElement>;
     @ViewChild('canvas') canvas: ElementRef<HTMLCanvasElement>;
     private dialogRef = inject(MatDialogRef<FaceRecognitionDialogComponent>);
-
+    private stream: MediaStream | null = null;
 
     constructor(
         private profileService: ProfilesService,
@@ -23,12 +23,23 @@ export class FaceRecognitionDialogComponent {
         this.startCamera();
     }
 
+    ngOnDestroy() {
+        this.stopCamera();
+    }
 
     startCamera() {
         navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
+            this.stream = stream;
             this.video.nativeElement.srcObject = stream;
             this.video.nativeElement.play();
         });
+    }
+
+    stopCamera() {
+        if (this.stream) {
+            this.stream.getTracks().forEach(track => track.stop());
+            this.stream = null;
+        }
     }
 
     captureFrame() {
