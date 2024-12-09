@@ -1,4 +1,4 @@
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Component, inject } from '@angular/core';
 import { MaterialsModule } from '../../../materials/materials.module';
 import { CommonModule } from '@angular/common';
@@ -9,9 +9,9 @@ import { DialogService } from '../../../stores/dialog/dialog.service';
 @Component({
   selector: 'app-find-pw',
   standalone: true,
-  imports: [MaterialsModule, CommonModule],
+  imports: [MaterialsModule, CommonModule, RouterLink],
   templateUrl: './find-pw.component.html',
-  styleUrl: './find-pw.component.scss'
+  styleUrl: './find-pw.component.scss',
 })
 export class FindPwComponent {
   form: FormGroup;
@@ -20,32 +20,28 @@ export class FindPwComponent {
 
   emailFormData: any = {
     email: '',
-    eCode: ''
+    eCode: '',
   };
 
-  private router = inject(Router)
-  private authService = inject(AuthService)
-  private formBuilder = inject(FormBuilder)
-  private dialogService = inject(DialogService)
+  private router = inject(Router);
+  private authService = inject(AuthService);
+  private formBuilder = inject(FormBuilder);
+  private dialogService = inject(DialogService);
 
-  constructor(
-  ) {
+  constructor() {
     this.form = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
-      eCode: ['']
+      eCode: [''],
     });
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   get f() {
     return this.form.controls;
   }
 
-  ngOnDestroy(): void {
-
-  }
+  ngOnDestroy(): void {}
 
   getEcode() {
     // console.log(this.emailFormData);
@@ -59,7 +55,7 @@ export class FindPwComponent {
       error: (err: any) => {
         console.log(err.error);
         this.errorAlert(err.error.message);
-      }
+      },
     });
   }
 
@@ -67,14 +63,16 @@ export class FindPwComponent {
     this.authService.getTempPw(this.emailFormData).subscribe({
       next: (data: any) => {
         if (data.message == 'sentPw') {
-          this.dialogService.openDialogPositive('Your password has been reset successfully. Temporary password is sent to your email.');
+          this.dialogService.openDialogPositive(
+            'Your password has been reset successfully. Temporary password is sent to your email.'
+          );
           this.router.navigate(['main']);
         }
       },
       error: (err: any) => {
         console.log(err.error);
         this.errorAlert(err.error.message);
-      }
+      },
     });
   }
 
@@ -87,8 +85,10 @@ export class FindPwComponent {
         this.dialogService.openDialogNegative('Wrong verification code.');
         break;
       case 'pwd err':
-        this.dialogService.openDialogNegative('Cannot change your password. Try again.');
+        this.dialogService.openDialogNegative(
+          'Cannot change your password. Try again.'
+        );
         break;
     }
-  };
+  }
 }
