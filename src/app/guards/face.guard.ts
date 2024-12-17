@@ -75,6 +75,7 @@ export const FaceGuard: CanActivateFn = async (
                             if (result.message === "recognition") {
                                 return true; // 라우팅 허용
                             } else {
+                                dialogService.openDialogNegative('Face recognition fail.\n')
                                 return router.createUrlTree(['/main']); // 라우팅 차단 및 리다이렉트
                             }
                         });
