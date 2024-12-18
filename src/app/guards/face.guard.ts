@@ -73,6 +73,7 @@ export const FaceGuard: CanActivateFn = async (
                         return dialogRef.afterClosed().toPromise().then(result => {
                             console.log(result)
                             if (result.message === "recognition") {
+                                dialogService.openDialogPositive('Face recognition Success.\n')
                                 return true; // 라우팅 허용
                             } else {
                                 dialogService.openDialogNegative('Face recognition fail.\n')
