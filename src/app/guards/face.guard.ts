@@ -32,7 +32,6 @@ export const FaceGuard: CanActivateFn = async (
     // console.log(spaceInfo)
 
     const userProfile = await userProfileInfo;
-    console.log('userProfileInfo : ', userProfile);
 
     let isWebcamConnected = false   // 웹캠 연결 되어있는지 확인용
     let isFaceRegistration = false  // 프로필에 얼굴 등록을 했는지 확인용
