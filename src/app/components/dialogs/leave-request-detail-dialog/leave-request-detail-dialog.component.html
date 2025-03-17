@@ -74,7 +74,7 @@
 	@if (!data.reject) {
 	<div class="modal-btn">
 		<button class="requestCancel" color="primary" mat-raised-button mat-dialog-close>Confirm</button>
-		@if (data.pending && !data.isManager) {
+		@if (data.status == 'pending' && !data.isManager) {
 		<button class="requestCancel pendingCancel" mat-raised-button (click)="requestCancel()">Pending Cancel</button>
 		} @if (data.status == 'approve' && data.isManager) {
 		<button class="requestCancel approveCancel" mat-raised-button (click)="approveLeaveCancel()">

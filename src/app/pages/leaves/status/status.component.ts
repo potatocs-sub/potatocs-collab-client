@@ -92,6 +92,7 @@ export class StatusComponent {
 			.subscribe((data: any) => {
 				if (data) {
 					this.dataSource.set(data.leaveRequestList);
+					console.log("요호호", data.leaveRequestList);
 					if (data.length > 0) this.resultsLength.set(data.totalCount);
 				}
 			});

@@ -1,23 +1,22 @@
-import { Component, ViewChild, ElementRef, OnInit, inject } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
 import { ProfilesService } from '../../../services/profiles/profiles.service';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { DialogService } from '../../../stores/dialog/dialog.service';
+import { Component, ElementRef, inject, ViewChild } from '@angular/core';
 
 @Component({
-    selector: 'app-camera-dialog',
+    selector: 'app-face-recogniton-dialog',
     standalone: true,
     imports: [],
-    templateUrl: './camera-dialog.component.html',
-    styleUrl: './camera-dialog.component.scss'
+    templateUrl: './face-recognition-dialog.component.html',
+    styleUrl: './face-recognition-dialog.component.scss'
 })
-export class CameraDialogComponent {
+export class FaceRecognitionDialogComponent {
     @ViewChild('video') video: ElementRef<HTMLVideoElement>;
     @ViewChild('canvas') canvas: ElementRef<HTMLCanvasElement>;
-    private dialogRef = inject(MatDialogRef<CameraDialogComponent>);
+    private dialogRef = inject(MatDialogRef<FaceRecognitionDialogComponent>);
+
 
     constructor(
         private profileService: ProfilesService,
-        private dialogService: DialogService,
     ) { }
 
     ngOnInit() {
@@ -33,7 +32,7 @@ export class CameraDialogComponent {
     }
 
     captureFrame() {
-        const context = this.canvas.nativeElement.getContext('2d');
+        const context: any = this.canvas.nativeElement.getContext('2d')
         context.drawImage(this.video.nativeElement, 0, 0, 640, 480);
         const frame = this.canvas.nativeElement.toDataURL('image/jpeg');
         // Send the frame to the server
@@ -46,20 +45,12 @@ export class CameraDialogComponent {
         // setInterval(() => {
         // context.drawImage(this.video.nativeElement, 0, 0, canvas.width, canvas.height);
         // const dataUrl = canvas.toDataURL('image/jpeg');
-        console.log(frame)
-        this.profileService.faceDetection(frame).subscribe(
+        this.profileService.faceRecognition(frame).subscribe(
             (data: any) => {
                 // console.log(data);
                 // console.log(data.profileChange);
                 console.log(data)
-                if (data.message == 'Not Detection') {
-                    this.dialogService.openDialogNegative(`Face Detection Fail. Please check again.`);
-                }
-                else {
-                    this.dialogService.openDialogPositive(`Your Face has updated successfully.`);
-                    this.closeModal()
-                }
-
+                this.closeModal(data)
             },
             (err: any) => {
                 console.log(err)
@@ -69,8 +60,8 @@ export class CameraDialogComponent {
 
     }
 
-    closeModal(): void {
-        this.dialogRef.close({ result: 'some data' });
+    closeModal(data): void {
+        this.dialogRef.close(data);
     }
 
     // startCamera() {

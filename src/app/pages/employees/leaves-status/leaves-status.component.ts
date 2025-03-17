@@ -80,6 +80,7 @@ export class LeavesStatusComponent {
 						return [];
 					}
 					this.isRateLimitReached.set(false);
+					console.log(res.total_count);
 					this.resultsLength.set(res.total_count);
 					return res;
 				}),
@@ -94,7 +95,7 @@ export class LeavesStatusComponent {
 					console.log("ㅎㅇㅎㅇㅎㅇㅎㅇ", data);
 
 					this.dataSource.set(data.myEmployeeLeaveListSearch);
-
+					console.log("요호호", data.leaveRequestList);
 					this.options = data.myEmployeeList;
 					if (this.options.length > 0) {
 						// 매니저가 관리하는 유저 수가 한명 이상일 경우

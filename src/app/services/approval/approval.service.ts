@@ -14,17 +14,17 @@ export class ApprovalService {
 	constructor() {}
 
 	getLeaveRequest(active: string, direction: string, pageIndex: number, pageSize: number) {
-		return this.http.get(this.baseUrl + "/employees/leaves/requests", {
+		return this.http.get(this.baseUrl + "/leave/requests", {
 			params: { active, direction, pageIndex, pageSize },
 		});
 	}
 
 	approvedLeaveRequest(data: any) {
-		return this.http.put(this.baseUrl + "/employees/leaves/requests", data);
+		return this.http.put(this.baseUrl + "/leave/approve-leave-request", data);
 	}
 
-	deleteLeaveRequest(data: any) {
-		return this.http.put(this.baseUrl + "/employees/leaves/requests/reject", data);
+	rejectLeaveRequest(data: any) {
+		return this.http.put(this.baseUrl + "/leave/reject-leave-request", data);
 	}
 
 	/* -----------------------------------------------

@@ -1,54 +1,34 @@
-import { Injectable, OnInit } from "@angular/core";
-import { Router, ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/router";
+import { inject } from "@angular/core";
+import { Router, ActivatedRouteSnapshot, RouterStateSnapshot, CanActivateFn } from "@angular/router";
 import { DialogService } from "../stores/dialog/dialog.service";
 import { AuthService } from "../services/auth/auth.service";
 import { SideNavService } from "../stores/side-nav/side-nav.service";
-import { MemberDataStorageService } from "../stores/member-data-storage/member-data-storage.service";
-import { SpaceListStorageService } from "../stores/space-list-storage.service";
-@Injectable()
-export class SpaceGuard implements OnInit {
-	userId;
-	space;
-	flag: boolean;
 
-	constructor(
-		private router: Router,
-		private auth: AuthService,
-		private dialogService: DialogService,
-		private memberDataStorageService: MemberDataStorageService,
-		private spaceListStorageService: SpaceListStorageService,
-		private sideNavService: SideNavService
-	) {}
+export const SpaceGuard: CanActivateFn = async (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
+    const dialogService = inject(DialogService);
+    const router = inject(Router);
+    const sidenavService = inject(SideNavService);
+    const spaces: any = await sidenavService.updateSideMenu().toPromise();
+    const spaceTime = route.params['spaceTime'];
 
-	ngOnInit() {
-		console.log("auth guard oninit");
-	}
-	// https://stackoverflow.com/questions/42719445/pass-parameter-into-route-guard
-	async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-		// this.flag = true;
-		const spaceTime = route.params.spaceTime;
-		this.userId = this.auth.getTokenInfo()._id;
+    let spaceInfo = spaces.navList[0].spaces;
+    let flag = false
 
-		const spaceList: any = await this.sideNavService.updateSideMenu().toPromise();
-
-		this.space = spaceList.navList[0].spaces;
-
-		for (let index = 0; index < this.space.length; index++) {
-			const element = this.space[index]._id;
-			if (spaceTime == element) {
-				this.flag = true;
-				break;
-			} else {
-				this.flag = false;
-			}
-		}
-
-		if (!this.flag) {
-			// console.log('undefined');
-			this.dialogService.openDialogNegative("You are not a member of this space or document.");
-			this.router.navigate(["/main"]);
-		} else {
-			return this.flag;
-		}
-	}
+    for (let index = 0; index < spaceInfo.length; index++) {
+        const element = spaceInfo[index]._id;
+        if (spaceTime == element) {
+            flag = true;
+            break;
+        } else {
+            flag = false;
+        }
+    }
+    console.log(flag)
+    if (flag) {
+        return true
+    } else {
+        dialogService.openDialogNegative("You are not a member of this space or document.");
+        router.navigate(["/main"]);
+    }
+    return false
 }
