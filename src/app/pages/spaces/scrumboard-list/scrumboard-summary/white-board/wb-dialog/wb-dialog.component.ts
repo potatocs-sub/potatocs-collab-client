@@ -361,4 +361,16 @@ export class WbDialogComponent implements OnInit, OnDestroy, AfterViewInit {
         this.imgPreview = null;
         this.imgFiles = [];
     }
+
+    async dialogClose() {
+        this.canvasService.clearMedia()
+        if (this.isRecording) {
+            this.recordingStop().then(() => {
+                this.dialogRef.close()
+            })
+        } else {
+            this.dialogRef.close()
+        }
+
+    }
 }

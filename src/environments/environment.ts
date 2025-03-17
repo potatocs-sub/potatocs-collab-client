@@ -6,5 +6,5 @@ export const environment = {
 	localhostUrl: "localhost:3000",
 	chatApiUrl: "http://localhost:3600/api/v1",
 	domainUrl: "https://potatocs.com",
-	MEETING_FRONT_URL: "localhost:4300",
+	MEETING_FRONT_URL: "https://localhost:4202",
 };

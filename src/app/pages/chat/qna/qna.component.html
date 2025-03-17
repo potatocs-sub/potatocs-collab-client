@@ -1,4 +1,5 @@
 <div class="chat_container">
+
     <form class="input_section" (ngSubmit)="submit()">
         <textarea #textarea rows="1" class="question_input" (keydown)="handleKeyDown($event)"
             placeholder="Please enter your question" [(ngModel)]="qustion"
@@ -8,6 +9,9 @@
     <section class="chat_section">
         @for(chat of history; track chat) {
         <div [innerHTML]="chat"></div>
+        }
+        @if(waiting){
+        <article class="answer"><mat-spinner [diameter]="30"></mat-spinner></article>
         }
     </section>
 

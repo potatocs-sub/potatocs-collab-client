@@ -9,7 +9,7 @@ import {
 	WritableSignal,
 } from "@angular/core";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
-import { MatSlider } from "@angular/material/slider";
+// import { MatSliderModule } from "@angular/material/slider";
 import { CanvasService } from "../../../../../../services/canvas/canvas.service";
 import { Replay } from "../../../../../../services/canvas/recording/replay";
 import { DocumentsService } from "../../../../../../services/spaces/documents.service";
@@ -34,7 +34,7 @@ export class WbDetailComponent implements OnInit, OnDestroy, AfterViewInit {
 	@ViewChild("teacherCanvas") public teacherCanvasRef: ElementRef;
 	@ViewChild("cursorCanvas") public cursorCanvasRef: ElementRef;
 
-	@ViewChild(MatSlider) slider: MatSlider;
+	// @ViewChild(MatSlider) slider: MatSlider;
 
 	canvasContainer: HTMLDivElement;
 	coverCanvas: HTMLCanvasElement;
@@ -70,10 +70,12 @@ export class WbDetailComponent implements OnInit, OnDestroy, AfterViewInit {
 		console.log(this.recData);
 	}
 
-	ngOnInit() {}
+	ngOnInit() { }
 
 	ngOnDestroy() {
 		this.replay("stop");
+		this.canvasService.clearMedia();
+		// this.recordingStop()
 	}
 
 	ngAfterViewInit() {
@@ -169,29 +171,30 @@ export class WbDetailComponent implements OnInit, OnDestroy, AfterViewInit {
 		// this.replayModule.seek(event.value);
 	}
 
-	onSeekEnd(event) {
+	onSeekEnd() {
 		// console.log('onseekend');
 		this.onSeekFlag = false;
 		if (this.onSeekState) {
-			this.replayModule.seek(event.value);
+			this.replayModule.seek(this.currentTime_mSec);
 			this.replay("play");
 		} else {
-			this.replayModule.seek(event.value);
+			this.replayModule.seek(this.currentTime_mSec);
 		}
 	}
 
 	// 이동중에 표시할지 여부...
-	onSeek(event) {
+	onSeek() {
 		// console.log('onseek');
 		if (this.onSeekFlag) {
-			this.replayModule.onSeek(event.value);
+			this.replayModule.onSeek(this.currentTime_mSec);
 		}
 	}
 
-	async onTouched(event) {
+	async onTouched() {
+
 		await this.onSeekStart();
-		await this.onSeek(event);
-		await this.onSeekEnd(event);
+		await this.onSeek();
+		await this.onSeekEnd();
 	}
 
 	/**
@@ -218,4 +221,6 @@ export class WbDetailComponent implements OnInit, OnDestroy, AfterViewInit {
 				break;
 		}
 	}
+
+
 }

@@ -25,7 +25,7 @@ export class CanvasService {
 
 	zoomScale = 1;
 
-	constructor() {}
+	constructor() { }
 
 	/**
 	 * Canvas에 event listener 추가
@@ -61,7 +61,8 @@ export class CanvasService {
 		});
 	}
 
-	recordingClear() {
+	async recordingClear() {
+		await this.recordingModule.recordStreamStop(); // 오디오 녹음 중지
 		this.recordingModule.clear();
 		this.drawingModule.clearCanvas();
 	}
@@ -152,6 +153,10 @@ export class CanvasService {
 	clear() {
 		this.drawingModule.clearCanvas();
 		this.recordingModule.recordEvent({ type: "clear" }, true);
+	}
+
+	clearMedia() {
+		this.recordingModule.clearMedia()
 	}
 
 	/**

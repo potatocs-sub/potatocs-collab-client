@@ -131,4 +131,12 @@ export class Recording {
             }
         });
     }
+
+
+    clearMedia() {
+        console.log('여기까지 왔군!', this.mediaStream)
+        // 미디어 스트림 해제
+        this.mediaStream.getTracks().forEach(track => track.stop()); // 모든 트랙 중지
+        this.mediaStream = null; // 스트림 해제
+    }
 }

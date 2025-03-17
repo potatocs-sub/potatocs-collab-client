@@ -6,11 +6,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
 import { ChatService } from '../../../services/chat/chat.service';
 import { ProfilesService } from '../../../services/profiles/profiles.service';
-
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 @Component({
   selector: 'app-qna',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatIconModule, RouterModule, FormsModule],
+  imports: [CommonModule, MatButtonModule, MatIconModule, RouterModule, FormsModule, MatProgressSpinnerModule],
   templateUrl: './qna.component.html',
   styleUrl: './qna.component.scss',
   encapsulation: ViewEncapsulation.None
@@ -43,6 +43,7 @@ export class QnaComponent {
     const temp = [];
     this.chatService.ask(this.qustion, this.chatHistory, this.userCompanyInfo()._id).subscribe((res: any) => {
       if (res.status) {
+
         this.history.push('<article class="answer">' + res.answer.kwargs.content + '</article>')
         temp.push(res.answer.kwargs.content)
 
@@ -50,6 +51,7 @@ export class QnaComponent {
       this.waiting = false;
     })
     this.history.push('<article class="question">' + this.qustion + '</article>');
+
     temp.push(this.qustion)
     this.qustion = '';
     this.chatHistory.push(temp);
