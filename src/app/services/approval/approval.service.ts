@@ -11,7 +11,7 @@ export class ApprovalService {
 	private baseUrl = environment.apiUrl;
 	private http = inject(HttpClient);
 	commonService = inject(CommonService);
-	constructor() {}
+	constructor() { }
 
 	getLeaveRequest(active: string, direction: string, pageIndex: number, pageSize: number) {
 		return this.http.get(this.baseUrl + "/leave/requests", {

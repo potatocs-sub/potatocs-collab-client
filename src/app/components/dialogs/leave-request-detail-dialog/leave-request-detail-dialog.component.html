@@ -8,12 +8,10 @@
 		<tbody>
 			<tr>
 				<th>Status</th>
-				<td
-					[ngClass]="{
+				<td [ngClass]="{
             approve: data.status == 'approve',
             reject: data.status == 'reject'
-          }"
-				>
+          }">
 					{{ data.status | titlecase }}
 				</td>
 			</tr>
@@ -34,7 +32,7 @@
 				<td>
 					{{ data.leave_start_date | date : "YYYY-MM-dd" }} ~
 					{{ data.leave_end_date | date : "YYYY-MM-dd" }} ({{
-            data.leaveDuration
+					data.leaveDuration
 					}}
 					days)
 				</td>
