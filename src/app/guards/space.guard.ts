@@ -9,13 +9,16 @@ export const SpaceGuard: CanActivateFn = async (route: ActivatedRouteSnapshot, s
     const router = inject(Router);
     const sidenavService = inject(SideNavService);
     const spaces: any = await sidenavService.updateSideMenu().toPromise();
-    const spaceTime = route.params['spaceTime'];
+    const spaceTime = route.params['spaceTime'] || route.queryParams['spaceTime'];
+
+
 
     let spaceInfo = spaces.navList[0].spaces;
     let flag = false
 
     for (let index = 0; index < spaceInfo.length; index++) {
         const element = spaceInfo[index]._id;
+
         if (spaceTime == element) {
             flag = true;
             break;
@@ -23,7 +26,7 @@ export const SpaceGuard: CanActivateFn = async (route: ActivatedRouteSnapshot, s
             flag = false;
         }
     }
-    console.log(flag)
+    // console.log(flag)
     if (flag) {
         return true
     } else {
