@@ -32,7 +32,6 @@ export const FaceGuard: CanActivateFn = async (
     // console.log(spaceInfo)
 
     const userProfile = await userProfileInfo;
-    console.log('userProfileInfo : ', userProfile);
 
     let isWebcamConnected = false   // 웹캠 연결 되어있는지 확인용
     let isFaceRegistration = false  // 프로필에 얼굴 등록을 했는지 확인용
@@ -73,8 +72,10 @@ export const FaceGuard: CanActivateFn = async (
                         return dialogRef.afterClosed().toPromise().then(result => {
                             console.log(result)
                             if (result.message === "recognition") {
+                                dialogService.openDialogPositive('Face recognition Success.\n')
                                 return true; // 라우팅 허용
                             } else {
+                                dialogService.openDialogNegative('Face recognition fail.\n')
                                 return router.createUrlTree(['/main']); // 라우팅 차단 및 리다이렉트
                             }
                         });

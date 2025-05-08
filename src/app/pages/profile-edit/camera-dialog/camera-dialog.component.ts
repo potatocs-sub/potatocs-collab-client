@@ -14,6 +14,7 @@ export class CameraDialogComponent {
     @ViewChild('video') video: ElementRef<HTMLVideoElement>;
     @ViewChild('canvas') canvas: ElementRef<HTMLCanvasElement>;
     private dialogRef = inject(MatDialogRef<CameraDialogComponent>);
+    private stream: MediaStream | null = null;
 
     constructor(
         private profileService: ProfilesService,
@@ -24,12 +25,23 @@ export class CameraDialogComponent {
         this.startCamera();
     }
 
+    ngOnDestroy() {
+        this.stopCamera();
+    }
 
     startCamera() {
         navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
+            this.stream = stream;
             this.video.nativeElement.srcObject = stream;
             this.video.nativeElement.play();
         });
+    }
+
+    stopCamera() {
+        if (this.stream) {
+            this.stream.getTracks().forEach(track => track.stop());
+            this.stream = null;
+        }
     }
 
     captureFrame() {

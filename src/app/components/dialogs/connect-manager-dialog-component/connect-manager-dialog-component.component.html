@@ -1,59 +1,61 @@
-<div class="mainContentContainer">
-  <div class="mainContent">
-    <div fxLayout="row">
-      <div class="mainTitle">Find My Manager</div>
-    </div>
-    <form [formGroup]="emailForm" (ngSubmit)="emailForm.valid && findManager()">
-      <div class="selectContainer">
-        <div class="selectBox">
-          <span class="selectLabel">
-            <label for="type" class="optionLabel">Email</label>
-          </span>
-          <mat-form-field color="accent" appearance="outline" style="min-width:300px;" class="selectInput">
-            <mat-label>E-MAIL</mat-label>
-            <!-- https://stackoverflow.com/questions/5601647/html5-email-input-pattern-attribute -->
-            <input type="email" spellcheck="false" matInput name="id" formControlName="email"
-              pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required>
-            @if(emailForm.controls['email'].errors?.['required']){
-            <mat-error>an e-mail is required</mat-error>
-            }
-            @if(emailForm.controls['email'].errors?.['pattern']){
-            <mat-error>Please input a correct e-mail!
-            </mat-error>
-            }
+<div class="m-10 max-w-[800px]">
+  <div class="text-[22px] font-bold mb-4">Connect Manager</div>
 
-
-          </mat-form-field>
-          <button mat-raised-button color="primary" class="submit-button" [disabled]="!emailForm.valid">search</button>
-        </div>
+  <form [formGroup]="emailForm" novalidate>
+    <div
+      class="flex flex-row justify-center border-b border-solid border-[#0000001f]"
+    >
+      <div
+        class="flex items-center rounded-[5px] m-1 p-[16px] text-white font-bold bg-[#00154f] flex-1 max-w-[30%]"
+      >
+        <span>Email</span>
       </div>
-    </form>
-
-    <div class="historyTableBox" *ngIf="manager">
-
-      <table mat-table [dataSource]="manager" class="mat-elevation-z8 historyTable">
-
-        <ng-container matColumnDef="name" class="historyWrap">
-          <th mat-header-cell *matHeaderCellDef> Name </th>
-          <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="email" class="historyWrap">
-          <th mat-header-cell *matHeaderCellDef> email </th>
-          <td mat-cell *matCellDef="let element"> {{element.email}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="acceptButton" class="historyWrap">
-          <th mat-header-cell *matHeaderCellDef> . </th>
-          <td mat-cell *matCellDef="let element">
-            <button mat-raised-button color="primary" color="primary" (click)="addManager()">
-              Add Manager
-            </button>
-          </td>
-        </ng-container>
-        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      </table>
+      <mat-form-field appearance="outline" class="flex-1 pt-[21px] pl-2">
+        <mat-label>email</mat-label>
+        <input matInput type="text" formControlName="email" />
+        <mat-error *ngIf="emailForm.controls['email'].hasError('required')">
+          Please enter email.
+        </mat-error>
+        <mat-error *ngIf="emailForm.controls['email'].hasError('email')">
+          email is not in format.
+        </mat-error>
+      </mat-form-field>
     </div>
+
+    <div class="flex flex-row justify-center items-center gap-5 mt-8">
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="findManager()"
+        [disabled]="emailForm.invalid"
+      >
+        Search
+      </button>
+    </div>
+  </form>
+
+  <div *ngIf="manager">
+    <table mat-table [dataSource]="manager" class="mt-5">
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>emailForm</th>
+        <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef>email</th>
+        <td mat-cell *matCellDef="let element">{{ element.email }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="acceptButton">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element">
+          <button mat-stroked-button color="primary" (click)="addManager()">
+            Connect
+          </button>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
   </div>
 </div>
