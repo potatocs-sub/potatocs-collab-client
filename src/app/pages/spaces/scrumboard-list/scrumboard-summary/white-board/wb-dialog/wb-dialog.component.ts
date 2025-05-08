@@ -6,6 +6,7 @@ import { CanvasService } from "../../../../../../services/canvas/canvas.service"
 import { DocumentsService } from "../../../../../../services/spaces/documents.service";
 import { MaterialsModule } from "../../../../../../materials/materials.module";
 import { CommonModule } from "@angular/common";
+import { environment } from "../../../../../../../environments/environment";
 
 type RecordType = {
     recordingTitle: string;
@@ -260,12 +261,13 @@ export class WbDialogComponent implements OnInit, OnDestroy, AfterViewInit {
      *
      */
     uploadDrawing(drawingData) {
+        const baseUrl = environment.apiUrl;
         // 용량 감소를 위해서 parameter 2를 삭제.
         // const blob = new Blob([JSON.stringify(drawingData, null, 2)], { type: 'application/json' });
         const blob = new Blob([JSON.stringify(drawingData)], { type: "application/json" });
         // console.log(blob);
         const filename = `${Date.now()}_rec.gstd`;
-        const url = "http://localhost:3000/api/v1/collab/space/doc/saveGstdPath";
+        const url = baseUrl + "/collab/space/doc/saveGstdPath";
 
         return this.docService.uploadBlobToMultipart(url, filename, blob, "recording");
     }
