@@ -69,7 +69,7 @@ export class IndexComponent implements OnInit {
 		element.scrollIntoView({ behavior: "smooth" });
 	}
 
-	constructor(private renderer: Renderer2) {}
+	constructor(private renderer: Renderer2) { }
 
 	onSlideChangeStartVertical(e) {
 		console.log("START");

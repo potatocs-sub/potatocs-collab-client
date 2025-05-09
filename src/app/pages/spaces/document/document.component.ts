@@ -96,7 +96,7 @@ export class DocumentComponent implements OnInit, AfterViewInit {
 				// console.log(data.spaceMembers[0].docStatus);
 				this.docStatus = data.spaceMembers[0].docStatus;
 			},
-			error: (err: any) => {},
+			error: (err: any) => { },
 		});
 		this.getInfo();
 
@@ -165,7 +165,7 @@ export class DocumentComponent implements OnInit, AfterViewInit {
 		});
 	}
 
-	docUpdate(updateDocData) {}
+	docUpdate(updateDocData) { }
 
 	toBack(): void {
 		this.dialogService.openDialogConfirm("Unsaved data disappears. Do you want to go back?").subscribe((result) => {
@@ -242,7 +242,7 @@ export class DocumentComponent implements OnInit, AfterViewInit {
 					},
 				},
 				list: {
-					class: List,
+					class: List as any,
 					inlineToolbar: true,
 				},
 				image: SimpleImage,
@@ -259,7 +259,7 @@ export class DocumentComponent implements OnInit, AfterViewInit {
 					inlineToolbar: true,
 				},
 				table: {
-					class: Table,
+					class: Table as any,
 					inlineToolbar: true,
 				},
 				delimiter: Delimiter,

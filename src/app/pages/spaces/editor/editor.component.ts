@@ -138,7 +138,7 @@ export class EditorComponent implements OnInit {
                     },
                 },
                 list: {
-                    class: List,
+                    class: List as any,
                     inlineToolbar: true,
                 },
                 image: SimpleImage,
@@ -155,7 +155,7 @@ export class EditorComponent implements OnInit {
                     inlineToolbar: true,
                 },
                 table: {
-                    class: Table,
+                    class: Table as any,
                     inlineToolbar: true,
                 },
                 delimiter: Delimiter,

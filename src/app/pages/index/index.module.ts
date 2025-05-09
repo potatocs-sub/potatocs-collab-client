@@ -7,4 +7,4 @@ import { SwiperModule } from "swiper/angular";
 @NgModule({
 	exports: [CommonModule, SwiperModule],
 })
-export class IndexModule {}
+export class IndexModule { }

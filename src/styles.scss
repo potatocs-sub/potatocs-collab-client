@@ -1,8 +1,17 @@
 /* You can add global styles to this file, and also import other style files */
+@import 'swiper/css';
+@import 'swiper/css/navigation';
+@import 'swiper/css/pagination';
+@import 'swiper/css/autoplay';
+@import 'swiper/css/mousewheel';
+
+
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
 
 $sidenav-width: 279px;
 $sidenav-toolbar-height: 64px; // material default
@@ -28,8 +37,7 @@ body {
   box-shadow: none !important;
 }
 
-.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field
-  .mdc-notched-outline__notch {
+.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field .mdc-notched-outline__notch {
   border-right-style: hidden !important;
   box-shadow: none !important;
 }
@@ -40,6 +48,7 @@ body {
   .mat-mdc-select-arrow svg {
     width: 0px !important;
   }
+
   .mat-mdc-select-trigger {
     width: 0px !important;
   }

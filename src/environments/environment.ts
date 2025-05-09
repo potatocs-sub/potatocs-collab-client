@@ -4,7 +4,7 @@ export const environment = {
 	eCodeName: "findPw",
 	apiUrl: "https://test-potatocs-lb.com/api/v1",
 	localhostUrl: "localhost:3300",
-	chatApiUrl: "http://localhost:3600/api/v1",
+	chatApiUrl: "https://test-potatocs-lb.com/chatApi/v1",
 	domainUrl: "https://test-potatocs-lb.com",
 	MEETING_FRONT_URL: "https://test-potatocs-lb.com",
 };
