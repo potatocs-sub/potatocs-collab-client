@@ -1,0 +1,73 @@
+<div class="AddContainer">
+
+    <div class="docSpaceTitle">
+        {{ spaceTitle }}
+
+        <button mat-icon-button class="backBtn" (click)="toBack()"><mat-icon>close</mat-icon></button>
+    </div>
+
+
+    <mat-form-field appearance="outline">
+        <mat-label>Start Date</mat-label>
+        <input matInput mwlFlatpickr [convertModelValue]="true" type="text" class="period-picker"
+            [(ngModel)]="startDate" (ngModelChange)="refresh.next()" dateFormat="Y-m-d H:i" placeholder="Not set"
+            [enableTime]="true" />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>End Date</mat-label>
+        <input matInput mwlFlatpickr [convertModelValue]="true" class="period-picker" type="text" [(ngModel)]="endDate"
+            (ngModelChange)="refresh.next()" dateFormat="Y-m-d H:i" placeholder="Not set" [enableTime]="true" />
+    </mat-form-field>
+
+
+
+    <mat-form-field class="selectUser" appearance="outline">
+        <mat-label>Select User</mat-label>
+        <mat-select required [(value)]="selectedMember" multiple>
+            @for(member of member_list;track member){
+            <mat-option (click)="memberSelect()" [value]="member._id" multiLineOption>
+                <div class="member-select-option">
+                    @if(member.profile_img != ''){
+                    <img class="profile-img-select" [src]="member.profile_img" alt="" />
+                    } @else{
+                    <img class="profile-img-select" [src]="basicProfile" alt="" />}
+
+                    <div fxLayout="column" fxLayoutAlign="center">
+                        <div class="member-select-option-name">{{ member.name }}</div>
+                        <div class="member-select-option-email">{{ member.email }}</div>
+                    </div>
+                </div>
+            </mat-option>
+            }
+        </mat-select>
+    </mat-form-field>
+
+
+
+    <mat-form-field appearance="outline" class="spaceSelect">
+        <mat-label>Select List</mat-label>
+        <mat-select required [(ngModel)]="selectedStatus">
+            @for(status of docStatus; track status){
+            <mat-option [value]="status">
+                {{ status }}
+            </mat-option>
+            }
+        </mat-select>
+    </mat-form-field>
+
+    <!-- <div>
+            <section>
+                <mat-checkbox [(ngModel)]="faceOption" [color]="faceOptionColor">
+                    Face Authentificatio
+                </mat-checkbox>
+            </section>
+        </div> -->
+
+    <mat-form-field appearance="outline">
+        <mat-label>Enter a title</mat-label>
+        <input matInput [(ngModel)]="editorTitle" required maxlength="151" />
+    </mat-form-field>
+    <div>
+        <button mat-raised-button class="saveBtn" (click)="onSave()">Save</button>
+    </div>
+</div>

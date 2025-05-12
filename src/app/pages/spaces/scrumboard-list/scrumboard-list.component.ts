@@ -24,6 +24,7 @@ import { DocumentsService } from "../../../services/spaces/documents.service";
 import { SpaceAddStatusDialogComponent } from "./space-add-status-dialog/space-add-status-dialog.component";
 import { ScrumboardSummaryComponent } from "./scrumboard-summary/scrumboard-summary.component";
 import { MemberDataStorageService } from "../../../stores/member-data-storage/member-data-storage.service";
+import { ScrumboardAddComponent } from "./scrumboard-add/scrumboard-add.component";
 
 export interface ScrumboardList {
 	// id: number;
@@ -102,7 +103,7 @@ export class ScrumboardListComponent implements OnInit {
 		});
 	}
 
-	ngOnInit(): void {}
+	ngOnInit(): void { }
 
 	ngOnChanges(): void {
 		if (this.memberInSpace == undefined) {
@@ -164,7 +165,7 @@ export class ScrumboardListComponent implements OnInit {
 			swapCur: event.currentIndex,
 		};
 		this.docService.scrumEditDocStatus(data).subscribe(
-			(data: any) => {},
+			(data: any) => { },
 			(err: any) => {
 				// console.log(err);
 			}
@@ -213,7 +214,7 @@ export class ScrumboardListComponent implements OnInit {
 							horizontalPosition: "center",
 						});
 					},
-					error: (err: any) => {},
+					error: (err: any) => { },
 				});
 			}
 		});
@@ -240,7 +241,7 @@ export class ScrumboardListComponent implements OnInit {
 								horizontalPosition: "center",
 							});
 						},
-						(err: any) => {}
+						(err: any) => { }
 					);
 				}
 			});
@@ -268,7 +269,7 @@ export class ScrumboardListComponent implements OnInit {
 				this.initializeScrumBoard(this.member.value);
 				this.textareaFlag = false;
 			},
-			(err: any) => {}
+			(err: any) => { }
 		);
 		this.textareaFlag = false;
 	}
@@ -301,7 +302,39 @@ export class ScrumboardListComponent implements OnInit {
 			status: status.label,
 		};
 
-		this.router.navigate(["/space/editor/ctDoc"], { queryParams: editorQuery });
+		// this.router.navigate(["/space/editor/ctDoc"], { queryParams: editorQuery });
+
+
+
+		const dialogRef = this.dialog.open(ScrumboardAddComponent, {
+			data: {
+				spaceTime: this.spaceInfo._id,
+				spaceTitle: this.spaceInfo.displayName,
+				status: status.label,
+			},
+			autoFocus: false,
+			maxWidth: '600px',
+
+			width: '100%',
+
+		});
+
+
+		dialogRef.afterClosed().subscribe((result) => {
+			// result 에 값이 오면 업로드
+			if (result) {
+				this.docService.scrumAddDocStatus(result).subscribe({
+					next: (data: any) => {
+						this.initializeScrumBoard(this.member.value);
+						this.snackbar.open("Add document", "Close", {
+							duration: 3000,
+							horizontalPosition: "center",
+						});
+					},
+					error: (err: any) => { },
+				});
+			}
+		});
 		this.textareaFlag = false;
 	}
 

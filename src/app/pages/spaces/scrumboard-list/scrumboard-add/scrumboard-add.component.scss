@@ -1,0 +1,53 @@
+.AddContainer {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    max-width: 600px;
+    max-height: 800px;
+    width: 100%;
+    height: 100%;
+
+    .docSpaceTitle {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+}
+
+.backBtn {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+
+
+.profile-img-select {
+    width: 35px;
+    height: 35px;
+    border-radius: 100%;
+
+}
+
+.member-select-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.member-select-option-name {
+    font-size: 14px;
+
+}
+
+.member-select-option-email {
+    font-size: 12px;
+
+}
+
+.member-option {
+    height: 70px;
+
+}
