@@ -92,7 +92,7 @@ export class LeavesRequestsAddComponent {
               ),
             ];
           },
-          error: () => {},
+          error: () => { },
         });
       }
 
@@ -108,13 +108,13 @@ export class LeavesRequestsAddComponent {
           next: (res) => {
             this.myLeaves.set(res);
           },
-          error: () => {},
+          error: () => { },
         });
       }
     });
   }
 
-  ngAfterViewInit() {}
+  ngAfterViewInit() { }
 
   // 휴가 분류 변경 시 호출되는 함수
   classificationChange(value: any) {
@@ -157,7 +157,7 @@ export class LeavesRequestsAddComponent {
         this.leaveDuration = 0.5;
         if (!this.userCompanyInfo().isMinusAnnualLeave) {
           // 연차 감소 허용 여부
-          if (this.leaveDuration > matchedLeaveDay || this.leaveDuration < 0) {
+          if (this.leaveDuration < 0) {
             this.dialogsService.openDialogNegative('Wrong period, Try again.');
             this.allReset();
             return;
@@ -167,7 +167,7 @@ export class LeavesRequestsAddComponent {
         // 하루인 경우
         this.leaveDuration = this.calculateDiff(start_date, end_date);
         if (!this.userCompanyInfo().isMinusAnnualLeave) {
-          if (this.leaveDuration > matchedLeaveDay || this.leaveDuration < 0) {
+          if (this.leaveDuration < 0) {
             this.dialogsService.openDialogNegative('Wrong period, Try again.');
             this.allReset();
             return;
