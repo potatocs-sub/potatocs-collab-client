@@ -107,6 +107,14 @@ export class LeavesRequestsAddComponent {
         this.leavesService.getMyLeavesStatus().subscribe({
           next: (res) => {
             this.myLeaves.set(res);
+            // rolloverMinDate 수정 - 수정자: 임호균
+            this.rolloverMinDate = this.commonService.dateFormatting(
+              this.myLeaves().startYear,
+              'timeZone'
+            );
+            const startDate = new Date(this.myLeaves().startYear);
+            startDate.setMonth(startDate.getMonth() + this.userCompanyInfo().rollover_max_month);
+            this.rolloverMaxDate = this.commonService.dateFormatting(startDate, 'timeZone');
           },
           error: () => { },
         });
@@ -114,14 +122,18 @@ export class LeavesRequestsAddComponent {
     });
   }
 
-  ngAfterViewInit() { }
+
 
   // 휴가 분류 변경 시 호출되는 함수
   classificationChange(value: any) {
     if (value === 'rollover') {
       this.minDate = this.rolloverMinDate; // 롤오버 최소 날짜 설정
       this.maxDate = this.rolloverMaxDate; // 롤오버 최대 날짜 설정
+    } else {
+      this.minDate = null;
+      this.maxDate = null;
     }
+
     this.datePickDisabled(); // 날짜 선택 비활성화
     this.datePickReset(); // 날짜 선택 초기화
   }
@@ -162,6 +174,12 @@ export class LeavesRequestsAddComponent {
             this.allReset();
             return;
           }
+        }
+
+
+        if (formValue.leaveType1 == 'rollover' && start_date > this.rolloverMaxDate || start_date < this.rolloverMinDate) {
+          this.dialogsService.openDialogNegative('Wrong period, Try again.');
+          this.allReset();
         }
       } else {
         // 하루인 경우

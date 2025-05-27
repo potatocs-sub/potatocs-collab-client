@@ -73,11 +73,14 @@ export class RequestsComponent {
 
 	displayedColumns: string[] = ["createAt", "leaveStartDate", "duration", "leaveType", "approver", "status"];
 
-	constructor() {}
+	constructor() { }
 
-	ngOnInit() {}
+	ngOnInit() {
+		// console.log('회사 정보' + this.userCompanyInfo())
+	}
 	ngAfterViewInit() {
 		this.getEmployeeLeaveRequest();
+		// console.log('회사 정보' + this.userCompanyInfo())
 	}
 
 	getEmployeeLeaveRequest() {
