@@ -69,7 +69,7 @@
   padding: 10px;
   border-radius: 4px;
   min-height: 168px;
-  min-width: 350px;
+  // min-width: 350px;
   // height: 100% !important;
   // width: 340px;
   // flex: 3;
@@ -518,4 +518,9 @@
   .select_comapny_manager {
     flex-direction: column;
   }
+}
+
+
+.calendar {
+  min-width: 410px;
 }

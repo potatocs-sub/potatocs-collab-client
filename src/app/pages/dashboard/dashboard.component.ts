@@ -93,11 +93,11 @@ export class DashboardComponent {
     plugins: [dayGridPlugin, interactionPlugin], // 🔑 여기에 필요한 plugin을 등록
     initialView: 'dayGridMonth', // 사용할 viewType 명시
     events: [
-      {
-        title: '예시', start: '2025-06-01',
-        end: '2025-06-05'
-      }, // ✅ 6월 4일까지 포함되도록 다음 날로 설정},
-      { title: '예시', date: '2025-06-03' }
+      // {
+      //   title: '예시', start: '2025-06-01',
+      //   end: '2025-06-05'
+      // }, 
+      // { title: '예시', date: '2025-06-03' }
     ],
     height: 520,
   };
@@ -137,8 +137,16 @@ export class DashboardComponent {
 
             this.leavesService.getMyLeavesSearch({ type1: 'all', type2: 'all', leave_start_date: res.startYear, leave_end_date: res.endYear, status: 'all' }, '1', '1', 10, 10).subscribe((res: any) => {
               const newData = [];
+              console.log(res)
               res.LeaveRequestListSearch.map((data: any) => {
-                newData.push({ title: data.leaveType, start: moment(data.leave_start_date).format("YYYY-MM-DD"), end: moment(data.leave_end_date).format("YYYY-MM-DD") })
+                if (data.status != 'reject' && data.status != 'Cancel') {
+                  if (data.leaveDay == 'half') {
+                    newData.push({ title: data.leaveType, date: moment(data.leave_start_date).format("YYYY-MM-DD") })
+                  } else {
+                    newData.push({ title: data.leaveType, start: moment(data.leave_start_date).format("YYYY-MM-DD"), end: moment(data.leave_end_date).format("YYYY-MM-DD") })
+                  }
+
+                }
               })
 
               this.calendarOptions.events = newData;
