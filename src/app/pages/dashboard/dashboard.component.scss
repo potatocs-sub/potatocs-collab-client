@@ -5,15 +5,21 @@
 .dashContent {
   padding: 40px 40px;
   margin: 0 auto;
+
+
+}
+
+
+.dashContentFlex {
+  width: 100%;
   display: flex;
   gap: 30px;
-
 }
 
 .dashTitle {
   font-size: 22px;
   font-weight: bold;
-  margin: 20px 0;
+  margin-bottom: 20px;
 }
 
 .leave_line_container {
@@ -505,7 +511,7 @@
   }
 
 
-  .dashContent {
+  .dashContentFlex {
     flex-direction: column;
   }
 

@@ -1,307 +1,311 @@
 <div class="dashContainer">
   <div class="dashContent" style="width: 100%">
-    <!-- <div fxLayout="row">
-      <div class="dashTitle"> Hi, {{ userProfileInfo()?.name }}!</div>
-    </div> -->
+    <div fxLayout="row">
+      <div class="dashTitle"> Dashboard</div>
+    </div>
 
-    <div fxLayout="column" fxLayoutGap="30px" class="dashWrap">
-      <div class="leave_line_container" fxLayout.gt-sm="row" fxLayoutAlign.gt-sm="start center" fxLayoutGap.gt-sm="30px"
-        fxLayout.lt-sm="column" fxLayoutAlign.lt-sm="start" fxLayoutGap.lt-sm="30px">
-        <!-- Hello 부분 -->
-        <div #dash id="dash" class="dash dashBoxBuild">
-          <div class="dash_hello">
-            Hi, {{ userProfileInfo()?.name }}!
-          </div>
-          <div class="dash_elements">
-            <div>
-              <img matCardImage class="dashImg" src="./assets/image/todo-list.png">
+    <div class="dashContentFlex">
+      <div fxLayout="column" fxLayoutGap="30px" class="dashWrap">
+        <div class="leave_line_container" fxLayout.gt-sm="row" fxLayoutAlign.gt-sm="start center"
+          fxLayoutGap.gt-sm="30px" fxLayout.lt-sm="column" fxLayoutAlign.lt-sm="start" fxLayoutGap.lt-sm="30px">
+          <!-- Hello 부분 -->
+          <div #dash id="dash" class="dash dashBoxBuild">
+            <div class="dash_hello">
+              Hi, {{ userProfileInfo()?.name }}!
             </div>
-            <div fxLayout="column" fxLayoutGap="20px">
+            <div class="dash_elements">
+              <div>
+                <img matCardImage class="dashImg" src="./assets/image/todo-list.png">
+              </div>
+              <div fxLayout="column" fxLayoutGap="20px">
 
-              <div class="dashDetail" *ngIf="userProfileInfo()?.emp_start_date != null">
-                <div>
-                  Contract Start : {{ userProfileInfo()?.emp_start_date | date:'YYYY-MM-dd' }}
-                </div>
-                <div>
-                  Tenure today : {{ tenure_today }}
-                </div>
-                <div *ngIf="isRollover">
-                  Rollover Period : {{ minDate }} ~ {{ maxDate }}
+                <div class="dashDetail" *ngIf="userProfileInfo()?.emp_start_date != null">
+                  <div>
+                    Contract Start : {{ userProfileInfo()?.emp_start_date | date:'YYYY-MM-dd' }}
+                  </div>
+                  <div>
+                    Tenure today : {{ tenure_today }}
+                  </div>
+                  <div *ngIf="isRollover">
+                    Rollover Period : {{ minDate }} ~ {{ maxDate }}
+                  </div>
                 </div>
               </div>
             </div>
+
           </div>
 
-        </div>
+          <!-- 휴가 남은거 대충 내역 -->
+          <div #leaveBalance id="leaveBalance" class="dashBoxBuild mybox" fxLayout="column">
+            <div>
+              <span class="fontBold">Leave Balance</span>
+            </div>
+            <div class="leave_card_container">
 
-        <!-- 휴가 남은거 대충 내역 -->
-        <div #leaveBalance id="leaveBalance" class="dashBoxBuild mybox" fxLayout="column">
-          <div>
-            <span class="fontBold">Leave Balance</span>
-          </div>
-          <div class="leave_card_container">
+              <div class="leave_card">
+                <section class="leave_data_section">
 
-            <div class="leave_card">
-              <section class="leave_data_section">
-
-                <mat-progress-spinner mode="determinate"
-                  [value]="leaveInfo?.annual_leave ? 100- (leaveInfo.used_annual_leave / leaveInfo.annual_leave) * 100 : 0"
-                  [strokeWidth]="strokeWidth" [diameter]="diameter">
-                </mat-progress-spinner>
+                  <mat-progress-spinner mode="determinate"
+                    [value]="leaveInfo?.annual_leave ? 100- (leaveInfo.used_annual_leave / leaveInfo.annual_leave) * 100 : 0"
+                    [strokeWidth]="strokeWidth" [diameter]="diameter">
+                  </mat-progress-spinner>
 
 
-                <div class="leave_data">
-                  <div class="leave_left">
-                    {{ leaveInfo?.annual_leave - leaveInfo?.used_annual_leave || 0}}
+                  <div class="leave_data">
+                    <div class="leave_left">
+                      {{ leaveInfo?.annual_leave - leaveInfo?.used_annual_leave || 0}}
+                    </div>
+
+
+                    <div>
+                      <p class="leave_total">
+                        {{leaveInfo?.annual_leave || 0}}
+                      </p>
+                    </div>
                   </div>
 
+                </section>
+                <p class="leave_title">
+                  Annual Leave
+                </p>
+              </div>
 
-                  <div>
-                    <p class="leave_total">
-                      {{leaveInfo?.annual_leave || 0}}
-                    </p>
+              <!-- 롤 오버 -->
+              <div class="leave_card" *ngIf="isRollover">
+                <section class="leave_data_section">
+
+                  <mat-progress-spinner mode="determinate"
+                    [value]="leaveInfo?.rollover ? 100 - (leaveInfo.used_rollover / leaveInfo.rollover) * 100 : 0"
+                    [strokeWidth]="strokeWidth" [diameter]="diameter">
+                  </mat-progress-spinner>
+
+
+                  <div class="leave_data">
+                    <div class="leave_left">
+                      {{ leaveInfo?.rollover - leaveInfo?.used_rollover || 0}}
+                    </div>
+
+
+                    <div>
+                      <p class="leave_total">
+                        {{leaveInfo?.rollover || 0}}
+                      </p>
+                    </div>
                   </div>
-                </div>
 
-              </section>
-              <p class="leave_title">
+                </section>
+                <p class="leave_title">
+                  Rollover
+                </p>
+              </div>
+
+
+
+
+              <div class="leave_card">
+                <section class="leave_data_section">
+
+                  <mat-progress-spinner mode="determinate"
+                    [value]="leaveInfo?.sick_leave ?100- (leaveInfo.used_sick_leave / leaveInfo.sick_leave) * 100 : 0"
+                    [strokeWidth]="strokeWidth" [diameter]="diameter">
+                  </mat-progress-spinner>
+
+
+                  <div class="leave_data">
+                    <div class="leave_left">
+                      {{ leaveInfo?.sick_leave - leaveInfo?.used_sick_leave || 0}}
+                    </div>
+
+
+                    <div>
+                      <p class="leave_total">
+                        {{leaveInfo?.sick_leave || 0}}
+                      </p>
+                    </div>
+                  </div>
+
+                </section>
+                <p class="leave_title">
+                  Sick Leave
+                </p>
+              </div>
+
+
+
+              <div class="leave_card" *ngIf="userCompanyInfo()?.isReplacementDay">
+                <section class="leave_data_section">
+
+                  <mat-progress-spinner mode="determinate"
+                    [value]="leaveInfo?.replacement_leave ? 100- (leaveInfo.used_replacement_leave / leaveInfo.replacement_leave) * 100 : 0"
+                    [strokeWidth]="strokeWidth" [diameter]="diameter">
+                  </mat-progress-spinner>
+
+                  <div class="leave_data">
+                    <div class="leave_left">
+                      {{ leaveInfo?.replacement_leave - leaveInfo?.used_replacement_leave || 0}}
+                    </div>
+
+
+                    <div>
+                      <p class="leave_total">
+                        {{leaveInfo?.replacement_leave || 0}}
+                      </p>
+                    </div>
+                  </div>
+
+                </section>
+                <p class="leave_title">
+                  Replacement Leave
+                </p>
+              </div>
+              <!-- <div class="leaveSubSection" fxFlex="60">
                 Annual Leave
-              </p>
+              </div>
+              <div fxLayout="row" fxFlex="40" fxLayoutAlign="end center">
+                <div class="leaveSubSection_sec daysSection">
+                  <span class="fontBold">
+                    {{ leaveInfo?.annual_leave - leaveInfo?.used_annual_leave || 0}}
+                  </span>
+                  Day(s)
+                </div>
+  
+              </div> -->
             </div>
 
-            <!-- 롤 오버 -->
-            <div class="leave_card" *ngIf="isRollover">
-              <section class="leave_data_section">
-
-                <mat-progress-spinner mode="determinate"
-                  [value]="leaveInfo?.rollover ? 100 - (leaveInfo.used_rollover / leaveInfo.rollover) * 100 : 0"
-                  [strokeWidth]="strokeWidth" [diameter]="diameter">
-                </mat-progress-spinner>
-
-
-                <div class="leave_data">
-                  <div class="leave_left">
-                    {{ leaveInfo?.rollover - leaveInfo?.used_rollover || 0}}
-                  </div>
-
-
-                  <div>
-                    <p class="leave_total">
-                      {{leaveInfo?.rollover || 0}}
-                    </p>
-                  </div>
-                </div>
-
-              </section>
-              <p class="leave_title">
+            <!-- <div fxLayout="row" fxFlex="40" fxLayoutAlign="end center" *ngIf="isRollover">
+              <div class="leaveSubSection">
                 Rollover
-              </p>
-            </div>
-
-
-
-
-            <div class="leave_card">
-              <section class="leave_data_section">
-
-                <mat-progress-spinner mode="determinate"
-                  [value]="leaveInfo?.sick_leave ?100- (leaveInfo.used_sick_leave / leaveInfo.sick_leave) * 100 : 0"
-                  [strokeWidth]="strokeWidth" [diameter]="diameter">
-                </mat-progress-spinner>
-
-
-                <div class="leave_data">
-                  <div class="leave_left">
-                    {{ leaveInfo?.sick_leave - leaveInfo?.used_sick_leave || 0}}
-                  </div>
-
-
-                  <div>
-                    <p class="leave_total">
-                      {{leaveInfo?.sick_leave || 0}}
-                    </p>
-                  </div>
-                </div>
-
-              </section>
-              <p class="leave_title">
-                Sick Leave
-              </p>
-            </div>
-
-
-
-            <div class="leave_card" *ngIf="userCompanyInfo()?.isReplacementDay">
-              <section class="leave_data_section">
-
-                <mat-progress-spinner mode="determinate"
-                  [value]="leaveInfo?.replacement_leave ? 100- (leaveInfo.used_replacement_leave / leaveInfo.replacement_leave) * 100 : 0"
-                  [strokeWidth]="strokeWidth" [diameter]="diameter">
-                </mat-progress-spinner>
-
-                <div class="leave_data">
-                  <div class="leave_left">
-                    {{ leaveInfo?.replacement_leave - leaveInfo?.used_replacement_leave || 0}}
-                  </div>
-
-
-                  <div>
-                    <p class="leave_total">
-                      {{leaveInfo?.replacement_leave || 0}}
-                    </p>
-                  </div>
-                </div>
-
-              </section>
-              <p class="leave_title">
-                Replacement Leave
-              </p>
-            </div>
-            <!-- <div class="leaveSubSection" fxFlex="60">
-              Annual Leave
-            </div>
-            <div fxLayout="row" fxFlex="40" fxLayoutAlign="end center">
+              </div>
               <div class="leaveSubSection_sec daysSection">
                 <span class="fontBold">
-                  {{ leaveInfo?.annual_leave - leaveInfo?.used_annual_leave || 0}}
-                </span>
-                Day(s)
+                  {{ leaveInfo?.rollover - leaveInfo?.used_rollover || 0}}
+                </span>Day(s)
               </div>
+            </div> -->
 
+            <!-- <div fxLayout="row" fxFlex="40" fxLayoutAlign="end center">
+              <div class="leaveSubSection">
+                Sick Leave
+              </div>
+              <div class="leaveSubSection_sec daysSection">
+                <span class="fontBold">
+                  {{ leaveInfo?.sick_leave - leaveInfo?.used_sick_leave || 0}}
+                </span>Day(s)
+              </div>
+            </div> -->
+
+            <!-- <div fxLayout="row" fxFlex="40" fxLayoutAlign="end center" *ngIf="userCompanyInfo()?.isReplacementDay">
+              <div class="leaveSubSection">
+                Replacement Leave
+              </div>
+              <div class="leaveSubSection_sec daysSection">
+                <span class="fontBold">
+                  {{ leaveInfo?.replacement_leave - leaveInfo?.used_replacement_leave || 0}}
+                </span>Day(s)
+              </div>
             </div> -->
           </div>
+        </div>
 
-          <!-- <div fxLayout="row" fxFlex="40" fxLayoutAlign="end center" *ngIf="isRollover">
-            <div class="leaveSubSection">
-              Rollover
-            </div>
-            <div class="leaveSubSection_sec daysSection">
-              <span class="fontBold">
-                {{ leaveInfo?.rollover - leaveInfo?.used_rollover || 0}}
-              </span>Day(s)
-            </div>
-          </div> -->
 
-          <!-- <div fxLayout="row" fxFlex="40" fxLayoutAlign="end center">
-            <div class="leaveSubSection">
-              Sick Leave
-            </div>
-            <div class="leaveSubSection_sec daysSection">
-              <span class="fontBold">
-                {{ leaveInfo?.sick_leave - leaveInfo?.used_sick_leave || 0}}
-              </span>Day(s)
-            </div>
-          </div> -->
+        <!-- company, Manager 선택하는 부분 -->
+        <div class="select_comapny_manager">
+          <div style="flex:1">
+            <div class="addMe" style="height: 100%">
+              <div fxLayout="row" fxLayoutAlign="start">
+                <div class="addTitle">
+                  Company
+                </div>
+                <span class="example-spacer"></span>
+                <mat-icon class="closeMark" (click)="deleteCompany(userCompanyInfo()?.request_id)" *ngIf="userCompanyInfo() != null
+                            ">close</mat-icon>
+              </div>
 
-          <!-- <div fxLayout="row" fxFlex="40" fxLayoutAlign="end center" *ngIf="userCompanyInfo()?.isReplacementDay">
-            <div class="leaveSubSection">
-              Replacement Leave
+              <div *ngIf="userCompanyInfo()?.length == 0 || userCompanyInfo() == undefined; else showCompanyInfo">
+                <div fxLayout="row" fxLayoutAlign="center">
+                  <div>
+                    <mat-icon class="addMark" (click)="openDialogFindMyCompany()">add</mat-icon>
+                  </div>
+                </div>
+              </div>
+              <ng-template #showCompanyInfo>
+                <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="20px">
+                  <div fxLayout="row" fxLayoutAlign="start center">
+                    <!-- <img matCardImage class="dashImg" src="./assets/image/todo-list.png"> -->
+                    <mat-icon class="addImage">business</mat-icon>
+                  </div>
+                  <div fxLayout="column" fxLayoutAlign="center default">
+                    <div class="addDesc">
+                      <span class="descSpan">Company :</span> {{ userCompanyInfo()?.company_name | uppercase }}
+                    </div>
+                    <div class="addDesc">
+                      <span class="descSpan">Status :</span> {{ userCompanyInfo()?.status | titlecase }}
+                    </div>
+                  </div>
+                </div>
+              </ng-template>
             </div>
-            <div class="leaveSubSection_sec daysSection">
-              <span class="fontBold">
-                {{ leaveInfo?.replacement_leave - leaveInfo?.used_replacement_leave || 0}}
-              </span>Day(s)
+          </div>
+
+          <!-- *ngIf="userProfileInfo().isManager != true" -->
+          <div style="flex: 1">
+            <div class="addMe">
+              <div fxLayout="row" fxLayoutAlign="start">
+                <div class="addTitle">
+                  Manager
+                </div>
+                <span class="example-spacer"></span>
+                <mat-icon class="closeMark" (click)="deleteManager(userManagerInfo()?.manager_id)"
+                  *ngIf="userManagerInfo() != null">close</mat-icon>
+              </div>
+
+              <div *ngIf="userManagerInfo()  == null; else showManagerInfo">
+                <div fxLayout="row" fxLayoutAlign="center">
+                  <div>
+                    <mat-icon class="addMark" (click)="openDialogFindMyManager()">add</mat-icon>
+                  </div>
+                </div>
+              </div>
+              <ng-template #showManagerInfo>
+                <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="20px">
+                  <div fxLayout="row" fxLayoutAlign="start center">
+                    <!-- <img matCardImage class="dashImg" src="./assets/image/todo-list.png"> -->
+                    <mat-icon class="addImage">supervisor_account</mat-icon>
+                  </div>
+                  <div fxLayout="column" fxLayoutAlign="center default">
+                    <div class="addDesc">
+                      <span class="descSpan">Manager Name :</span> {{ userManagerInfo()?.name }}
+                    </div>
+                    <div class="addDesc">
+                      <span class="descSpan">Manager Email :</span> {{ userManagerInfo()?.email }}
+                    </div>
+                    <div *ngIf="userManagerInfo()?.accepted === false; else statusPositive">
+                      <div class="addDesc">
+                        <span class="descSpan">status :</span> Pending
+                      </div>
+                    </div>
+                    <ng-template #statusPositive>
+                      <div class="addDesc">
+                        <span class="descSpan">status :</span> Approve
+                      </div>
+                    </ng-template>
+                  </div>
+                </div>
+              </ng-template>
             </div>
-          </div> -->
+          </div>
         </div>
       </div>
 
-
-      <!-- company, Manager 선택하는 부분 -->
-      <div class="select_comapny_manager">
-        <div style="flex:1">
-          <div class="addMe" style="height: 100%">
-            <div fxLayout="row" fxLayoutAlign="start">
-              <div class="addTitle">
-                Company
-              </div>
-              <span class="example-spacer"></span>
-              <mat-icon class="closeMark" (click)="deleteCompany(userCompanyInfo()?.request_id)" *ngIf="userCompanyInfo() != null
-                          ">close</mat-icon>
-            </div>
-
-            <div *ngIf="userCompanyInfo()?.length == 0 || userCompanyInfo() == undefined; else showCompanyInfo">
-              <div fxLayout="row" fxLayoutAlign="center">
-                <div>
-                  <mat-icon class="addMark" (click)="openDialogFindMyCompany()">add</mat-icon>
-                </div>
-              </div>
-            </div>
-            <ng-template #showCompanyInfo>
-              <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="20px">
-                <div fxLayout="row" fxLayoutAlign="start center">
-                  <!-- <img matCardImage class="dashImg" src="./assets/image/todo-list.png"> -->
-                  <mat-icon class="addImage">business</mat-icon>
-                </div>
-                <div fxLayout="column" fxLayoutAlign="center default">
-                  <div class="addDesc">
-                    <span class="descSpan">Company :</span> {{ userCompanyInfo()?.company_name | uppercase }}
-                  </div>
-                  <div class="addDesc">
-                    <span class="descSpan">Status :</span> {{ userCompanyInfo()?.status | titlecase }}
-                  </div>
-                </div>
-              </div>
-            </ng-template>
-          </div>
-        </div>
-
-        <!-- *ngIf="userProfileInfo().isManager != true" -->
-        <div style="flex: 1">
-          <div class="addMe">
-            <div fxLayout="row" fxLayoutAlign="start">
-              <div class="addTitle">
-                Manager
-              </div>
-              <span class="example-spacer"></span>
-              <mat-icon class="closeMark" (click)="deleteManager(userManagerInfo()?.manager_id)"
-                *ngIf="userManagerInfo() != null">close</mat-icon>
-            </div>
-
-            <div *ngIf="userManagerInfo()  == null; else showManagerInfo">
-              <div fxLayout="row" fxLayoutAlign="center">
-                <div>
-                  <mat-icon class="addMark" (click)="openDialogFindMyManager()">add</mat-icon>
-                </div>
-              </div>
-            </div>
-            <ng-template #showManagerInfo>
-              <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="20px">
-                <div fxLayout="row" fxLayoutAlign="start center">
-                  <!-- <img matCardImage class="dashImg" src="./assets/image/todo-list.png"> -->
-                  <mat-icon class="addImage">supervisor_account</mat-icon>
-                </div>
-                <div fxLayout="column" fxLayoutAlign="center default">
-                  <div class="addDesc">
-                    <span class="descSpan">Manager Name :</span> {{ userManagerInfo()?.name }}
-                  </div>
-                  <div class="addDesc">
-                    <span class="descSpan">Manager Email :</span> {{ userManagerInfo()?.email }}
-                  </div>
-                  <div *ngIf="userManagerInfo()?.accepted === false; else statusPositive">
-                    <div class="addDesc">
-                      <span class="descSpan">status :</span> Pending
-                    </div>
-                  </div>
-                  <ng-template #statusPositive>
-                    <div class="addDesc">
-                      <span class="descSpan">status :</span> Approve
-                    </div>
-                  </ng-template>
-                </div>
-              </div>
-            </ng-template>
-          </div>
+      <!-- 달력 -->
+      <div id="todayDate" class="dashBoxBuild">
+        <div class="fontBold">
+          Today is {{ currentDate | date: 'YYYY.MM.dd' }}
+          <full-calendar [options]="calendarOptions"></full-calendar>
         </div>
       </div>
     </div>
 
-    <!-- 달력 -->
-    <div id="todayDate" class="dashBoxBuild">
-      <div class="fontBold">
-        Today is {{ currentDate | date: 'YYYY.MM.dd' }}
-        <full-calendar [options]="calendarOptions"></full-calendar>
-      </div>
-    </div>
+
   </div>
 </div>
