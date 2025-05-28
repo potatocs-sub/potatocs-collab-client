@@ -1,43 +1,162 @@
 <div class="dashContainer">
   <div class="dashContent">
-    <div fxLayout="row">
-      <div class="dashTitle">Dashboard</div>
-    </div>
+    <!-- <div fxLayout="row">
+      <div class="dashTitle"> Hi, {{ userProfileInfo()?.name }}!</div>
+    </div> -->
 
     <div fxLayout="column" fxLayoutGap="30px" class="dashWrap">
       <div class="leave_line_container" fxLayout.gt-sm="row" fxLayoutAlign.gt-sm="start center" fxLayoutGap.gt-sm="30px"
         fxLayout.lt-sm="column" fxLayoutAlign.lt-sm="start" fxLayoutGap.lt-sm="30px">
-        <div #dash id="dash" class="dash dashBoxBuild" fxFlex.gt-sm="50" fxFlex.lt-sm="100" fxLayout="row"
-          fxLayoutAlign="start center" fxLayoutGap="20px">
-          <div>
-            <img matCardImage class="dashImg" src="./assets/image/todo-list.png">
+        <div #dash id="dash" class="dash dashBoxBuild">
+          <div class="dash_hello">
+            Hi, {{ userProfileInfo()?.name }}!
           </div>
-          <div fxLayout="column" fxLayoutGap="20px">
-            <div class="dashName">
-              Hi, {{ userProfileInfo()?.name }}!
+          <div class="dash_elements">
+            <div>
+              <img matCardImage class="dashImg" src="./assets/image/todo-list.png">
             </div>
-            <div class="dashDetail" *ngIf="userProfileInfo()?.emp_start_date != null">
-              <div>
-                Contract Start : {{ userProfileInfo()?.emp_start_date | date:'YYYY-MM-dd' }}
-              </div>
-              <div>
-                Tenure today : {{ tenure_today }}
-              </div>
-              <div *ngIf="isRollover">
-                Rollover Period : {{ minDate }} ~ {{ maxDate }}
+            <div fxLayout="column" fxLayoutGap="20px">
+
+              <div class="dashDetail" *ngIf="userProfileInfo()?.emp_start_date != null">
+                <div>
+                  Contract Start : {{ userProfileInfo()?.emp_start_date | date:'YYYY-MM-dd' }}
+                </div>
+                <div>
+                  Tenure today : {{ tenure_today }}
+                </div>
+                <div *ngIf="isRollover">
+                  Rollover Period : {{ minDate }} ~ {{ maxDate }}
+                </div>
               </div>
             </div>
           </div>
+
         </div>
 
 
-        <div #leaveBalance id="leaveBalance" class="dashBoxBuild" fxFlex.gt-sm="25" fxFlex.ls-sm="100" fxLayout="column"
-          fxLayoutGap="10px">
+        <div #leaveBalance id="leaveBalance" class="dashBoxBuild mybox" fxLayout="column">
           <div>
             <span class="fontBold">Leave Balance</span>
           </div>
-          <div fxLayout="row">
-            <div class="leaveSubSection" fxFlex="60">
+          <div class="leave_card_container">
+
+            <div class="leave_card">
+              <section class="leave_data_section">
+
+                <mat-progress-spinner mode="determinate"
+                  [value]="leaveInfo?.annual_leave ? 100- (leaveInfo.used_annual_leave / leaveInfo.annual_leave) * 100 : 0"
+                  [strokeWidth]="strokeWidth" [diameter]="diameter">
+                </mat-progress-spinner>
+
+
+                <div class="leave_data">
+                  <div class="leave_left">
+                    {{ leaveInfo?.annual_leave - leaveInfo?.used_annual_leave || 0}}
+                  </div>
+
+
+                  <div>
+                    <p class="leave_total">
+                      {{leaveInfo?.annual_leave || 0}}
+                    </p>
+                  </div>
+                </div>
+
+              </section>
+              <p class="leave_title">
+                Annual Leave
+              </p>
+            </div>
+
+            <!-- 롤 오버 -->
+            <div class="leave_card" *ngIf="isRollover">
+              <section class="leave_data_section">
+
+                <mat-progress-spinner mode="determinate"
+                  [value]="leaveInfo?.rollover ? 100 - (leaveInfo.used_rollover / leaveInfo.rollover) * 100 : 0"
+                  [strokeWidth]="strokeWidth" [diameter]="diameter">
+                </mat-progress-spinner>
+
+
+                <div class="leave_data">
+                  <div class="leave_left">
+                    {{ leaveInfo?.rollover - leaveInfo?.used_rollover || 0}}
+                  </div>
+
+
+                  <div>
+                    <p class="leave_total">
+                      {{leaveInfo?.rollover || 0}}
+                    </p>
+                  </div>
+                </div>
+
+              </section>
+              <p class="leave_title">
+                Rollover
+              </p>
+            </div>
+
+
+
+
+            <div class="leave_card">
+              <section class="leave_data_section">
+
+                <mat-progress-spinner mode="determinate"
+                  [value]="leaveInfo?.sick_leave ?100- (leaveInfo.used_sick_leave / leaveInfo.sick_leave) * 100 : 0"
+                  [strokeWidth]="strokeWidth" [diameter]="diameter">
+                </mat-progress-spinner>
+
+
+                <div class="leave_data">
+                  <div class="leave_left">
+                    {{ leaveInfo?.sick_leave - leaveInfo?.used_sick_leave || 0}}
+                  </div>
+
+
+                  <div>
+                    <p class="leave_total">
+                      {{leaveInfo?.sick_leave || 0}}
+                    </p>
+                  </div>
+                </div>
+
+              </section>
+              <p class="leave_title">
+                Sick Leave
+              </p>
+            </div>
+
+
+
+            <div class="leave_card" *ngIf="userCompanyInfo()?.isReplacementDay">
+              <section class="leave_data_section">
+
+                <mat-progress-spinner mode="determinate"
+                  [value]="leaveInfo?.replacement_leave ? 100- (leaveInfo.used_replacement_leave / leaveInfo.replacement_leave) * 100 : 0"
+                  [strokeWidth]="strokeWidth" [diameter]="diameter">
+                </mat-progress-spinner>
+
+                <div class="leave_data">
+                  <div class="leave_left">
+                    {{ leaveInfo?.replacement_leave - leaveInfo?.used_replacement_leave || 0}}
+                  </div>
+
+
+                  <div>
+                    <p class="leave_total">
+                      {{leaveInfo?.replacement_leave || 0}}
+                    </p>
+                  </div>
+                </div>
+
+              </section>
+              <p class="leave_title">
+                Replacement Leave
+              </p>
+            </div>
+            <!-- <div class="leaveSubSection" fxFlex="60">
               Annual Leave
             </div>
             <div fxLayout="row" fxFlex="40" fxLayoutAlign="end center">
@@ -48,10 +167,10 @@
                 Day(s)
               </div>
 
-            </div>
+            </div> -->
           </div>
 
-          <div fxLayout="row" fxFlex="40" fxLayoutAlign="end center" *ngIf="isRollover">
+          <!-- <div fxLayout="row" fxFlex="40" fxLayoutAlign="end center" *ngIf="isRollover">
             <div class="leaveSubSection">
               Rollover
             </div>
@@ -60,9 +179,9 @@
                 {{ leaveInfo?.rollover - leaveInfo?.used_rollover || 0}}
               </span>Day(s)
             </div>
-          </div>
+          </div> -->
 
-          <div fxLayout="row" fxFlex="40" fxLayoutAlign="end center">
+          <!-- <div fxLayout="row" fxFlex="40" fxLayoutAlign="end center">
             <div class="leaveSubSection">
               Sick Leave
             </div>
@@ -71,9 +190,9 @@
                 {{ leaveInfo?.sick_leave - leaveInfo?.used_sick_leave || 0}}
               </span>Day(s)
             </div>
-          </div>
+          </div> -->
 
-          <div fxLayout="row" fxFlex="40" fxLayoutAlign="end center" *ngIf="userCompanyInfo()?.isReplacementDay">
+          <!-- <div fxLayout="row" fxFlex="40" fxLayoutAlign="end center" *ngIf="userCompanyInfo()?.isReplacementDay">
             <div class="leaveSubSection">
               Replacement Leave
             </div>
@@ -82,22 +201,27 @@
                 {{ leaveInfo?.replacement_leave - leaveInfo?.used_replacement_leave || 0}}
               </span>Day(s)
             </div>
-          </div>
+          </div> -->
         </div>
 
 
-
-        <div id="todayDate" class="dashBoxBuild" fxFlex.gt-sm="25" fxFlex.ls-sm="100" fxLayout="row"
+        <!-- 원래 오늘 날짜 나오는 부분 -->
+        <!-- <div id="todayDate" class="dashBoxBuild" fxFlex.gt-sm="25" fxFlex.ls-sm="100" fxLayout="row"
           fxLayoutAlign="center center" fxShow.gt-md fxHide.lt-md>
           <div class="fontBold">
             {{ currentDate | date: 'YYYY.MM.dd' }}
           </div>
-        </div>
-
-
-
-
+        </div> -->
       </div>
+
+
+
+      <!-- 캘린더 -->
+      <div>
+        <full-calendar [options]="calendarOptions"></full-calendar>
+      </div>
+
+
 
       <div fxLayout.gt-sm="row" fxLayoutAlign.gt-sm="start center" fxLayoutGap.gt-sm="30px" fxLayout.lt-sm="column"
         fxLayoutAlign.lt-sm="start" fxLayoutGap.lt-sm="30px">
@@ -109,7 +233,7 @@
               </div>
               <span class="example-spacer"></span>
               <mat-icon class="closeMark" (click)="deleteCompany(userCompanyInfo()?.request_id)" *ngIf="userCompanyInfo() != null
-                            ">close</mat-icon>
+                          ">close</mat-icon>
             </div>
 
             <div *ngIf="userCompanyInfo()?.length == 0 || userCompanyInfo() == undefined; else showCompanyInfo">

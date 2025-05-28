@@ -36,10 +36,17 @@ import { ConnectCompanyDialogComponent } from '../../components/dialogs/connect-
 import moment from 'moment';
 import { ConnectManagerDialogComponentComponent } from '../../components/dialogs/connect-manager-dialog-component/connect-manager-dialog-component.component';
 
+
+import { FullCalendarModule } from '@fullcalendar/angular';
+import dayGridPlugin from '@fullcalendar/daygrid'; // <- 이걸 추가해야 함
+import interactionPlugin from '@fullcalendar/interaction';
+
+
+
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, MaterialsModule],
+  imports: [CommonModule, MaterialsModule, FullCalendarModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
@@ -78,6 +85,36 @@ export class DashboardComponent {
   userManagerInfo: WritableSignal<any> = this.profilesService.userManagerInfo;
 
   tenure_today: string = '';
+
+
+
+
+  calendarOptions = {
+    plugins: [dayGridPlugin, interactionPlugin], // 🔑 여기에 필요한 plugin을 등록
+    initialView: 'dayGridMonth', // 사용할 viewType 명시
+    events: [
+      {
+        title: '예시', start: '2025-06-01',
+        end: '2025-06-05'
+      }, // ✅ 6월 4일까지 포함되도록 다음 날로 설정},
+      { title: '예시', date: '2025-06-03' }
+    ]
+  };
+
+  // Leave Balance 원형 표시 굵기
+  strokeWidth: number = 5;
+  // Leave Balance 원형 크기
+  diameter: number = 60;
+
+
+
+
+
+
+
+
+
+
   constructor() {
     effect(() => {
       if (this.userProfileInfo()) {
@@ -90,12 +127,21 @@ export class DashboardComponent {
         this.rolloverDate();
         this.leavesService.getMyLeavesStatus().subscribe({
           next: (res: any) => {
-            console.log(res);
+
             this.leaveInfo = res;
             this.leaveInfo.rollover = Math.min(
               this.leaveInfo.rollover,
               this.userCompanyInfo()?.rollover_max_day
             );
+
+            this.leavesService.getMyLeavesSearch({ type1: 'all', type2: 'all', leave_start_date: res.startYear, leave_end_date: res.endYear, status: 'all' }, '1', '1', 10, 10).subscribe((res: any) => {
+              const newData = [];
+              res.LeaveRequestListSearch.map((data: any) => {
+                newData.push({ title: data.leaveType, start: moment(data.leave_start_date).format("YYYY-MM-DD"), end: moment(data.leave_end_date).format("YYYY-MM-DD") })
+              })
+
+              this.calendarOptions.events = newData;
+            })
           },
           error: (err: any) => {
             err;
@@ -103,6 +149,8 @@ export class DashboardComponent {
         });
       }
     });
+
+
   }
 
   // rollover 사용기간
@@ -219,7 +267,7 @@ export class DashboardComponent {
                 );
               }
             },
-            (err: any) => {}
+            (err: any) => { }
           );
         }
       });

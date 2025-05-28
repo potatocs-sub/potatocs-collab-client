@@ -12,6 +12,9 @@ import { CalendarModule, DateAdapter } from "angular-calendar";
 import { adapterFactory } from "angular-calendar/date-adapters/date-fns";
 import { FlatpickrModule } from "angularx-flatpickr";
 import { FormsModule } from "@angular/forms";
+
+import { FullCalendarModule } from '@fullcalendar/angular';
+
 export function tokenGetter() {
 	return localStorage.getItem(environment.tokenName);
 }
@@ -34,7 +37,9 @@ export const appConfig: ApplicationConfig = {
 			CalendarCommonModule,
 			CalendarMonthModule,
 			FormsModule,
-			FlatpickrModule.forRoot()
+			FlatpickrModule.forRoot(),
+
+			FullCalendarModule
 		),
 		provideHttpClient(withInterceptorsFromDi()),
 		provideRouter(routes),
