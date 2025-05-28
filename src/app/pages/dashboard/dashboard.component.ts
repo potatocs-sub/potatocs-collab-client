@@ -98,7 +98,8 @@ export class DashboardComponent {
         end: '2025-06-05'
       }, // ✅ 6월 4일까지 포함되도록 다음 날로 설정},
       { title: '예시', date: '2025-06-03' }
-    ]
+    ],
+    height: 520,
   };
 
   // Leave Balance 원형 표시 굵기

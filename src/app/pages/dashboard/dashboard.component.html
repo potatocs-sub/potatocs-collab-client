@@ -1,5 +1,5 @@
 <div class="dashContainer">
-  <div class="dashContent">
+  <div class="dashContent" style="width: 100%">
     <!-- <div fxLayout="row">
       <div class="dashTitle"> Hi, {{ userProfileInfo()?.name }}!</div>
     </div> -->
@@ -7,6 +7,7 @@
     <div fxLayout="column" fxLayoutGap="30px" class="dashWrap">
       <div class="leave_line_container" fxLayout.gt-sm="row" fxLayoutAlign.gt-sm="start center" fxLayoutGap.gt-sm="30px"
         fxLayout.lt-sm="column" fxLayoutAlign.lt-sm="start" fxLayoutGap.lt-sm="30px">
+        <!-- Hello 부분 -->
         <div #dash id="dash" class="dash dashBoxBuild">
           <div class="dash_hello">
             Hi, {{ userProfileInfo()?.name }}!
@@ -33,7 +34,7 @@
 
         </div>
 
-
+        <!-- 휴가 남은거 대충 내역 -->
         <div #leaveBalance id="leaveBalance" class="dashBoxBuild mybox" fxLayout="column">
           <div>
             <span class="fontBold">Leave Balance</span>
@@ -203,30 +204,13 @@
             </div>
           </div> -->
         </div>
-
-
-        <!-- 원래 오늘 날짜 나오는 부분 -->
-        <!-- <div id="todayDate" class="dashBoxBuild" fxFlex.gt-sm="25" fxFlex.ls-sm="100" fxLayout="row"
-          fxLayoutAlign="center center" fxShow.gt-md fxHide.lt-md>
-          <div class="fontBold">
-            {{ currentDate | date: 'YYYY.MM.dd' }}
-          </div>
-        </div> -->
       </div>
 
 
-
-      <!-- 캘린더 -->
-      <div>
-        <full-calendar [options]="calendarOptions"></full-calendar>
-      </div>
-
-
-
-      <div fxLayout.gt-sm="row" fxLayoutAlign.gt-sm="start center" fxLayoutGap.gt-sm="30px" fxLayout.lt-sm="column"
-        fxLayoutAlign.lt-sm="start" fxLayoutGap.lt-sm="30px">
-        <div fxFlex.gt-sm="50" fxFlex.lt-sm="100">
-          <div class="addMe">
+      <!-- company, Manager 선택하는 부분 -->
+      <div class="select_comapny_manager">
+        <div style="flex:1">
+          <div class="addMe" style="height: 100%">
             <div fxLayout="row" fxLayoutAlign="start">
               <div class="addTitle">
                 Company
@@ -263,7 +247,7 @@
         </div>
 
         <!-- *ngIf="userProfileInfo().isManager != true" -->
-        <div fxFlex.gt-sm="50" fxFlex.lt-sm="100">
+        <div style="flex: 1">
           <div class="addMe">
             <div fxLayout="row" fxLayoutAlign="start">
               <div class="addTitle">
@@ -309,6 +293,14 @@
             </ng-template>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- 달력 -->
+    <div id="todayDate" class="dashBoxBuild">
+      <div class="fontBold">
+        Today is {{ currentDate | date: 'YYYY.MM.dd' }}
+        <full-calendar [options]="calendarOptions"></full-calendar>
       </div>
     </div>
   </div>

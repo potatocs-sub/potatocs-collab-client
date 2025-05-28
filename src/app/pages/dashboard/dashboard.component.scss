@@ -5,6 +5,9 @@
 .dashContent {
   padding: 40px 40px;
   margin: 0 auto;
+  display: flex;
+  gap: 30px;
+
 }
 
 .dashTitle {
@@ -60,6 +63,8 @@
   padding: 10px;
   border-radius: 4px;
   min-height: 168px;
+  min-width: 350px;
+  // height: 100% !important;
   // width: 340px;
   // flex: 3;
 }
@@ -75,7 +80,7 @@
 }
 
 #todayDate {
-  max-height: 168px !important;
+  // max-height: 168px !important;
 }
 
 
@@ -129,6 +134,7 @@
   border-radius: 4px;
   background: #fff;
   color: rgba(0, 0, 0, .87);
+
   // background-color: rgba(23, 133, 23, 0.5);
 }
 
@@ -327,6 +333,10 @@
 
 }
 
+.dashWrap {
+  width: 100%;
+}
+
 /* Extra large devices (large laptops and desktops, 1200px and up) */
 @media screen and (max-width: 780px) {
 
@@ -344,7 +354,7 @@
 
   .dashContent {
     // width: 100vw !important;
-    width: 100%;
+    width: 100% !important;
     height: 100%;
     padding: 0;
   }
@@ -354,7 +364,7 @@
   }
 
   .dashWrap {
-    width: 100vw !important;
+    // width: 100vw !important;
     margin-bottom: 20px;
 
   }
@@ -470,6 +480,11 @@
 
 
 
+.select_comapny_manager {
+  display: flex;
+  gap: 30px;
+}
+
 /* ✅ 950px 미만일 경우 반응형 처리 */
 @media (max-width: 950px) {
   .dashBoxBuild {
@@ -489,4 +504,12 @@
     margin-left: 15px !important;
   }
 
+
+  .dashContent {
+    flex-direction: column;
+  }
+
+  .select_comapny_manager {
+    flex-direction: column;
+  }
 }
