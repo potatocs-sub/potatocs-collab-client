@@ -42,10 +42,11 @@ export class LeavesRequestsComponent {
   isRateLimitReached = signal<boolean>(false);
 
   viewType: any = {
-    annual_leave: 'Annual Leave',
-    rollover: 'Rollover',
-    sick_leave: 'Sick Leave',
-    replacement_leave: 'Replacement Day',
+    annual_leave: "Annual Leave",
+    rollover: "Rollover",
+    sick_leave: "Sick Leave",
+    replacement_leave: "Replacement Day",
+    official_leave: "Official Leave"
   };
 
   leavesRequestList = signal<MatTableDataSource<any>>(new MatTableDataSource());

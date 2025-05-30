@@ -6,8 +6,7 @@
 
     <div class="dashContentFlex">
       <div fxLayout="column" fxLayoutGap="30px" class="dashWrap">
-        <div class="leave_line_container" fxLayout.gt-sm="row" fxLayoutAlign.gt-sm="start center"
-          fxLayoutGap.gt-sm="30px" fxLayout.lt-sm="column" fxLayoutAlign.lt-sm="start" fxLayoutGap.lt-sm="30px">
+        <div class="leave_line_container">
           <!-- Hello 부분 -->
           <div #dash id="dash" class="dash dashBoxBuild">
             <div class="dash_hello">
@@ -158,6 +157,34 @@
                   Replacement Leave
                 </p>
               </div>
+
+
+              <!-- 공가 -->
+              <div class="leave_card">
+                <section class="leave_data_section">
+
+                  <mat-progress-spinner mode="determinate"
+                    [value]="leaveInfo?.used_official_leave ?  (leaveInfo.checked_official_leave / leaveInfo.used_official_leave) * 100 : 0"
+                    [strokeWidth]="strokeWidth" [diameter]="diameter">
+                  </mat-progress-spinner>
+
+                  <div class="leave_data">
+                    <div class="leave_left">
+                      {{ leaveInfo?.checked_official_leave || 0}}
+                    </div>
+                    <div>
+                      <p class="leave_total">
+                        {{ leaveInfo?.used_official_leave || 0}}
+                      </p>
+                    </div>
+                  </div>
+
+                </section>
+                <p class="leave_title">
+                  Official Leave
+                </p>
+              </div>
+
               <!-- <div class="leaveSubSection" fxFlex="60">
                 Annual Leave
               </div>
@@ -298,7 +325,7 @@
       </div>
 
       <!-- 달력 -->
-      <div id="todayDate" class="dashBoxBuild calendar">
+      <div id="todayDate" class="calenderBoxBuild calendar">
         <div class="fontBold">
           Today is {{ currentDate | date: 'YYYY.MM.dd' }}
           <full-calendar [options]="calendarOptions"></full-calendar>

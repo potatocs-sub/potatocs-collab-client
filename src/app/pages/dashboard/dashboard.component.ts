@@ -99,7 +99,7 @@ export class DashboardComponent {
       // }, 
       // { title: '예시', date: '2025-06-03' }
     ],
-    height: 520,
+    height: 550,
   };
 
   // Leave Balance 원형 표시 굵기

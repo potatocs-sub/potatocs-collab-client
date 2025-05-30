@@ -12,7 +12,7 @@ export class LeavesService {
   private http = inject(HttpClient);
   commonService = inject(CommonService);
 
-  constructor() {}
+  constructor() { }
   // getMyLeaveList() {
   //   return this.http.get(this.baseUrl + '/leaves/my-request');
   // }
@@ -76,8 +76,20 @@ export class LeavesService {
     });
   }
 
-  requestLeave(leaveData: any) {
-    return this.http.post(this.baseUrl + '/leave/request-leave', leaveData);
+  requestLeave(leaveData: any, fileData?: any) {
+    const formData = new FormData();
+
+    formData.append('leaveType', leaveData.leaveType);
+    formData.append('leaveDay', leaveData.leaveDay);
+    formData.append('leaveDuration', leaveData.leaveDuration);
+    formData.append('leave_start_date', leaveData.leave_start_date);
+    formData.append('leave_end_date', leaveData.leave_end_date);
+    formData.append('leave_reason', leaveData.leave_reason);
+    formData.append('status', leaveData.status);
+    formData.append('official_leave', fileData);
+    // formData.append('file-name', fileName);
+
+    return this.http.post(this.baseUrl + '/leave/request-leave', formData);
   }
 
   cancelMyRequestLeave(data: any) {
@@ -123,5 +135,41 @@ export class LeavesService {
       this.baseUrl + '/leave/cancel-Employee-Approve-Leave',
       leaveData
     );
+  }
+
+
+
+
+
+
+
+  // 업로드된 파일 다운로드
+  fileDownload(fileId: any) {
+    // params를 쓸땐 객체로 보내야한다.
+    return this.http.get(this.baseUrl + "/leave/download_request_leaves_doc", {
+      params: { fileId: fileId },
+      responseType: "blob",
+    });
+    // return this.http.get('/api/v1/collab/space/doc/getUploadFileList',{ params: docId });
+  }
+
+  confirmFileDownload(fileId: any) {
+    return this.http.get(this.baseUrl + "/leave/download_confirm_leaves_doc", {
+      params: { fileId: fileId },
+      responseType: "blob",
+    });
+  }
+
+  submitOfficialDoc(_id: any, fileData: any) {
+    const formData = new FormData();
+
+    formData.append('official_leave', fileData);
+    formData.append('_id', _id);
+    return this.http.post(this.baseUrl + '/leave/confirm-official-leave', formData)
+  }
+
+
+  checkOfficialLeave(_id: string, check: boolean) {
+    return this.http.post(this.baseUrl + '/leave/official-leave-check', { _id, check })
   }
 }

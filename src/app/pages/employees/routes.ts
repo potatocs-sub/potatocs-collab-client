@@ -4,6 +4,7 @@ import { LeavesRequestsComponent } from './leaves-requests/leaves-requests.compo
 import { LeavesStatusComponent } from './leaves-status/leaves-status.component';
 import { ManagersConnectionComponent } from './managers-connection/managers-connection.component';
 import { ReplacementDaysComponent } from './replacement-days/replacement-days.component';
+import { OfficialLeaveCheckComponent } from './official-leave-check/official-leave-check.component';
 
 
 
@@ -28,6 +29,10 @@ export const EMPLOYEES_ROUTES: Route[] = [
   {
     path: 'registration/requests', // 직원들이 담당 매니저와의 연결 요청 목록
     loadComponent: () => ManagersConnectionComponent,
+  },
+  {
+    path: 'leaves/official-leave-requests',
+    loadComponent: () => OfficialLeaveCheckComponent,
   },
   {
     path: '',

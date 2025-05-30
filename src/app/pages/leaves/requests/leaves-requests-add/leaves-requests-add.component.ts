@@ -67,6 +67,14 @@ export class LeavesRequestsAddComponent {
   company: any;
   user: any;
 
+  isOfficialLeave: boolean = false;
+
+  // official leave를 신청할 때 사용할 문서 데이터 변수
+  fileData: any;
+  // official leave용 파일 이름
+  fileName: any;
+
+
   holidayDateFilter = (d: Date | null): boolean => {
     if (!d) return false;
     const day = d.getDay();
@@ -124,6 +132,11 @@ export class LeavesRequestsAddComponent {
 
 
 
+  fileChangeEvent(data: any) {
+    this.fileData = data.target.files[0];
+    this.fileName = this.fileData.name;
+  }
+
   // 휴가 분류 변경 시 호출되는 함수
   classificationChange(value: any) {
     if (value === 'rollover') {
@@ -133,6 +146,16 @@ export class LeavesRequestsAddComponent {
       this.minDate = null;
       this.maxDate = null;
     }
+
+    // 공가 신청이면 문서 업로드가 필요 할 수 있음 
+    if (value == 'official_leave')
+      this.isOfficialLeave = true;
+    else {
+      this.isOfficialLeave = false;
+      this.fileData = undefined;
+      this.fileName = undefined;
+    }
+
 
     this.datePickDisabled(); // 날짜 선택 비활성화
     this.datePickReset(); // 날짜 선택 초기화
@@ -345,6 +368,9 @@ export class LeavesRequestsAddComponent {
         ? leaveStartDate
         : this.commonService.dateFormatting(formValue.leave_end_date);
 
+    // 파일 정보 추가
+
+
     this.leaveRequestData = {
       leaveType: formValue.leaveType1, // 휴가 타입
       leaveDay: formValue.leaveType2, // 휴가 단위 (하루 또는 반차)
@@ -357,10 +383,10 @@ export class LeavesRequestsAddComponent {
   }
 
   submitLeaveRequest() {
-    this.leavesService.requestLeave(this.leaveRequestData).subscribe({
+    this.leavesService.requestLeave(this.leaveRequestData, this.fileData).subscribe({
       next: (data: any) => {
         if (data.message === 'requested') {
-          this.router.navigate(['leaves/requests']);
+          this.router.navigate(['leaves/official_leave']);
           this.dialogsService.openDialogPositive(
             'Successfully, the request has been submitted.'
           );

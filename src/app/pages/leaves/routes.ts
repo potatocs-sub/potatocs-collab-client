@@ -3,6 +3,7 @@ import { LeavesRequestsAddComponent } from "./requests/leaves-requests-add/leave
 import { StatusComponent } from "./status/status.component";
 import { LeavesComponent } from "./leaves.component";
 import { ReplacementRequestsComponent } from "./replacement-requests/replacement-requests.component";
+import { OfficialComponent } from "./official/official.component";
 
 export const LEAVES_ROUTES: Route[] = [
 	{
@@ -24,4 +25,8 @@ export const LEAVES_ROUTES: Route[] = [
 		path: "rd-request-list",
 		loadComponent: () => ReplacementRequestsComponent,
 	},
+	{
+		path: 'check-request',
+		loadComponent: () => OfficialComponent,
+	}
 ];

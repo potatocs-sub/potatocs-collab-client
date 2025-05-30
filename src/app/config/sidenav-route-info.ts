@@ -65,6 +65,14 @@ export const sidenavRouteInfo: NavigationItem[] = [
 						isManager: false,
 						isReplacementDay: true,
 					},
+					{
+						type: "link",
+						label: "Official Leave Request",
+						route: "/leaves/check-request",
+						icon: "update",
+						isManager: false,
+						isReplacementDay: false,
+					}
 				],
 			},
 			{
@@ -104,6 +112,14 @@ export const sidenavRouteInfo: NavigationItem[] = [
 						icon: "update",
 						isManager: true,
 						isReplacementDay: true,
+					},
+					{
+						type: "link",
+						label: "OL Confirming Request",
+						route: "/employees/leaves/official-leave-requests",
+						icon: "update",
+						isManager: true,
+						isReplacementDay: false,
 					},
 					{
 						type: "link",

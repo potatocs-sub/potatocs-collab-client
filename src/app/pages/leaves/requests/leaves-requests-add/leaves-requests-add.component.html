@@ -68,6 +68,8 @@
                     <mat-option value="annual_leave">Annual Leave</mat-option>
                     <mat-option *ngIf="userCompanyInfo()?.rollover" value="rollover">Rollover</mat-option>
                     <mat-option value="sick_leave">Sick Leave</mat-option>
+                    <!-- 공가 기능 추가 -->
+                    <mat-option value="official_leave">Official Leave</mat-option>
                   </mat-select>
                 </mat-form-field>
 
@@ -81,6 +83,26 @@
               </div>
             </div>
           </div>
+
+          <div *ngIf="isOfficialLeave" class="lineDivider" fxLayout="row wrap">
+            <div class="leftTable" fxFlex="30" fxFlex.gt-md="20">
+              <div><span>Official Document</span></div>
+            </div>
+            <div class="rightTable" fxFlex>
+              <div>
+                <div id="upload">
+                  <label>
+                    <input type="file" ngf-select (change)="fileChangeEvent($event)" />
+                    <div class="choose_button_span" matTooltip="File attachment" matTooltipPosition="above"
+                      [matTooltipShowDelay]="500">
+                      <!-- <mat-icon> attach_file</mat-icon> -->
+                    </div>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div class="lineDivider" fxLayout="row wrap">
             <div class="leftTable" fxFlex="30" fxFlex.gt-md="20">
               <div><span>Period</span></div>

@@ -61,6 +61,7 @@ export class RequestsComponent {
 		rollover: "Rollover",
 		sick_leave: "Sick Leave",
 		replacement_leave: "Replacement Day",
+		official_leave: "Official Leave"
 	};
 
 	isRollover = false;

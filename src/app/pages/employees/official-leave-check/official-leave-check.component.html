@@ -1,0 +1,83 @@
+<div class="mainContentContainer">
+    <div class="mainContent">
+        <div fxLayout="row">
+            <div class="mainTitle">Employee Leave Status</div>
+        </div>
+
+
+        <div class="historyTableBox">
+            <table mat-table [dataSource]="dataSource()" class="mat-elevation-z8 historyTable" matSort
+                matSortActive="createdAt" matSortDisableClear matSortDirection="desc">
+                <!--- Note that these columns can be defined in any order.
+                        The actual rendered columns are set as a property on the row definition" -->
+
+                <!-- Name Column -->
+                <ng-container matColumnDef="startDate">
+                    <th mat-header-cell *matHeaderCellDef>Start Date</th>
+                    <td mat-cell class="center-text" *matCellDef="let element">
+                        {{ element.startDate | date : "YYYY-MM-dd" }}
+                    </td>
+                </ng-container>
+
+                <!-- Weight Column -->
+                <ng-container matColumnDef="endDate">
+                    <th mat-header-cell *matHeaderCellDef>End Date</th>
+                    <td mat-cell class="center-text" *matCellDef="let element">
+                        {{ element.endDate | date : "YYYY-MM-dd" }}
+                    </td>
+                </ng-container>
+
+                <!-- Symbol Column -->
+                <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef>Requestor</th>
+                    <td mat-cell class="center-text" *matCellDef="let element">
+                        {{ element.name }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="emailFind">
+                    <th mat-header-cell *matHeaderCellDef>Requestor Email</th>
+                    <td mat-cell class="center-text" *matCellDef="let element">
+                        {{ element.email }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="leaveType">
+                    <th mat-header-cell *matHeaderCellDef>Type</th>
+                    <td mat-cell class="center-text" *matCellDef="let element">
+                        <div class="leave-request-detail" (click)="openDialogPendingLeaveDetail(element)">
+                            {{ viewType[element.leaveType] }}
+                        </div>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="duration">
+                    <th mat-header-cell *matHeaderCellDef>Day(s)</th>
+                    <td mat-cell class="center-text" *matCellDef="let element">
+                        {{ element.duration }} day
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="status">
+                    <th mat-header-cell *matHeaderCellDef>Status</th>
+                    <td mat-cell class="center-text" *matCellDef="let element" [ngClass]="{
+                approve: element.status == 'approve',
+                reject: element.status == 'reject'
+              }">
+                        {{ element.status }}
+                    </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell" colspan="9999">No data</td>
+                </tr>
+            </table>
+            <mat-paginator [length]="resultsLength()" [pageSize]="pageSize()" [pageSizeOptions]="[5, 10, 25]"
+                showFirstLastButtons aria-label="Select page of periodic elements">
+            </mat-paginator>
+        </div>
+    </div>
+    <!-- mainContent -->
+</div>
+<!-- mainContentContainer -->

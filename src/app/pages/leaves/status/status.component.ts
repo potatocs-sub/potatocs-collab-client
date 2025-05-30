@@ -41,6 +41,7 @@ export class StatusComponent {
 		rollover: "Rollover",
 		sick_leave: "Sick Leave",
 		replacement_leave: "Replacement Day",
+		official_leave: "Official Leave"
 	};
 
 	constructor() {
@@ -110,6 +111,7 @@ export class StatusComponent {
 			// height: '614px',
 
 			data: {
+				_id: data._id,
 				requestor: data.requestor,
 				requestorName: data.requestorName,
 				leaveType: data.leaveType,
@@ -120,6 +122,9 @@ export class StatusComponent {
 				status: data.status,
 				createdAt: data.createdAt,
 				approver: data.approver,
+				official_leave_request_file_name: data?.official_leave_request_file_name,
+				official_leave_check_file_name: data?.official_leave_check_file_name,
+				official_leave_check: data?.official_leave_check
 			},
 		});
 

@@ -19,13 +19,13 @@ export class RdRequestsDetailsDialogComponent {
   leavesService = inject(LeavesService);
 
   isPending;
-  viewType = {
-    annual_leave: 'Annual Leave',
-    rollover: 'Rollover',
-    sick_leave: 'Sick Leave',
-    replacement_leave: 'Replacement Day',
+  viewType: any = {
+    annual_leave: "Annual Leave",
+    rollover: "Rollover",
+    sick_leave: "Sick Leave",
+    replacement_leave: "Replacement Day",
+    official_leave: "Official Leave"
   };
-
   reject: any = new FormGroup({
     rejectReason: new FormControl(),
   });
@@ -35,7 +35,7 @@ export class RdRequestsDetailsDialogComponent {
     @Inject(MAT_DIALOG_DATA) public data: any,
 
     private dialogService: DialogService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     console.log(this.data);

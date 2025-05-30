@@ -7,6 +7,9 @@ import { MaterialsModule } from "../../../materials/materials.module";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { DialogService } from "../../../stores/dialog/dialog.service";
 import { FormControl, FormGroup } from "@angular/forms";
+import { saveAs } from "file-saver";
+
+
 
 @Component({
 	selector: "app-leave-request-detail-dialog",
@@ -28,12 +31,12 @@ export class LeaveRequestDetailDialogComponent {
 	rejectForm: FormGroup = new FormGroup({
 		rejectReason: new FormControl(),
 	});
-
 	viewType: any = {
 		annual_leave: "Annual Leave",
 		rollover: "Rollover",
 		sick_leave: "Sick Leave",
 		replacement_leave: "Replacement Day",
+		official_leave: "Official Leave"
 	};
 	constructor() {
 		console.log(this.data);
@@ -103,5 +106,69 @@ export class LeaveRequestDetailDialogComponent {
 				this.dialogRef.close();
 			}
 		});
+	}
+
+
+
+	// 파일 다운로드 -> 나중에 미리보기 이런거 추가해야 함
+	downloadFile(id: string, official_leave_request_file_name: string) {
+		this.leavesService.fileDownload(id).subscribe((res) => {
+			// console.log(res);
+			const blob = res;
+			saveAs(blob, official_leave_request_file_name);
+		});
+	}
+
+	// 승인 파일 다운로드 -> 나중에 미리보기 이런거 추가해야 함
+	downloadConfirmFile(id: string, official_leave_check_file_name: string) {
+		this.leavesService.fileDownload(id).subscribe((res) => {
+			// console.log(res);
+			const blob = res;
+			saveAs(blob, official_leave_check_file_name);
+		});
+	}
+
+	// official leave를 신청할 때 사용할 문서 데이터 변수
+	fileData: any;
+	// official leave용 파일 이름
+	fileName: any;
+
+	fileChangeEvent(data: any) {
+		this.fileData = data.target.files[0];
+		this.fileName = this.fileData.name;
+	}
+
+
+
+	submitConfirmationDocument() {
+		// console.log(this.data._id)
+		this.leavesService.submitOfficialDoc(this.data._id, this.fileData).subscribe({
+			next: (data: any) => {
+				console.log(data)
+				if (data.message == 'upload') {
+					this.dialogService.openDialogPositive("Successfully, Official leave approval request.");
+					this.dialogRef.close();
+				}
+
+			},
+			error: (err: any) => {
+				this.dialogService.openDialogNegative(err.error.message);
+			},
+		})
+	}
+
+
+	confirmCheck(_id: string, check: boolean) {
+		this.leavesService.checkOfficialLeave(_id, check).subscribe({
+			next: (data: any) => {
+				if (data.message == 'Success') {
+					this.dialogRef.close();
+				}
+
+			},
+			error: (err: any) => {
+				this.dialogService.openDialogNegative(err.error.message);
+			}
+		})
 	}
 }

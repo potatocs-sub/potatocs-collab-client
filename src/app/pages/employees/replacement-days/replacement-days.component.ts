@@ -24,10 +24,11 @@ export class ReplacementDaysComponent {
   dialog = inject(MatDialog);
 
   viewType: any = {
-    annual_leave: 'Annual Leave',
-    rollover: 'Rollover',
-    sick_leave: 'Sick Leave',
-    replacement_leave: 'Replacement Day',
+    annual_leave: "Annual Leave",
+    rollover: "Rollover",
+    sick_leave: "Sick Leave",
+    replacement_leave: "Replacement Day",
+    official_leave: "Official Leave"
   };
 
   displayedColumns: string[] = [

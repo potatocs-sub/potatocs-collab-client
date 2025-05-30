@@ -27,15 +27,68 @@
 				<th>Leave type</th>
 				<td>{{ viewType[data.leaveType] }}</td>
 			</tr>
+			@if(data.leaveType == 'official_leave'){
+			<tr>
+				<th>Request Document</th>
+				<td (click)="downloadFile(data?._id, data?.official_leave_request_file_name)">{{
+					data?.official_leave_request_file_name }}</td>
+			</tr>
+			<tr>
+				<th>Confirmation Document</th>
+				@if(data?.status =='approve'){
+				@if(data?.official_leave_check_file_name) {
+				<td>{{ data?.official_leave_check_file_name }}</td>
+				}@else if(!data?.isManager) {
+				<td>
+					<div>
+						<input type="file" ngf-select (change)="fileChangeEvent($event)" />
+						<div class="choose_button_span" matTooltip="File attachment" matTooltipPosition="above"
+							[matTooltipShowDelay]="500"></div>
+					</div>
+
+					<button (click)="submitConfirmationDocument()" mat-button>submit</button>
+				</td>
+				}@else {
+				<td></td>
+				}
+				}
+				@else {
+				<td></td>
+				}
+			</tr>
+			<tr>
+				<th>Checked</th>
+				@if(data?.status =='approve'){
+				@if(data?.official_leave_check) {
+				<td>
+					@if(data.isManager){
+					<button mat-raised-button class="rejectBtn" (click)="confirmCheck(data?._id, false)">Cancel</button>
+					}@else {
+					<p>approve</p>
+					}
+				</td>
+				}@else {
+				<td>
+					@if(data.isManager){
+					<button class="requestCancel" color="primary" mat-raised-button style="margin-right: 10px;"
+						(click)="confirmCheck(data?._id, true)">Approve</button>
+					<button class="rejectBtn" mat-raised-button (click)="confirmCheck(data?._id, false)">Reject</button>
+					}
+				</td>
+				}
+				}
+				@else {
+				<td></td>
+				}
+			</tr>
+			}
+
 			<tr>
 				<th>Period</th>
 				<td>
-					{{ data.leave_start_date | date : "YYYY-MM-dd" }} ~
-					{{ data.leave_end_date | date : "YYYY-MM-dd" }} ({{
-					data.leaveDuration
-					}}
-					days)
-				</td>
+					{{ data.leave_start_date | date : " YYYY-MM-dd" }} ~ {{ data.leave_end_date | date : "YYYY-MM-dd" }}
+					({{
+					data.leaveDuration }} days) </td>
 			</tr>
 			<tr>
 				<th>Leave of used</th>

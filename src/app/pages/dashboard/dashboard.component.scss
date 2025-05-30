@@ -23,7 +23,9 @@
 }
 
 .leave_line_container {
-  height: 250px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
 }
 
 .dash {
@@ -40,7 +42,7 @@
 
   .dash_hello {
     font-size: x-large;
-    margin-top: 15px;
+    // margin-top: 15px;
     margin-left: 30px;
   }
 
@@ -75,7 +77,11 @@
   // flex: 3;
 }
 
-
+.calenderBoxBuild {
+  // box-shadow: 0 1px 4px 0 rgb(0 0 0 / 14%);
+  padding: 10px;
+  border-radius: 4px;
+}
 
 #leaveBalance {
   height: 100% !important;
@@ -433,8 +439,8 @@
 .leave_card {
   display: flex;
   flex-direction: column;
-  max-width: calc(50%);
-  flex: 1 1 calc(50%);
+  // max-width: calc(50%);
+  // flex: 1 1 calc(50%);
   /* 한 줄에 2개: 전체의 50% - gap 보정 */
   box-sizing: border-box;
   margin: 10px 0;
@@ -481,7 +487,8 @@
 .leave_card_container {
   display: flex;
   flex-wrap: wrap;
-  /* 넘치면 줄바꿈 */
+  justify-content: space-around
+    /* 넘치면 줄바꿈 */
 }
 
 

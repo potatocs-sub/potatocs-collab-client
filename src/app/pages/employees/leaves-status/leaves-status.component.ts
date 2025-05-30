@@ -37,6 +37,7 @@ export class LeavesStatusComponent {
 		rollover: "Rollover",
 		sick_leave: "Sick Leave",
 		replacement_leave: "Replacement Day",
+		official_leave: "Official Leave"
 	};
 
 	startOfMonth = moment().startOf("month").format();
@@ -163,6 +164,9 @@ export class LeavesStatusComponent {
 				approver: data.approver,
 				rejectReason: data.rejectReason,
 				isManager: true,
+				official_leave_request_file_name: data?.official_leave_request_file_name,
+				official_leave_check_file_name: data?.official_leave_check_file_name,
+				official_leave_check: data?.official_leave_check
 			},
 		});
 		//닫힌후에 테이블 갱신
