@@ -5,35 +5,132 @@
     </div>
 
     <div class="dashContentFlex">
-      <div fxLayout="column" fxLayoutGap="30px" class="dashWrap">
+      <div class="dashWrap">
         <div class="leave_line_container">
           <!-- Hello 부분 -->
           <div #dash id="dash" class="dash dashBoxBuild">
-            <div class="dash_hello">
-              Hi, {{ userProfileInfo()?.name }}!
-            </div>
-            <div class="dash_elements">
-              <div>
-                <img matCardImage class="dashImg" src="./assets/image/todo-list.png">
+            <div class="dash_hello_container">
+              <div class="dash_hello">
+                Hi, {{ userProfileInfo()?.name }}!
               </div>
-              <div fxLayout="column" fxLayoutGap="20px">
+              <div class="dash_elements">
+                <div>
+                  <img matCardImage class="dashImg" src="./assets/image/todo-list.png">
+                </div>
+                <div fxLayout="column" fxLayoutGap="20px">
 
-                <div class="dashDetail" *ngIf="userProfileInfo()?.emp_start_date != null">
-                  <div>
-                    Contract Start : {{ userProfileInfo()?.emp_start_date | date:'YYYY-MM-dd' }}
-                  </div>
-                  <div>
-                    Tenure today : {{ tenure_today }}
-                  </div>
-                  <div *ngIf="isRollover">
-                    Rollover Period : {{ minDate }} ~ {{ maxDate }}
+                  <div class="dashDetail" *ngIf="userProfileInfo()?.emp_start_date != null">
+                    <div>
+                      Contract Start : {{ userProfileInfo()?.emp_start_date | date:'YYYY-MM-dd' }}
+                    </div>
+                    <div>
+                      Tenure today : {{ tenure_today }}
+                    </div>
+                    <div *ngIf="isRollover">
+                      Rollover Period : {{ minDate }} ~ {{ maxDate }}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
 
-          </div>
 
+
+
+            <div class="company_manager_card_container">
+              <!-- 회사 선택 부분-->
+              <div class="company_manager_card">
+
+
+                <div class="addMe">
+                  <div fxLayout="row" fxLayoutAlign="start">
+                    <div class="addTitle">
+                      Company
+                    </div>
+                    <span class="example-spacer"></span>
+                    <mat-icon class="closeMark" (click)="deleteCompany(userCompanyInfo()?.request_id)" *ngIf="userCompanyInfo() != null
+                  ">close</mat-icon>
+                  </div>
+
+                  <div *ngIf="userCompanyInfo()?.length == 0 || userCompanyInfo() == undefined; else showCompanyInfo">
+                    <div fxLayout="row" fxLayoutAlign="center">
+                      <div>
+                        <mat-icon class="addMark" (click)="openDialogFindMyCompany()">add</mat-icon>
+                      </div>
+                    </div>
+                  </div>
+                  <ng-template #showCompanyInfo>
+                    <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="20px">
+                      <div fxLayout="row" fxLayoutAlign="start center">
+                        <!-- <img matCardImage class="dashImg" src="./assets/image/todo-list.png"> -->
+                        <mat-icon class="addImage">business</mat-icon>
+                      </div>
+                      <div fxLayout="column" fxLayoutAlign="center default">
+                        <div class="addDesc">
+                          <span class="descSpan">Company :</span> {{ userCompanyInfo()?.company_name | uppercase
+                          }}
+                        </div>
+                        <div class="addDesc">
+                          <span class="descSpan">Status :</span> {{ userCompanyInfo()?.status | titlecase }}
+                        </div>
+                      </div>
+                    </div>
+                  </ng-template>
+                </div>
+
+
+              </div>
+
+
+
+              <div class="company_manager_card">
+                <div class="addMe">
+                  <div fxLayout="row" fxLayoutAlign="start">
+                    <div class="addTitle">
+                      Manager
+                    </div>
+                    <span class="example-spacer"></span>
+                    <mat-icon class="closeMark" (click)="deleteManager(userManagerInfo()?.manager_id)"
+                      *ngIf="userManagerInfo() != null">close</mat-icon>
+                  </div>
+
+                  <div *ngIf="userManagerInfo()  == null; else showManagerInfo">
+                    <div fxLayout="row" fxLayoutAlign="center">
+                      <div>
+                        <mat-icon class="addMark" (click)="openDialogFindMyManager()">add</mat-icon>
+                      </div>
+                    </div>
+                  </div>
+                  <ng-template #showManagerInfo>
+                    <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="20px">
+                      <div fxLayout="row" fxLayoutAlign="start center">
+                        <!-- <img matCardImage class="dashImg" src="./assets/image/todo-list.png"> -->
+                        <mat-icon class="addImage">supervisor_account</mat-icon>
+                      </div>
+                      <div fxLayout="column" fxLayoutAlign="center default">
+                        <div class="addDesc">
+                          <span class="descSpan">Name :</span> {{ userManagerInfo()?.name }}
+                        </div>
+                        <div class="addDesc">
+                          <span class="descSpan">Email :</span> {{ userManagerInfo()?.email }}
+                        </div>
+                        <div *ngIf="userManagerInfo()?.accepted === false; else statusPositive">
+                          <div class="addDesc">
+                            <span class="descSpan">status :</span> Pending
+                          </div>
+                        </div>
+                        <ng-template #statusPositive>
+                          <div class="addDesc">
+                            <span class="descSpan">status :</span> Approve
+                          </div>
+                        </ng-template>
+                      </div>
+                    </div>
+                  </ng-template>
+                </div>
+              </div>
+            </div>
+          </div>
           <!-- 휴가 남은거 대충 내역 -->
           <div #leaveBalance id="leaveBalance" class="dashBoxBuild mybox" fxLayout="column">
             <div>
@@ -184,155 +281,107 @@
                   Official Leave
                 </p>
               </div>
-
-              <!-- <div class="leaveSubSection" fxFlex="60">
-                Annual Leave
-              </div>
-              <div fxLayout="row" fxFlex="40" fxLayoutAlign="end center">
-                <div class="leaveSubSection_sec daysSection">
-                  <span class="fontBold">
-                    {{ leaveInfo?.annual_leave - leaveInfo?.used_annual_leave || 0}}
-                  </span>
-                  Day(s)
-                </div>
-  
-              </div> -->
             </div>
-
-            <!-- <div fxLayout="row" fxFlex="40" fxLayoutAlign="end center" *ngIf="isRollover">
-              <div class="leaveSubSection">
-                Rollover
-              </div>
-              <div class="leaveSubSection_sec daysSection">
-                <span class="fontBold">
-                  {{ leaveInfo?.rollover - leaveInfo?.used_rollover || 0}}
-                </span>Day(s)
-              </div>
-            </div> -->
-
-            <!-- <div fxLayout="row" fxFlex="40" fxLayoutAlign="end center">
-              <div class="leaveSubSection">
-                Sick Leave
-              </div>
-              <div class="leaveSubSection_sec daysSection">
-                <span class="fontBold">
-                  {{ leaveInfo?.sick_leave - leaveInfo?.used_sick_leave || 0}}
-                </span>Day(s)
-              </div>
-            </div> -->
-
-            <!-- <div fxLayout="row" fxFlex="40" fxLayoutAlign="end center" *ngIf="userCompanyInfo()?.isReplacementDay">
-              <div class="leaveSubSection">
-                Replacement Leave
-              </div>
-              <div class="leaveSubSection_sec daysSection">
-                <span class="fontBold">
-                  {{ leaveInfo?.replacement_leave - leaveInfo?.used_replacement_leave || 0}}
-                </span>Day(s)
-              </div>
-            </div> -->
           </div>
-        </div>
-
-
-        <!-- company, Manager 선택하는 부분 -->
-        <div class="select_comapny_manager">
-          <div style="flex:1">
-            <div class="addMe" style="height: 100%">
-              <div fxLayout="row" fxLayoutAlign="start">
-                <div class="addTitle">
-                  Company
-                </div>
-                <span class="example-spacer"></span>
-                <mat-icon class="closeMark" (click)="deleteCompany(userCompanyInfo()?.request_id)" *ngIf="userCompanyInfo() != null
+          <!-- 달력 -->
+          <div id="todayDate" class="calenderBoxBuild calendar">
+            <div class="fontBold">
+              Today is {{ currentDate | date: 'YYYY.MM.dd' }}
+              <full-calendar [options]="calendarOptions"></full-calendar>
+            </div>
+          </div>
+          <!-- company, Manager 선택하는 부분 -->
+          <!-- <div class="select_comapny_manager">
+            <div style="flex:1">
+              <div class="addMe" style="height: 100%">
+                <div fxLayout="row" fxLayoutAlign="start">
+                  <div class="addTitle">
+                    Company
+                  </div>
+                  <span class="example-spacer"></span>
+                  <mat-icon class="closeMark" (click)="deleteCompany(userCompanyInfo()?.request_id)" *ngIf="userCompanyInfo() != null
                             ">close</mat-icon>
-              </div>
+                </div>
 
-              <div *ngIf="userCompanyInfo()?.length == 0 || userCompanyInfo() == undefined; else showCompanyInfo">
-                <div fxLayout="row" fxLayoutAlign="center">
-                  <div>
-                    <mat-icon class="addMark" (click)="openDialogFindMyCompany()">add</mat-icon>
-                  </div>
-                </div>
-              </div>
-              <ng-template #showCompanyInfo>
-                <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="20px">
-                  <div fxLayout="row" fxLayoutAlign="start center">
-                    <!-- <img matCardImage class="dashImg" src="./assets/image/todo-list.png"> -->
-                    <mat-icon class="addImage">business</mat-icon>
-                  </div>
-                  <div fxLayout="column" fxLayoutAlign="center default">
-                    <div class="addDesc">
-                      <span class="descSpan">Company :</span> {{ userCompanyInfo()?.company_name | uppercase }}
-                    </div>
-                    <div class="addDesc">
-                      <span class="descSpan">Status :</span> {{ userCompanyInfo()?.status | titlecase }}
+                <div *ngIf="userCompanyInfo()?.length == 0 || userCompanyInfo() == undefined; else showCompanyInfo">
+                  <div fxLayout="row" fxLayoutAlign="center">
+                    <div>
+                      <mat-icon class="addMark" (click)="openDialogFindMyCompany()">add</mat-icon>
                     </div>
                   </div>
                 </div>
-              </ng-template>
-            </div>
-          </div>
-
-          <!-- *ngIf="userProfileInfo().isManager != true" -->
-          <div style="flex: 1">
-            <div class="addMe">
-              <div fxLayout="row" fxLayoutAlign="start">
-                <div class="addTitle">
-                  Manager
-                </div>
-                <span class="example-spacer"></span>
-                <mat-icon class="closeMark" (click)="deleteManager(userManagerInfo()?.manager_id)"
-                  *ngIf="userManagerInfo() != null">close</mat-icon>
-              </div>
-
-              <div *ngIf="userManagerInfo()  == null; else showManagerInfo">
-                <div fxLayout="row" fxLayoutAlign="center">
-                  <div>
-                    <mat-icon class="addMark" (click)="openDialogFindMyManager()">add</mat-icon>
-                  </div>
-                </div>
-              </div>
-              <ng-template #showManagerInfo>
-                <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="20px">
-                  <div fxLayout="row" fxLayoutAlign="start center">
-                    <!-- <img matCardImage class="dashImg" src="./assets/image/todo-list.png"> -->
-                    <mat-icon class="addImage">supervisor_account</mat-icon>
-                  </div>
-                  <div fxLayout="column" fxLayoutAlign="center default">
-                    <div class="addDesc">
-                      <span class="descSpan">Manager Name :</span> {{ userManagerInfo()?.name }}
+                <ng-template #showCompanyInfo>
+                  <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="20px">
+                    <div fxLayout="row" fxLayoutAlign="start center">
+                      
+                      <mat-icon class="addImage">business</mat-icon>
                     </div>
-                    <div class="addDesc">
-                      <span class="descSpan">Manager Email :</span> {{ userManagerInfo()?.email }}
-                    </div>
-                    <div *ngIf="userManagerInfo()?.accepted === false; else statusPositive">
+                    <div fxLayout="column" fxLayoutAlign="center default">
                       <div class="addDesc">
-                        <span class="descSpan">status :</span> Pending
+                        <span class="descSpan">Company :</span> {{ userCompanyInfo()?.company_name | uppercase }}
+                      </div>
+                      <div class="addDesc">
+                        <span class="descSpan">Status :</span> {{ userCompanyInfo()?.status | titlecase }}
                       </div>
                     </div>
-                    <ng-template #statusPositive>
-                      <div class="addDesc">
-                        <span class="descSpan">status :</span> Approve
-                      </div>
-                    </ng-template>
+                  </div>
+                </ng-template>
+              </div>
+            </div>
+
+
+            <div style="flex: 1">
+              <div class="addMe">
+                <div fxLayout="row" fxLayoutAlign="start">
+                  <div class="addTitle">
+                    Manager
+                  </div>
+                  <span class="example-spacer"></span>
+                  <mat-icon class="closeMark" (click)="deleteManager(userManagerInfo()?.manager_id)"
+                    *ngIf="userManagerInfo() != null">close</mat-icon>
+                </div>
+
+                <div *ngIf="userManagerInfo()  == null; else showManagerInfo">
+                  <div fxLayout="row" fxLayoutAlign="center">
+                    <div>
+                      <mat-icon class="addMark" (click)="openDialogFindMyManager()">add</mat-icon>
+                    </div>
                   </div>
                 </div>
-              </ng-template>
+                <ng-template #showManagerInfo>
+                  <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="20px">
+                    <div fxLayout="row" fxLayoutAlign="start center">
+                    
+                      <mat-icon class="addImage">supervisor_account</mat-icon>
+                    </div>
+                    <div fxLayout="column" fxLayoutAlign="center default">
+                      <div class="addDesc">
+                        <span class="descSpan">Manager Name :</span> {{ userManagerInfo()?.name }}
+                      </div>
+                      <div class="addDesc">
+                        <span class="descSpan">Manager Email :</span> {{ userManagerInfo()?.email }}
+                      </div>
+                      <div *ngIf="userManagerInfo()?.accepted === false; else statusPositive">
+                        <div class="addDesc">
+                          <span class="descSpan">status :</span> Pending
+                        </div>
+                      </div>
+                      <ng-template #statusPositive>
+                        <div class="addDesc">
+                          <span class="descSpan">status :</span> Approve
+                        </div>
+                      </ng-template>
+                    </div>
+                  </div>
+                </ng-template>
+              </div>
             </div>
-          </div>
+          </div> -->
         </div>
+
+
       </div>
 
-      <!-- 달력 -->
-      <div id="todayDate" class="calenderBoxBuild calendar">
-        <div class="fontBold">
-          Today is {{ currentDate | date: 'YYYY.MM.dd' }}
-          <full-calendar [options]="calendarOptions"></full-calendar>
-        </div>
-      </div>
+
     </div>
-
-
   </div>
-</div>

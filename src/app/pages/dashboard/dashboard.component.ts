@@ -99,13 +99,13 @@ export class DashboardComponent {
       // }, 
       // { title: '예시', date: '2025-06-03' }
     ],
-    height: 550,
+    // height: 550,
   };
 
   // Leave Balance 원형 표시 굵기
-  strokeWidth: number = 5;
+  strokeWidth: number = 6;
   // Leave Balance 원형 크기
-  diameter: number = 60;
+  diameter: number = 80;
 
 
 
