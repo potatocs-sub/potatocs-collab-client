@@ -136,6 +136,42 @@
         </div>
       </div>
 
+
+      <!-- office leave  -->
+      <div class="leaveContainer">
+        <div class="leaveBox" fxLayout="column nowrap" fxLayoutGap="20px">
+          <div class="leaveSubSection">
+            <span class="fontBold">Official Leave</span>
+          </div>
+          <mat-divider></mat-divider>
+          <div fxLayout="row">
+            <div class="leaveSubSection">Used</div>
+            <div class="leaveSubSection_sec daysSection">
+              <span class="fontBold">
+                {{ leaveInfo?.used_official_leave || 0 }} </span>Day(s)
+            </div>
+          </div>
+
+          <div fxLayout="row">
+            <div class="leaveSubSection">Checked</div>
+            <div class="leaveSubSection_sec daysSection">
+              <span class="fontBold">
+                {{ leaveInfo?.checked_official_leave || 0 }} </span>Day(s)
+            </div>
+          </div>
+
+          <div fxLayout="row">
+            <div class="leaveSubSection">Balance</div>
+            <div class="leaveSubSection_sec daysSection">
+              <span class="fontBold">
+                {{
+                leaveInfo?.used_official_leave -
+                leaveInfo?.checked_official_leave || 0
+                }} </span>Day(s)
+            </div>
+          </div>
+        </div>
+      </div>
       <!-- <div class="leaveContainer">
 				<div class="leaveBox" fxLayout="column nowrap" fxLayoutAlign="center center" style="height: 153px;">
 					<div class="fontBold" style="font-size:28px;">{{ currentDate | date: 'YYYY.MM' }}</div>

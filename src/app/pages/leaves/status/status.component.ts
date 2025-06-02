@@ -47,6 +47,7 @@ export class StatusComponent {
 	constructor() {
 		effect(() => {
 			if (this.userCompanyInfo()) {
+				console.log(this.userCompanyInfo())
 				this.leavesService.getMyLeavesStatus().subscribe({
 					next: (res: any) => {
 						// console.log('get userLeaveStatus');
