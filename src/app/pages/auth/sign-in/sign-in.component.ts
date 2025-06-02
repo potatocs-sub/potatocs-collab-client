@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { MaterialsModule } from '../../../materials/materials.module';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import {
   FormBuilder,
   FormControl,
@@ -23,6 +23,7 @@ export class SignInComponent {
   authService = inject(AuthService);
   dialogService = inject(DialogService);
   router = inject(Router);
+  route = inject(ActivatedRoute);
 
   signInForm: FormGroup = this.fb.group({
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -32,12 +33,19 @@ export class SignInComponent {
       Validators.maxLength(15),
     ]),
   });
+  returnUrl = '/main';
+  ngOnInit(): void {
+    console.log(this.route.snapshot.queryParams['redirectURL'])
+    this.returnUrl = this.route.snapshot.queryParams['redirectURL'] || '/main';
+  }
 
   signIn() {
     this.authService.signIn(this.signInForm.value).subscribe({
       next: (res: any) => {
         console.log(res);
-        this.router.navigate(['/main']);
+        // this.router.navigate(['/main']);
+        console.log(this.returnUrl)
+        this.router.navigateByUrl(this.returnUrl);
       },
       error: (error: any) => {
         console.log(error.error.message);
