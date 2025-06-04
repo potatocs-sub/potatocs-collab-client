@@ -7,16 +7,9 @@
             {{ spaceInfo?.displayName }}
           </div>
           <div class="spaceOption" fxLayoutAlign="default center">
-            <mat-icon
-              class="mat-18"
-              [class.isNotActive]="!spaceInfo?.isAdmin"
-              (click)="openSpaceOption()"
-              matTooltip="Space setting"
-              matTooltipPosition="above"
-              [matTooltipShowDelay]="500"
-            >
-              settings</mat-icon
-            >
+            <mat-icon class="mat-18" [class.isNotActive]="!spaceInfo?.isAdmin" (click)="openSpaceOption()"
+              matTooltip="Space setting" matTooltipPosition="above" [matTooltipShowDelay]="500">
+              settings</mat-icon>
           </div>
         </div>
         <div class="title_sub">
@@ -31,51 +24,46 @@
                         <span class="mat-18">Create Document</span>
                     </button>
                 </div> -->
+        <div class="memeber_icons_container">
+          <div class="member_icons">
+            @for(item of memberInSpace; track item; let last=$last){
 
-        <!-- hokyun - 2022-08-16 - add labels -->
+            @if(item?.profile_img != ''){
+            <img class="profile-img" [src]="item?.profile_img" alt="" [matTooltip]="item?.name"
+              matTooltipPosition="above" />
+            } @else {
+            <img class="profile-img" [src]="basicProfile" alt="" [matTooltip]="item?.name" matTooltipPosition="above" />
+            }
+
+            }
+          </div>
+          <div class="add_button">
+            <div class="creator-plus-button-container">
+              <button mat-fab (click)="openSpaceMemeber()">
+                <mat-icon>add</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+
+
         <div class="content memberContent">
-          <!-- <div>
-						<button
-							mat-button
-							(click)="openSpaceMemeber()"
-							matTooltip="Invite space member"
-							matTooltipPosition="above"
-							[matTooltipShowDelay]="500"
-						>
-							<mat-icon class="mat-18">person_add</mat-icon>
-						</button>
-					</div> -->
           <div>
             <div>
-              <button
-                mat-button
-                [matMenuTriggerFor]="memberList"
-                class="mat-icon-button"
-              >
-                <span class="member-text"
-                  >Member ({{ memberInSpace?.length }})</span
-                >
+              <button mat-button [matMenuTriggerFor]="memberList" class="mat-icon-button">
+                <span class="member-text">Member ({{ memberInSpace?.length }})</span>
                 <mat-icon class="mat-18">expand_more</mat-icon>
               </button>
             </div>
 
             <mat-menu #memberList="matMenu" class="dropdown-box">
               <div class="dropdown">
-                <div
-                  fxLayout="row"
-                  fxLayoutAlign="space-between center"
-                  class="dropdown-header"
-                >
+                <div fxLayout="row" fxLayoutAlign="space-between center" class="dropdown-header">
                   <div>
                     <div class="dropdown-heading">
                       Member <span>({{ memberInSpace?.length }})</span>
-                      <button
-                        mat-button
-                        (click)="openSpaceMemeber()"
-                        matTooltip="Invite space member"
-                        matTooltipPosition="above"
-                        [matTooltipShowDelay]="500"
-                      >
+                      <button mat-button (click)="openSpaceMemeber()" matTooltip="Invite space member"
+                        matTooltipPosition="above" [matTooltipShowDelay]="500">
                         <mat-icon class="mat-18">person_add</mat-icon>
                       </button>
                     </div>
@@ -88,19 +76,11 @@
                 <div class="dropdown-content">
                   @for(item of memberInSpace; track item; let last=$last){
                   <div>
-                    <div
-                      matRipple
-                      fxLayout="row"
-                      fxLayoutAlign="space-between center"
-                      class="notification notification-cursor"
-                    >
+                    <div matRipple fxLayout="row" fxLayoutAlign="space-between center"
+                      class="notification notification-cursor">
                       <div fxLayout="row" fxLayoutAlign="start center">
                         @if(item?.profile_img != ''){
-                        <img
-                          class="profile-img"
-                          [src]="item?.profile_img"
-                          alt=""
-                        />
+                        <img class="profile-img" [src]="item?.profile_img" alt="" />
                         } @else {
                         <img class="profile-img" [src]="basicProfile" alt="" />
                         }
@@ -111,18 +91,9 @@
                             {{ item?.email }}
                           </div>
                         </div>
-                        <div
-                          class="adminIconCover"
-                          fxLayout="column"
-                          fxLayoutAlign="center center"
-                        >
-                          <mat-icon
-                            class="adminIcon"
-                            fxFlex
-                            [class.isNotActive]="!item?.isAdmin"
-                          >
-                            manage_accounts</mat-icon
-                          >
+                        <div class="adminIconCover" fxLayout="column" fxLayoutAlign="center center">
+                          <mat-icon class="adminIcon" fxFlex [class.isNotActive]="!item?.isAdmin">
+                            manage_accounts</mat-icon>
                         </div>
                       </div>
                     </div>
@@ -145,10 +116,7 @@
   <mat-tab-group mat-stretch-tabs>
     <mat-tab label="Scrumboard">
       <div class="height_100">
-        <app-scrumboard-list
-          [spaceInfo]="spaceInfo"
-          [memberInSpace]="memberInSpace"
-        ></app-scrumboard-list>
+        <app-scrumboard-list [spaceInfo]="spaceInfo" [memberInSpace]="memberInSpace"></app-scrumboard-list>
       </div>
     </mat-tab>
     <mat-tab label="Calendar">
@@ -156,10 +124,7 @@
     </mat-tab>
     <mat-tab label="Meeting">
       @if(spaceInfo){
-      <app-meeting-list
-        [spaceInfo]="spaceInfo"
-        [memberInSpace]="memberInSpace"
-      ></app-meeting-list>
+      <app-meeting-list [spaceInfo]="spaceInfo" [memberInSpace]="memberInSpace"></app-meeting-list>
       }
     </mat-tab>
     <!-- <mat-tab label="Document">

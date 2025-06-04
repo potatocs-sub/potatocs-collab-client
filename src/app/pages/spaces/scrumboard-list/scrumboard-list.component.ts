@@ -408,11 +408,12 @@ export class ScrumboardListComponent implements OnInit {
 			//빨간색
 			return { "background-color": "#ed2131", color: "#fff" };
 		} else if (diff === 1) {
+			// 무슨 색이지
 			return { "background-color": "#ffb412" };
 		} else if (diff < 0) {
 			return { "background-color": "pink" };
 		} else {
-			return { "background-color": "black" };
+			return { "background-color": "black", color: "#fff" };
 		}
 	}
 

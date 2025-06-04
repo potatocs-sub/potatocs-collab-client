@@ -56,15 +56,19 @@
               <div fxLayout="row" fxLayoutAlign="">
                 @if(member.profile_img != ''){
                 <img class="profile-img-select" [src]="member.profile_img" alt="" />
+                }
+                @else {
                 <img class="profile-img-select" [src]="basicProfile" alt="" />
-                } @else{
+                }
+
+
                 <div fxLayout="column" fxLayoutAlign="center">
                   <div class="member-select-option-name">{{ member.name }}</div>
                   <div class="member-select-option-email">
                     {{ member.email }}
                   </div>
                 </div>
-                }
+
               </div>
             </mat-option>
             }

@@ -47,7 +47,7 @@ export class SpacesComponent implements OnInit {
 		private docService: DocumentsService,
 		private commonService: CommonService,
 		private mdsService: MemberDataStorageService
-	) {}
+	) { }
 	ngOnInit(): void {
 		this.route.params.subscribe((params) => {
 			this.spaceTime = this.route.snapshot.params["spaceTime"];
@@ -62,7 +62,7 @@ export class SpacesComponent implements OnInit {
 			});
 
 			this.docService.getMeetingList({ spaceId: this.spaceTime }).subscribe({
-				next: (data: any) => {},
+				next: (data: any) => { },
 				error: (err: any) => {
 					console.log(err);
 				},
@@ -136,5 +136,11 @@ export class SpacesComponent implements OnInit {
 			} else {
 			}
 		});
+	}
+
+
+
+	alert(name: string) {
+		window.alert(name)
 	}
 }

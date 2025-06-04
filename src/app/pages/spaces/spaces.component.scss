@@ -3,30 +3,39 @@
   flex-direction: column;
   height: 100%;
 }
+
 button.mat-icon-button {
-  display: flex; /* Flexbox 사용 */
-  justify-content: space-between; /* 좌우 정렬 */
-  align-items: center; /* 세로 정렬 */
-  white-space: nowrap; /* 줄바꿈 방지 */
-  width: 100%; /* 버튼 전체 너비 차지 */
+  display: flex;
+  /* Flexbox 사용 */
+  justify-content: space-between;
+  /* 좌우 정렬 */
+  align-items: center;
+  /* 세로 정렬 */
+  white-space: nowrap;
+  /* 줄바꿈 방지 */
+  width: 100%;
+  /* 버튼 전체 너비 차지 */
 }
 
 .member-text {
-  flex-grow: 1; /* 텍스트가 가능한 공간 차지 */
+  flex-grow: 1;
+  /* 텍스트가 가능한 공간 차지 */
 }
 
 .mat-icon {
-  margin-left: 10px; /* 아이콘과 텍스트 사이의 간격 */
+  margin-left: 10px;
+  /* 아이콘과 텍스트 사이의 간격 */
 }
 
 .contentContainer {
   // width: 100%;
   //   padding: 0 0 10px 0;
-  background-color: bisque;
+  // background-color: bisque;
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .titleContent {
-  padding: 10px 30px;
+  padding: 0px 30px;
 }
 
 .title_info {
@@ -56,6 +65,7 @@ button.mat-icon-button {
 
 .memberContent {
   display: flex;
+  align-items: center;
 }
 
 .button_content {
@@ -215,6 +225,7 @@ button.mat-icon-button {
 .dropdown-content::-webkit-scrollbar {
   width: 12px;
 }
+
 .dropdown-content::-webkit-scrollbar-thumb {
   background-color: #7176809d;
   border-radius: 10px;
@@ -227,6 +238,7 @@ button.mat-icon-button {
   border-radius: 10px;
   box-shadow: inset 0px 0px 5px white;
 }
+
 // ��ũ�� CSS
 
 .notification {
@@ -309,9 +321,68 @@ button.mat-icon-button {
 
   // margin-left: 60px;
 }
+
 // ::ng-deep .cdk-overlay-pane {
 //     @media  screen and (max-width: 780px) {
 //         padding: 15px !important;
 //         max-width: 94vw !important;
 //     }
 // }
+
+
+
+
+
+
+.memeber_icons_container {
+  display: flex;
+  align-items: center;
+
+  .member_icons {
+    display: flex;
+    align-items: center;
+    position: relative;
+
+    .profile-img {
+      margin-left: -10px;
+      width: 40px;
+      height: 40px;
+      z-index: 10;
+    }
+  }
+
+  .add_button {
+    width: 35px;
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: -10px;
+    z-index: 11;
+
+    .creator-plus-button-container {
+      display: flex;
+      justify-content: center;
+      width: 35px;
+
+      button {
+        width: 35px;
+        height: 35px;
+        background-color: #7c7c7c;
+        opacity: 0.5;
+        line-height: 35px;
+
+
+        &::ng-deep .mat-button-wrapper {
+          line-height: 35px;
+          padding: 0;
+        }
+
+        mat-icon {
+          color: #fff;
+          margin: 0;
+        }
+      }
+    }
+  }
+}
