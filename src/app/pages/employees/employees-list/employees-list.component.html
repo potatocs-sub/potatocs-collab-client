@@ -26,17 +26,10 @@
 				<div class="example-container mat-elevation-z8"> -->
 
       <div class="filter">
-        <mat-form-field
-          *ngFor="let filter of filterSelectObj"
-          style="margin-left: 15px"
-        >
+        <mat-form-field *ngFor="let filter of filterSelectObj" style="margin-left: 15px">
           <mat-label>Filter {{ filter?.name }}</mat-label>
-          <select
-            matNativeControl
-            name="{{ filter?.columnProp }}"
-            [(ngModel)]="filter.modelValue"
-            (change)="filterChange(filter, $event)"
-          >
+          <select matNativeControl name="{{ filter?.columnProp }}" [(ngModel)]="filter.modelValue"
+            (change)="filterChange(filter, $event)">
             <option value="">-- Select {{ filter?.name }} --</option>
             <option [value]="item" *ngFor="let item of filter?.options">
               {{ item }}
@@ -47,15 +40,8 @@
         <!-- <button mat-flat-button color="warn" (click)="resetFilters()">Reset</button> -->
       </div>
 
-      <table
-        mat-table
-        [dataSource]="employeeList()"
-        class="mat-elevation-z8 historyTable"
-        matSort
-        matSortActive="createdAt"
-        matSortDisableClear
-        matSortDirection="desc"
-      >
+      <table mat-table [dataSource]="employeeList()" class="mat-elevation-z8 historyTable" matSort
+        matSortActive="createdAt" matSortDisableClear matSortDirection="desc">
         <ng-container matColumnDef="name">
           <th mat-header-cell *matHeaderCellDef>Name</th>
           <td mat-cell class="center-text" *matCellDef="let element">
@@ -79,8 +65,8 @@
         <ng-container matColumnDef="annual_leave">
           <th mat-header-cell *matHeaderCellDef>Taken / Entitlement</th>
           <td mat-cell class="center-text" *matCellDef="let element">
-            {{ element?.usedLeave.used_annual_leave[0]?.sum || 0 }}/{{
-              element?.totalLeave?.annual_leave
+            {{ element?.used_annual_leave || 0 }}/{{
+            element?.totalLeave?.annual_leave
             }}
             day
           </td>
@@ -89,8 +75,8 @@
         <ng-container matColumnDef="rollover">
           <th mat-header-cell *matHeaderCellDef>Taken / Rollover</th>
           <td mat-cell class="center-text" *matCellDef="let element">
-            {{ element?.usedLeave.used_rollover[0]?.sum || 0 }}/{{
-              element?.totalLeave?.rollover || 0
+            {{ element?.used_rollover || 0 }}/{{
+            element?.totalLeave?.rollover || 0
             }}
             day
           </td>
@@ -99,8 +85,8 @@
         <ng-container matColumnDef="sick_leave">
           <th mat-header-cell *matHeaderCellDef>Taken / Sick Leave</th>
           <td mat-cell class="center-text" *matCellDef="let element">
-            {{ element?.usedLeave.used_sick_leave[0]?.sum || 0 }}/{{
-              element?.totalLeave?.sick_leave
+            {{ element?.used_sick_leave || 0 }}/{{
+            element?.totalLeave?.sick_leave
             }}
             day
           </td>
@@ -109,12 +95,26 @@
         <ng-container matColumnDef="replacementday_leave">
           <th mat-header-cell *matHeaderCellDef>Taken / RD</th>
           <td mat-cell class="center-text" *matCellDef="let element">
-            {{ element?.usedLeave.used_replacement_leave[0]?.sum || 0 }}/{{
-              element?.totalLeave?.replacement_leave
+            {{ element?.used_replacement_leave || 0 }}/{{
+            element?.totalLeave?.replacement_leave
             }}
             day
           </td>
         </ng-container>
+
+
+
+        <ng-container matColumnDef="official_leave">
+          <th mat-header-cell *matHeaderCellDef>Checked / Official Leave</th>
+          <td mat-cell class="center-text" *matCellDef="let element">
+            {{ element?.checked_official_leave || 0 }}/{{
+            element?.used_official_leave || 0
+            }}
+            day
+          </td>
+        </ng-container>
+
+
 
         <!-- <ng-container matColumnDef="start_date">
 							<th mat-header-cell *matHeaderCellDef> Tenure() </th>
@@ -159,21 +159,14 @@
 							</td>
 						</ng-container> -->
 
-        <tr
-          mat-header-row
-          *matHeaderRowDef="displayedColumns; sticky: true"
-        ></tr>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
         <tr class="mat-row" *matNoDataRow>
           <td class="mat-cell" colspan="9999">No data</td>
         </tr>
       </table>
-      <mat-paginator
-        [length]="resultsLength()"
-        [pageSize]="pageSize()"
-        [pageSizeOptions]="[5, 10, 25]"
-        showFirstLastButtons
-      >
+      <mat-paginator [length]="resultsLength()" [pageSize]="pageSize()" [pageSizeOptions]="[5, 10, 25]"
+        showFirstLastButtons>
       </mat-paginator>
     </div>
     <!-- </div>

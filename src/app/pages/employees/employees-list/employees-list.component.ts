@@ -27,7 +27,9 @@ export class EmployeesListComponent {
     'annual_leave',
     'sick_leave',
     'replacementday_leave',
+    'official_leave',
     'tenure_today',
+
   ];
   filterValues: any = {};
   filterSelectObj: any = [];
